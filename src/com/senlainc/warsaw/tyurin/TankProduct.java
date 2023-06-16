@@ -1,22 +1,22 @@
 package com.senlainc.warsaw.tyurin;
 
 public class TankProduct implements IProduct{
-    private Body body;
-    private Engine engine;
-    private Turret turret;
+    private IProductPart body;
+    private IProductPart engine;
+    private IProductPart turret;
 
     @Override
     public void installFirstPart(IProductPart productPart) {
-        this.body = (Body) productPart;
+        this.body = productPart;
     }
 
     @Override
     public void installSecondPart(IProductPart productPart) {
-        this.engine = (Engine) productPart;
+        this.engine = productPart;
     }
 
     @Override
     public void installThirdPart(IProductPart productPart) {
-        this.turret = (Turret) productPart;
+        this.turret = productPart;
     }
 }
