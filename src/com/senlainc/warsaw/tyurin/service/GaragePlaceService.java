@@ -1,27 +1,26 @@
 package com.senlainc.warsaw.tyurin.service;
 
-import com.senlainc.warsaw.tyurin.dao.CraftsmanDAO;
 import com.senlainc.warsaw.tyurin.dao.GaragePlaceDAO;
-import com.senlainc.warsaw.tyurin.dao.ICraftsmanDAO;
 import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDAO;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
+import com.senlainc.warsaw.tyurin.entity.Order;
+import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GaragePlaceService implements IGaragePlaceService{
 
     private static GaragePlaceService INSTANCE;
     private IGaragePlaceDAO garagePlaceDAO;
-    private ICraftsmanDAO craftsmanDAO;
+    private IOrderService orderService;
+    private ICraftsmanService craftsmanService;
 
     private GaragePlaceService() {
         garagePlaceDAO = GaragePlaceDAO.getInstance();
-        craftsmanDAO = CraftsmanDAO.getInstance();
+        orderService = OrderService.getInstance();
+        craftsmanService = CraftsmanService.getInstance();
     }
 
     public static GaragePlaceService getInstance() {
@@ -43,22 +42,23 @@ public class GaragePlaceService implements IGaragePlaceService{
 
     @Override
     public List<GaragePlace> getAvailablePlaces() {
-        LocalDateTime currantTime = LocalDateTime.now();
-        LocalDateTime searchTime = currantTime
-                .minusMinutes(currantTime.getMinute())
-                .minusSeconds(currantTime.getSecond())
-                .minusNanos(currantTime.getNano());
+        List<GaragePlace> availablePlaces = new ArrayList<>();
 
-        return garagePlaceDAO
-                .getGaragePlaces()
+        List<Long> unavailableGaragePlaceNumbers = orderService
+                .getOrders()
                 .stream()
-                .filter(garagePlace -> Objects.nonNull(garagePlace
-                        .getSchedule()
-                        .get(searchTime)))
-                .filter(garagePlace -> garagePlace
-                        .getSchedule()
-                        .get(searchTime))
+                .filter(order -> order
+                        .getOrderStatus().equals(OrderStatus.IN_PROGRESS))
+                .map(Order::getGaragePlaceId)
                 .collect(Collectors.toList());
+
+        garagePlaceDAO.getGaragePlaces().forEach(garagePlace -> {
+            if (!unavailableGaragePlaceNumbers.contains(garagePlace.getId())) {
+                availablePlaces.add(garagePlace);
+            }
+        });
+
+        return availablePlaces;
     }
 
     @Override
@@ -68,29 +68,34 @@ public class GaragePlaceService implements IGaragePlaceService{
                 .minusSeconds(localDateTime.getSecond())
                 .minusNanos(localDateTime.getNano());
 
-        long availableGaragePlacesAmount = garagePlaceDAO
-                .getGaragePlaces()
+        List<Order> searchTimeOrders = orderService
+                .getOrders()
                 .stream()
-                .filter(garagePlace -> Objects.nonNull(garagePlace
-                        .getSchedule()
-                        .get(searchTime)))
-                .filter(garagePlace -> garagePlace
-                        .getSchedule()
-                        .get(searchTime))
-                .count();
+                .filter(order -> order
+                        .getStartDate()
+                        .isBefore(searchTime) && order
+                        .getCompletionDate()
+                        .isAfter(searchTime) && !order
+                .getOrderStatus().equals(OrderStatus.CANCELED))
+                .collect(Collectors.toList());
 
-        long availableCraftsmenAmount = craftsmanDAO
-                .getCraftsmen()
+        List<Long> orders = searchTimeOrders
                 .stream()
-                .filter(craftsman -> Objects.nonNull(craftsman
-                        .getSchedule()
-                        .get(searchTime)))
-                .filter(craftsman -> craftsman
-                        .getSchedule()
-                        .get(searchTime))
-                .count();
+                .map(Order::getGaragePlaceId)
+                .collect(Collectors.toList());
 
-        return Math.min(availableGaragePlacesAmount, availableCraftsmenAmount);
+        int availablePlacesAmount = garagePlaceDAO.getGaragePlaces().size() - orders.size();
+
+        int unavailableCraftsmenAmount = searchTimeOrders
+                .stream()
+                .map(Order::getCraftsmenId)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet())
+                .size();
+
+        int availableCraftsmenAmount = craftsmanService.getCraftsmen().size() - unavailableCraftsmenAmount;
+
+        return Math.min(availablePlacesAmount, availableCraftsmenAmount);
     }
 
     @Override
@@ -100,31 +105,44 @@ public class GaragePlaceService implements IGaragePlaceService{
         LocalDateTime searchTime = currantTime
                 .minusMinutes(currantTime.getMinute())
                 .minusSeconds(currantTime.getSecond())
-                .minusNanos(currantTime.getNano());
+                .minusNanos(currantTime.getNano())
+                .plusHours(1);
 
-        Set<LocalDateTime> garagePlaceAvailableTime = new TreeSet<>();
-        garagePlaceDAO.getGaragePlaces().forEach(garagePlace -> {
-            garagePlace.getSchedule().forEach((timeAppointment, isAvailableAppointment) -> {
-                if (timeAppointment.isAfter(searchTime) && isAvailableAppointment) {
-                    garagePlaceAvailableTime.add(timeAppointment);
-                }
-            });
-        });
+        if (getAvailablePlacesAmount(searchTime) > 0) {
+            return searchTime;
+        }
 
-        Set<LocalDateTime> craftsmanAvailableTime = new TreeSet<>();
-        craftsmanDAO.getCraftsmen().forEach(craftsman -> {
-            craftsman.getSchedule().forEach((timeAppointment, isAvailableAppointment) -> {
-                if (timeAppointment.isAfter(searchTime) && isAvailableAppointment) {
-                    craftsmanAvailableTime.add(timeAppointment);
-                }
-            });
-        });
+        List<Order> ordersInProgress = orderService
+                .getOrders()
+                .stream()
+                .filter(order -> (order
+                        .getOrderStatus().equals(OrderStatus.IN_PROGRESS)) || (order
+                        .getOrderStatus().equals(OrderStatus.NEW)))
+                .sorted(Comparator.comparing(Order::getCompletionDate))
+                .collect(Collectors.toList());
 
-        for (LocalDateTime time : garagePlaceAvailableTime) {
-            if (craftsmanAvailableTime.contains(time)) {
-                return time;
+        for (Order order : ordersInProgress) {
+            if (getAvailablePlacesAmount(order.getCompletionDate()) > 0) {
+                return order.getCompletionDate();
             }
         }
+
         return null;
+    }
+
+    @Override
+    public GaragePlace createGaragePlace(String data) {
+        GaragePlace garagePlace = new GaragePlace();
+        String[] keyValuePairs = data.split(",");
+        Arrays.stream(keyValuePairs).forEach(keyValue -> {
+            if (keyValue.startsWith("id")) {
+                garagePlace.setId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
+            } else if (keyValue.startsWith("number")) {
+                garagePlace.setNumber(Integer.parseInt(keyValue.substring(keyValue.indexOf(":") + 1)));
+            } else if (keyValue.startsWith("space")) {
+                garagePlace.setSpace(Double.parseDouble(keyValue.substring(keyValue.indexOf(":") + 1)));
+            }
+        });
+        return garagePlace;
     }
 }

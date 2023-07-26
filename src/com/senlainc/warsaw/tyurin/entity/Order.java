@@ -1,5 +1,7 @@
 package com.senlainc.warsaw.tyurin.entity;
 
+import com.senlainc.warsaw.tyurin.util.OrderStatus;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +15,16 @@ public class Order {
     private LocalDateTime startDate;
     private LocalDateTime completionDate;
     private OrderStatus orderStatus;
-    private List<Craftsman> craftsmen;
-    private int garagePlaceNumber;
+    private List<Long> craftsmenId;
+    private long garagePlaceId;
 
     public Order() {
         orderStatus = OrderStatus.NEW;
-        craftsmen = new ArrayList<>();
+        craftsmenId = new ArrayList<>();
         submissionDate = LocalDateTime.now();
+        submissionDate = submissionDate
+                .minusSeconds(submissionDate.getSecond())
+                .minusNanos(submissionDate.getNano());
     }
 
     public long getId() {
@@ -38,21 +43,20 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public List<Craftsman> getCraftsmen() {
-        return craftsmen;
+    public List<Long> getCraftsmenId() {
+        return craftsmenId;
     }
 
-    public void setCraftsmen(List<Craftsman> craftsmen) {
-        this.craftsmen = craftsmen;
+    public void setCraftsmen(List<Long> craftsmenId) {
+        this.craftsmenId = craftsmenId;
     }
 
-    public void addCraftsman(Craftsman craftsman) {
-        craftsmen.add(craftsman);
-        craftsman.getSchedule().replace(this.startDate, false);
+    public void addCraftsmanId(Craftsman craftsman) {
+        craftsmenId.add(craftsman.getId());
     }
 
     public void removeCraftsman(Craftsman craftsman) {
-        craftsmen.remove(craftsman);
+        craftsmenId.remove(craftsman.getId());
     }
 
     public void changeStatusToClose() {
@@ -103,12 +107,12 @@ public class Order {
         this.completionDate = completionDate;
     }
 
-    public int getGaragePlaceNumber() {
-        return garagePlaceNumber;
+    public long getGaragePlaceId() {
+        return garagePlaceId;
     }
 
-    public void setGaragePlaceNumber(int garagePlaceNumber) {
-        this.garagePlaceNumber = garagePlaceNumber;
+    public void setGaragePlaceId(long garagePlaceId) {
+        this.garagePlaceId = garagePlaceId;
     }
 
     @Override
@@ -116,18 +120,26 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return id == order.id && Double.compare(order.price, price) == 0 &&
-                garagePlaceNumber == order.garagePlaceNumber &&
-                Objects.equals(submissionDate, order.submissionDate) &&
-                Objects.equals(startDate, order.startDate) &&
-                Objects.equals(completionDate, order.completionDate) &&
+        return id == order.id &&
+                Double.compare(order.price, price) == 0 &&
+                garagePlaceId == order.garagePlaceId &&
+                submissionDate.equals(order.submissionDate) &&
+                startDate.equals(order.startDate) &&
+                completionDate.equals(order.completionDate) &&
                 orderStatus == order.orderStatus &&
-                Objects.equals(craftsmen, order.craftsmen);
+                craftsmenId.equals(order.craftsmenId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, price, submissionDate, startDate, completionDate, orderStatus, craftsmen, garagePlaceNumber);
+        return Objects.hash(id,
+                price,
+                submissionDate,
+                startDate,
+                completionDate,
+                orderStatus,
+                craftsmenId,
+                garagePlaceId);
     }
 
     @Override
@@ -139,8 +151,8 @@ public class Order {
                 ", startDate=" + startDate +
                 ", completionDate=" + completionDate +
                 ", orderStatus=" + orderStatus +
-                ", craftsmen=" + craftsmen +
-                ", garagePlaceNumber=" + garagePlaceNumber +
+                ", craftsmenId=" + craftsmenId +
+                ", garagePlaceId=" + garagePlaceId +
                 '}';
     }
 }

@@ -16,4 +16,10 @@ public interface ICraftsmanService {
     List<Craftsman> getSortedAlphabetically();
 
     List<Craftsman> getSortedByBusyness();
+
+    Craftsman getCraftsmanById(Long id);
+
+    Craftsman createCraftsmen(String data);
+
+    List<Craftsman> getCraftsmen();
 }

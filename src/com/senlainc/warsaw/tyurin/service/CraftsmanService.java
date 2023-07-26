@@ -4,20 +4,20 @@ import com.senlainc.warsaw.tyurin.dao.CraftsmanDAO;
 import com.senlainc.warsaw.tyurin.dao.ICraftsmanDAO;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.Order;
+import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftsmanService implements ICraftsmanService{
 
     private static CraftsmanService INSTANCE;
-    private ICraftsmanDAO craftsmanStorage;
+    private ICraftsmanDAO craftsmanDAO;
+    private IOrderService orderService;
 
     private CraftsmanService() {
-        craftsmanStorage = CraftsmanDAO.getInstance();
+        craftsmanDAO = CraftsmanDAO.getInstance();
+        orderService =OrderService.getInstance();
     }
 
     public static CraftsmanService getInstance() {
@@ -30,26 +30,32 @@ public class CraftsmanService implements ICraftsmanService{
 
     @Override
     public void addCraftsman(Craftsman craftsman) {
-        craftsmanStorage
+        craftsmanDAO
                 .getCraftsmen()
                 .add(craftsman);
     }
 
     @Override
     public void removeCraftsmen(Craftsman craftsman) {
-        craftsmanStorage
+        craftsmanDAO
                 .getCraftsmen()
                 .remove(craftsman);
     }
 
     @Override
     public List<Craftsman> getCraftsmenByOrder(Order order) {
-        return order.getCraftsmen();
+        List<Craftsman> craftsmen = new ArrayList<>();
+
+        order
+                .getCraftsmenId()
+                .forEach(id -> craftsmen.add(getCraftsmanById(id)));
+
+        return craftsmen;
     }
 
     @Override
     public List<Craftsman> getSortedAlphabetically() {
-        return craftsmanStorage
+        return craftsmanDAO
                 .getCraftsmen()
                 .stream()
                 .sorted(Comparator
@@ -62,15 +68,67 @@ public class CraftsmanService implements ICraftsmanService{
 
     @Override
     public List<Craftsman> getSortedByBusyness() {
-        List<Craftsman> craftsmen = new ArrayList<>(craftsmanStorage.getCraftsmen());
+        Map<Long, Integer> craftsmenBusiness = new HashMap<>();
+        List<Craftsman> sortedCraftsmen = new ArrayList<>();
 
-        craftsmen.sort(Comparator.comparing(craftsman -> craftsman
-                .getSchedule()
+        orderService
+                .getOrders()
+                .stream()
+                .filter(order -> ((!order
+                        .getOrderStatus()
+                        .equals(OrderStatus.CANCELED))))
+                .forEach(order -> order
+                                .getCraftsmenId()
+                                .forEach(id -> {
+                            if (craftsmenBusiness.containsKey(id)) {
+                                craftsmenBusiness.replace(id, craftsmenBusiness.get(id) + 1);
+                            } else {
+                                craftsmenBusiness.put(id, 1);
+                            }
+                        }));
+
+        craftsmenBusiness
                 .entrySet()
                 .stream()
-                .filter(Map.Entry::getValue)
-                .count()));
+                .sorted(Map.Entry.comparingByValue())
+                .forEach(id -> {
+            sortedCraftsmen.add(getCraftsmanById(id.getKey()));
+        });
 
-        return craftsmen;
+        return sortedCraftsmen;
+    }
+
+    @Override
+    public Craftsman getCraftsmanById(Long id) {
+        List<Craftsman> craftsmen = craftsmanDAO.getCraftsmen();
+
+        for (Craftsman craftsman : craftsmen) {
+            if(craftsman.getId() == id) {
+                return craftsman;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Craftsman createCraftsmen(String data) {
+        Craftsman craftsman = new Craftsman();
+        String[] keyValuePairs = data.split(",");
+        Arrays.stream(keyValuePairs).forEach(keyValue -> {
+            if (keyValue.startsWith("id")) {
+                craftsman.setId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
+            } else if (keyValue.startsWith("name")) {
+                craftsman.setName(keyValue.substring(keyValue.indexOf(":") + 1));
+            } else if (keyValue.startsWith("surname")) {
+                craftsman.setSurname(keyValue.substring(keyValue.indexOf(":") + 1));
+            }
+        });
+        return craftsman;
+    }
+
+    @Override
+    public List<Craftsman> getCraftsmen() {
+        return craftsmanDAO.getCraftsmen();
     }
 }

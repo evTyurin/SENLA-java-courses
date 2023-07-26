@@ -1,12 +1,8 @@
 package com.senlainc.warsaw.tyurin;
 
-import com.senlainc.warsaw.tyurin.dao.CraftsmanDAO;
-import com.senlainc.warsaw.tyurin.dao.GaragePlaceDAO;
-import com.senlainc.warsaw.tyurin.dao.OrderDAO;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
-import com.senlainc.warsaw.tyurin.entity.OrderStatus;
 import com.senlainc.warsaw.tyurin.service.CraftsmanService;
 import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
 import com.senlainc.warsaw.tyurin.service.OrderService;
@@ -21,117 +17,47 @@ public class Test {
         CraftsmanService craftsmanService = CraftsmanService.getInstance();
         OrderService orderService = OrderService.getInstance();
 
-        Craftsman bob = new Craftsman();
-        bob.setName("bob");
-        bob.setSurname("smith");
-        bob.setId(1);
-        bob.getSchedule().put(LocalDateTime.of(2023, 7, 01, 12, 0), true);
-        bob.getSchedule().put(LocalDateTime.of(2023, 7, 05, 12, 0), true);
-        bob.getSchedule().put(LocalDateTime.of(2023, 7, 10, 12, 0), true);
-        bob.getSchedule().put(LocalDateTime.of(2023, 7, 15, 12, 0), true);
-        bob.getSchedule().put(LocalDateTime.of(2023, 7, 20, 12, 0), true);
-        bob.getSchedule().put(LocalDateTime.of(2023, 7, 25, 12, 0), true);
-        bob.getSchedule().put(LocalDateTime.of(2023, 7, 30, 12, 0), true);
+        Craftsman bob = craftsmanService.createCraftsmen("id:1,name:bob,surname:smith");
+        Craftsman ted = craftsmanService.createCraftsmen("id:2,name:ted,surname:bons");
+        Craftsman stan = craftsmanService.createCraftsmen("id:3,name:stan,surname:smith");
 
-        Craftsman ted = new Craftsman();
-        ted.setName("ted");
-        ted.setSurname("bons");
-        ted.setId(2);
-        ted.getSchedule().put(LocalDateTime.of(2023, 7, 01, 12, 0), true);
-        ted.getSchedule().put(LocalDateTime.of(2023, 7, 05, 12, 0), true);
-        ted.getSchedule().put(LocalDateTime.of(2023, 7, 10, 12, 0), true);
-        ted.getSchedule().put(LocalDateTime.of(2023, 7, 15, 12, 0), true);
-        ted.getSchedule().put(LocalDateTime.of(2023, 7, 20, 12, 0), true);
-        ted.getSchedule().put(LocalDateTime.of(2023, 7, 25, 12, 0), true);
-        ted.getSchedule().put(LocalDateTime.of(2023, 7, 30, 12, 0), true);
+        GaragePlace garagePlace1 = garagePlaceService.createGaragePlace("id:1,number:1,space:10.0");
+        GaragePlace garagePlace2 = garagePlaceService.createGaragePlace("id:2,number:2,space:10.0");
+        GaragePlace garagePlace3 = garagePlaceService.createGaragePlace("id:3,number:3,space:10.0");
 
-        Craftsman stan = new Craftsman();
-        stan.setName("stan");
-        stan.setSurname("smith");
-        stan.setId(3);
-        stan.getSchedule().put(LocalDateTime.of(2023, 7, 01, 12, 0), true);
-        stan.getSchedule().put(LocalDateTime.of(2023, 7, 05, 12, 0), true);
-        stan.getSchedule().put(LocalDateTime.of(2023, 7, 10, 12, 0), true);
-        stan.getSchedule().put(LocalDateTime.of(2023, 7, 11, 13, 0), true);
-        stan.getSchedule().put(LocalDateTime.of(2023, 7, 15, 12, 0), true);
-        stan.getSchedule().put(LocalDateTime.of(2023, 7, 20, 12, 0), true);
-        stan.getSchedule().put(LocalDateTime.of(2023, 7, 25, 12, 0), true);
-        stan.getSchedule().put(LocalDateTime.of(2023, 7, 30, 12, 0), true);
+        Order order1 = orderService.createOrder("id:1,price:5,submissionDate:2023-07-26T21:45," +
+                "startDate:2023-07-05T12:00,completionDate:2023-07-12T20:00," +
+                "orderStatus:COMPLETED,craftsmenId:2;1,garagePlaceId:1");
 
-        GaragePlace garagePlace1 = new GaragePlace();
-        garagePlace1.setId(1);
-        garagePlace1.setNumber(1);
-        garagePlace1.setSpace(10.0);
-        garagePlace1.getSchedule().put(LocalDateTime.of(2023, 7, 01, 12, 0), true);
-        garagePlace1.getSchedule().put(LocalDateTime.of(2023, 7, 05, 12, 0), true);
-        garagePlace1.getSchedule().put(LocalDateTime.of(2023, 7, 10, 12, 0), true);
-        garagePlace1.getSchedule().put(LocalDateTime.of(2023, 7, 15, 12, 0), true);
-        garagePlace1.getSchedule().put(LocalDateTime.of(2023, 7, 20, 12, 0), true);
-        garagePlace1.getSchedule().put(LocalDateTime.of(2023, 7, 25, 12, 0), true);
-        garagePlace1.getSchedule().put(LocalDateTime.of(2023, 7, 30, 12, 0), true);
+        Order order2 = orderService.createOrder("id:2,price:25,submissionDate:2023-07-26T21:35," +
+                "startDate:2023-07-12T12:00,completionDate:2023-07-28T13:00," +
+                "orderStatus:IN_PROGRESS,craftsmenId:2;1,garagePlaceId:2");
 
-        GaragePlace garagePlace2 = new GaragePlace();
-        garagePlace2.setId(2);
-        garagePlace2.setNumber(2);
-        garagePlace2.setSpace(10.0);
-        garagePlace2.getSchedule().put(LocalDateTime.of(2023, 7, 01, 12, 0), true);
-        garagePlace2.getSchedule().put(LocalDateTime.of(2023, 7, 05, 12, 0), true);
-        garagePlace2.getSchedule().put(LocalDateTime.of(2023, 7, 10, 12, 0), true);
-        garagePlace2.getSchedule().put(LocalDateTime.of(2023, 7, 11, 13, 0), true);
-        garagePlace2.getSchedule().put(LocalDateTime.of(2023, 7, 15, 12, 0), true);
-        garagePlace2.getSchedule().put(LocalDateTime.of(2023, 7, 20, 12, 0), true);
-        garagePlace2.getSchedule().put(LocalDateTime.of(2023, 7, 25, 12, 0), true);
-        garagePlace2.getSchedule().put(LocalDateTime.of(2023, 7, 30, 12, 0), true);
+        Order order3 = orderService.createOrder("id:3,price:15,submissionDate:2023-07-26T20:35," +
+                "startDate:2023-07-24T12:00,completionDate:2023-07-27T13:00," +
+                "orderStatus:IN_PROGRESS,craftsmenId:2;1,garagePlaceId:3");
 
-        GaragePlace garagePlace3 = new GaragePlace();
-        garagePlace3.setId(3);
-        garagePlace3.setNumber(3);
-        garagePlace3.setSpace(10.0);
-        garagePlace3.getSchedule().put(LocalDateTime.of(2023, 7, 01, 12, 0), true);
-        garagePlace3.getSchedule().put(LocalDateTime.of(2023, 7, 05, 12, 0), true);
-        garagePlace3.getSchedule().put(LocalDateTime.of(2023, 7, 10, 12, 0), true);
-        garagePlace3.getSchedule().put(LocalDateTime.of(2023, 7, 15, 12, 0), true);
-        garagePlace3.getSchedule().put(LocalDateTime.of(2023, 7, 20, 12, 0), true);
-        garagePlace3.getSchedule().put(LocalDateTime.of(2023, 7, 25, 12, 0), true);
-        garagePlace3.getSchedule().put(LocalDateTime.of(2023, 7, 30, 12, 0), true);
+        Order order4 = orderService.createOrder("id:4,price:60,submissionDate:2023-07-26T10:35," +
+                "startDate:2023-08-14T12:00,completionDate:2023-08-29T13:00," +
+                "orderStatus:NEW,craftsmenId:2,garagePlaceId:2");
 
-        Order order1 = new Order();
-        order1.setId(1);
-        order1.setStartDate(LocalDateTime.of(2023, 7, 05, 12, 0));
-        order1.setCompletionDate(LocalDateTime.of(2023, 7, 05, 13, 0));
-        order1.setOrderStatus(OrderStatus.COMPLETED);
-        order1.addCraftsman(ted);
-        order1.addCraftsman(bob);
+        Order order5 = orderService.createOrder("id:4,price:60,submissionDate:2023-07-26T10:35," +
+                "startDate:2023-09-14T12:00,completionDate:2023-09-29T13:00," +
+                "orderStatus:NEW,craftsmenId:3,garagePlaceId:2");
 
-        Order order2 = new Order();
-        order2.setId(2);
-        order2.setStartDate(LocalDateTime.of(2023, 7, 30, 12, 0));
-        order2.setCompletionDate(LocalDateTime.of(2023, 7, 30, 13, 0));
-        order2.addCraftsman(ted);
-        order2.addCraftsman(bob);
-        order2.setOrderStatus(OrderStatus.CANCELED);
+        garagePlaceService.addGaragePlace(garagePlace1);
+        garagePlaceService.addGaragePlace(garagePlace2);
+        garagePlaceService.addGaragePlace(garagePlace3);
 
-        Order order3 = new Order();
-        order3.setId(3);
-        order3.setStartDate(LocalDateTime.of(2023, 7, 15, 12, 0));
-        order3.setCompletionDate(LocalDateTime.of(2024, 7, 15, 13, 0));
-        order3.addCraftsman(ted);
-        order3.addCraftsman(bob);
+        craftsmanService.addCraftsman(bob);
+        craftsmanService.addCraftsman(ted);
+        craftsmanService.addCraftsman(stan);
 
-        GaragePlaceDAO garagePlaceDAO = GaragePlaceDAO.getInstance();
-        garagePlaceDAO.addGaragePlace(garagePlace1);
-        garagePlaceDAO.addGaragePlace(garagePlace2);
-        garagePlaceDAO.addGaragePlace(garagePlace3);
-
-        CraftsmanDAO craftsmanDAO = CraftsmanDAO.getInstance();
-        craftsmanDAO.addCraftsman(bob);
-        craftsmanDAO.addCraftsman(ted);
-        craftsmanDAO.addCraftsman(stan);
-
-        OrderDAO orderDAO = OrderDAO.getInstance();
-        orderDAO.addOrder(order1);
-        orderDAO.addOrder(order2);
-        orderDAO.addOrder(order3);
+        orderService.addOrder(order1);
+        orderService.addOrder(order2);
+        orderService.addOrder(order3);
+        orderService.addOrder(order4);
+        orderService.addOrder(order5);
 
         //get list of available places at the time of request
         //example - if current time is 11:15 then request return list of places that are available in 11:00 (from 11:00 till 12:00)
@@ -144,6 +70,7 @@ public class Test {
 
         //get available places amount
         //minimum 1 craftsman also should available at the same time (minimum 1 craftsman per 1 garage place)
+        System.out.println("===============================================");
         System.out.println("amount of available garage places for a date = " + garagePlaceService
                 .getAvailablePlacesAmount(LocalDateTime.of(2023, 7, 15, 12, 0)));
 

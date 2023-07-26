@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.entity;
+package com.senlainc.warsaw.tyurin.util;
 
 public enum OrderStatus {
     COMPLETED,

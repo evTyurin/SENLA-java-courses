@@ -3,7 +3,7 @@ package com.senlainc.warsaw.tyurin.service;
 
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.Order;
-import com.senlainc.warsaw.tyurin.entity.OrderStatus;
+import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,4 +37,10 @@ public interface IOrderService {
     List<Order> getArchivedOrdersSortedByPrice();
 
     Order getOrderByCraftsmen(Craftsman craftsman);
+
+    List<Order> getOrders();
+
+    Order createOrder(String data);
+
+    void addOrder(Order order);
 }

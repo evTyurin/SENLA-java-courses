@@ -1,21 +1,14 @@
 package com.senlainc.warsaw.tyurin.entity;
 
-
-import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Objects;
-import java.util.TreeMap;
 
 public class GaragePlace {
 
     private long id;
     private int number;
     private double space;
-    private Map<LocalDateTime, Boolean> schedule;
 
-    public GaragePlace() {
-        schedule = new TreeMap<>();
-    }
+    public GaragePlace() {}
 
     public long getId() {
         return id;
@@ -41,14 +34,6 @@ public class GaragePlace {
         this.space = space;
     }
 
-    public Map<LocalDateTime, Boolean> getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(Map<LocalDateTime, Boolean> schedule) {
-        this.schedule = schedule;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,13 +41,12 @@ public class GaragePlace {
         GaragePlace that = (GaragePlace) o;
         return id == that.id &&
                 number == that.number &&
-                Double.compare(that.space, space) == 0 &&
-                Objects.equals(schedule, that.schedule);
+                Double.compare(that.space, space) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, number, space, schedule);
+        return Objects.hash(id, number, space);
     }
 
     @Override
@@ -71,7 +55,6 @@ public class GaragePlace {
                 "id=" + id +
                 ", number=" + number +
                 ", space=" + space +
-                ", schedule=" + schedule +
                 '}';
     }
 }
