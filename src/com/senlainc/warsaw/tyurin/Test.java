@@ -115,7 +115,7 @@ public class Test {
                 System.out.println("currently executed order id sorted by price = " + order.getId()));
 
         //get order executed by specific craftsman
-        Order order = orderService.getOrderByCraftsmen(ted);
+        Order order = orderService.getOrderByCraftsmen(ted.getId());
         if (order != null) {
             System.out.println("order id executed by specific craftsman = " + order.getId());
         }
@@ -129,7 +129,7 @@ public class Test {
                 System.out.println("craftsman id sorted alphabetically = " + craftsman.getId()));
 
         //get list of all craftsmen executed specific order
-        craftsmanService.getCraftsmenByOrder(order1).forEach(craftsman ->
+        craftsmanService.getCraftsmenByOrder(order1.getId()).forEach(craftsman ->
                 System.out.println("craftsman id executed specific order = " + craftsman.getId()));
     }
 }

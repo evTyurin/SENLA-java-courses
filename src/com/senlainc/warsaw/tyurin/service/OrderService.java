@@ -168,13 +168,13 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public Order getOrderByCraftsmen(Craftsman craftsman) {
+    public Order getOrderByCraftsmen(long craftsmanId) {
         Optional<Order> optionalOrder = orderDAO
                 .getOrders()
                 .stream()
                 .filter(order -> (order
                         .getCraftsmenId()
-                        .contains(craftsman) && order
+                        .contains(craftsmanId) && order
                         .getOrderStatus()
                         .equals(OrderStatus.IN_PROGRESS)))
                 .findFirst();
@@ -229,6 +229,18 @@ public class OrderService implements IOrderService{
     @Override
     public void addOrder(Order order) {
         orderDAO.addOrder(order);
+    }
+
+    @Override
+    public Order getOrderById(long id) {
+        List<Order> orders = orderDAO.getOrders();
+
+        for (Order order : orders) {
+            if(order.getId() == id) {
+                return order;
+            }
+        }
+        return null;
     }
 
     private List<Order> getArchivedOrders() {

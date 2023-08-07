@@ -9,9 +9,9 @@ public interface ICraftsmanService {
 
     void addCraftsman(Craftsman craftsman);
 
-    void removeCraftsmen(Craftsman craftsman);
+    void removeCraftsmanById(long id);
 
-    List<Craftsman> getCraftsmenByOrder(Order order);
+    List<Craftsman> getCraftsmenByOrder(long id);
 
     List<Craftsman> getSortedAlphabetically();
 

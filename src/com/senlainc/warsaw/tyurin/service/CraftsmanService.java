@@ -27,7 +27,6 @@ public class CraftsmanService implements ICraftsmanService{
         return INSTANCE;
     }
 
-
     @Override
     public void addCraftsman(Craftsman craftsman) {
         craftsmanDAO
@@ -36,19 +35,28 @@ public class CraftsmanService implements ICraftsmanService{
     }
 
     @Override
-    public void removeCraftsmen(Craftsman craftsman) {
-        craftsmanDAO
-                .getCraftsmen()
-                .remove(craftsman);
+    public void removeCraftsmanById(long id) {
+
+        List<Craftsman> craftsmen = craftsmanDAO.getCraftsmen();
+
+        for (Craftsman craftsman : craftsmen) {
+            if(craftsman.getId() == id) {
+                craftsmanDAO
+                        .getCraftsmen()
+                        .remove(craftsman);
+                break;
+            }
+        }
     }
 
     @Override
-    public List<Craftsman> getCraftsmenByOrder(Order order) {
+    public List<Craftsman> getCraftsmenByOrder(long id) {
         List<Craftsman> craftsmen = new ArrayList<>();
 
-        order
+        orderService
+                .getOrderById(id)
                 .getCraftsmenId()
-                .forEach(id -> craftsmen.add(getCraftsmanById(id)));
+                .forEach(craftsmanId -> craftsmen.add(getCraftsmanById(craftsmanId)));
 
         return craftsmen;
     }
