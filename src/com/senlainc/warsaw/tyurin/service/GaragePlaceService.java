@@ -2,7 +2,6 @@ package com.senlainc.warsaw.tyurin.service;
 
 import com.senlainc.warsaw.tyurin.dao.GaragePlaceDAO;
 import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDAO;
-import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
@@ -39,16 +38,14 @@ public class GaragePlaceService implements IGaragePlaceService{
     @Override
     public void removeGaragePlace(long id) {
 
-        List<GaragePlace> garagePlaces = garagePlaceDAO.getGaragePlaces();
-
-        for (GaragePlace garagePlace : garagePlaces) {
-            if(garagePlace.getId() == id) {
-                garagePlaceDAO
+        garagePlaceDAO
+                .getGaragePlaces()
+                .remove(garagePlaceDAO
                         .getGaragePlaces()
-                        .remove(garagePlace);
-                break;
-            }
-        }
+                        .stream()
+                        .filter(garagePlace -> garagePlace.getId() == id)
+                        .findFirst()
+                        .orElse(null));
     }
 
     @Override
