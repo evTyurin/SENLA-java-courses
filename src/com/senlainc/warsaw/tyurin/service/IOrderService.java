@@ -36,11 +36,13 @@ public interface IOrderService {
 
     List<Order> getArchivedOrdersSortedByPrice();
 
-    Order getOrderByCraftsmen(Craftsman craftsman);
+    Order getOrderByCraftsmen(long craftsmanId);
 
     List<Order> getOrders();
 
     Order createOrder(String data);
 
     void addOrder(Order order);
+
+    Order getOrderById(long id);
 }

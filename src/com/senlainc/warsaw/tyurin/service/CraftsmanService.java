@@ -3,7 +3,6 @@ package com.senlainc.warsaw.tyurin.service;
 import com.senlainc.warsaw.tyurin.dao.CraftsmanDAO;
 import com.senlainc.warsaw.tyurin.dao.ICraftsmanDAO;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
-import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
 import java.util.*;
@@ -27,7 +26,6 @@ public class CraftsmanService implements ICraftsmanService{
         return INSTANCE;
     }
 
-
     @Override
     public void addCraftsman(Craftsman craftsman) {
         craftsmanDAO
@@ -36,19 +34,26 @@ public class CraftsmanService implements ICraftsmanService{
     }
 
     @Override
-    public void removeCraftsmen(Craftsman craftsman) {
+    public void removeCraftsmanById(long id) {
+
         craftsmanDAO
                 .getCraftsmen()
-                .remove(craftsman);
+                .remove(craftsmanDAO
+                        .getCraftsmen()
+                        .stream()
+                        .filter(craftsman -> craftsman.getId() == id)
+                        .findFirst()
+                        .orElse(null));
     }
 
     @Override
-    public List<Craftsman> getCraftsmenByOrder(Order order) {
+    public List<Craftsman> getCraftsmenByOrder(long id) {
         List<Craftsman> craftsmen = new ArrayList<>();
 
-        order
+        orderService
+                .getOrderById(id)
                 .getCraftsmenId()
-                .forEach(id -> craftsmen.add(getCraftsmanById(id)));
+                .forEach(craftsmanId -> craftsmen.add(getCraftsmanById(craftsmanId)));
 
         return craftsmen;
     }

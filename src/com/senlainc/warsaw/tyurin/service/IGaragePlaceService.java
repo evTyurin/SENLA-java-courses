@@ -9,7 +9,7 @@ public interface IGaragePlaceService {
 
     void addGaragePlace(GaragePlace garagePlace);
 
-    void deleteGaragePlace(GaragePlace garagePlace);
+    void removeGaragePlace(long id);
 
     List<GaragePlace> getAvailablePlaces();
 

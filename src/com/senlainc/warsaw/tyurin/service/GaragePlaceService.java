@@ -36,8 +36,16 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public void deleteGaragePlace(GaragePlace garagePlace) {
-        garagePlaceDAO.deleteGaragePlace(garagePlace);
+    public void removeGaragePlace(long id) {
+
+        garagePlaceDAO
+                .getGaragePlaces()
+                .remove(garagePlaceDAO
+                        .getGaragePlaces()
+                        .stream()
+                        .filter(garagePlace -> garagePlace.getId() == id)
+                        .findFirst()
+                        .orElse(null));
     }
 
     @Override

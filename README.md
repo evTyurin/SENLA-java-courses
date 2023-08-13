@@ -1,5 +1,5 @@
 # SENLA-java-courses
-## TASK 4
+## TASK 5
 ### Electronic Vehicle Garage Administrator
 ### The programme shall provide the possibility of:
 
@@ -16,3 +16,5 @@
 * Orders (completed/deleted/canceled) for a period of time (sort by submission date, by completion date, by price);
 * The number of available places on the service for any date in the future (calculated from the number of available mechanics and garage space);
 * The nearest available date.
+
+#### Added user interface module that contain a user console interface and allow to perform all the functions included in the program
