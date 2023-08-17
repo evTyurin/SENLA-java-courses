@@ -16,8 +16,6 @@ public class GetCraftsmenByOrder implements IAction {
         Scanner scanner = new Scanner(System.in);
         long orderId = scanner.nextLong();
         List<Craftsman> craftsmen = CraftsmanService.getInstance().getCraftsmenByOrder(orderId);
-        craftsmen.forEach(craftsman -> System.out.println("id = " + craftsman.getId()
-                + ", surname = " + craftsman.getSurname()
-                + ", name = " + craftsman.getName()));
+        craftsmen.forEach(craftsman -> System.out.println(craftsman.toString()));
     }
 }

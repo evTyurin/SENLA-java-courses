@@ -2,11 +2,12 @@ package com.senlainc.warsaw.tyurin.service;
 
 import com.senlainc.warsaw.tyurin.dao.IOrderDAO;
 import com.senlainc.warsaw.tyurin.dao.OrderDAO;
-import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.Order;
+import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -193,15 +194,35 @@ public class OrderService implements IOrderService{
         String[] keyValuePairs = data.split(",");
         Arrays.stream(keyValuePairs).forEach(keyValue -> {
             if (keyValue.startsWith("id")) {
-                order.setId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
+                try {
+                    order.setId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("You enter not a number as order id");
+                }
             } else if (keyValue.startsWith("price")) {
-                order.setPrice(Double.parseDouble(keyValue.substring(keyValue.indexOf(":") + 1)));
+                try {
+                    order.setPrice(Double.parseDouble(keyValue.substring(keyValue.indexOf(":") + 1)));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("You enter not a number as order price");
+                }
             } else if (keyValue.startsWith("submissionDate")) {
-                order.setSubmissionDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
+                try {
+                    order.setSubmissionDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
+                } catch (DateTimeParseException e) {
+                    throw new IllegalArgumentException("You enter not a date as submission date");
+                }
             } else if (keyValue.startsWith("startDate")) {
-                order.setStartDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
+                try {
+                    order.setStartDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
+                } catch (DateTimeParseException e) {
+                    throw new IllegalArgumentException("You enter not a date as submission date");
+                }
             } else if (keyValue.startsWith("completionDate")) {
-                order.setCompletionDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
+                try {
+                    order.setCompletionDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
+                } catch (DateTimeParseException e) {
+                    throw new IllegalArgumentException("You enter not a date as submission date");
+                }
             } else if (keyValue.startsWith("orderStatus")) {
                 if (keyValue.endsWith("COMPLETED")) {
                     order.setOrderStatus(OrderStatus.COMPLETED);
@@ -216,11 +237,19 @@ public class OrderService implements IOrderService{
                 }
             } else if (keyValue.startsWith("craftsmenId")) {
                 String[] craftsmanIdList = keyValue.substring(keyValue.indexOf(":") + 1).split(";");
-                Arrays.stream(craftsmanIdList).forEach(id -> {
-                    order.getCraftsmenId().add(Long.parseLong(id));
-                });
+                try {
+                    Arrays.stream(craftsmanIdList).forEach(id -> {
+                        order.getCraftsmenId().add(Long.parseLong(id));
+                    });
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("You enter not a number as craftsman id");
+                }
             } else if (keyValue.startsWith("garagePlaceId")) {
-                order.setGaragePlaceId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
+                try {
+                    order.setGaragePlaceId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("You enter not a number as garage place id");
+                }
             }
         });
         return order;
@@ -233,14 +262,48 @@ public class OrderService implements IOrderService{
 
     @Override
     public Order getOrderById(long id) {
-        List<Order> orders = orderDAO.getOrders();
 
-        for (Order order : orders) {
-            if(order.getId() == id) {
-                return order;
-            }
-        }
-        return null;
+        return orderDAO
+                .getOrders()
+                .stream()
+                .filter(order -> order.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public void importOrders() {
+
+        orderDAO
+                .importOrders(Constants.PATH_TO_ORDERS_CSV)
+                .stream()
+                .map(this::createOrder)
+                .forEach(importOrder -> {
+                    Order order = getOrderById(importOrder.getId());
+                    if (order == null) {
+                        orderDAO.addOrder(importOrder);
+                    } else if (!order.equals(importOrder)) {
+                        order.setOrderStatus(importOrder.getOrderStatus());
+                        order.setStartDate(importOrder.getStartDate());
+                        order.setCompletionDate(importOrder.getCompletionDate());
+                        order.setSubmissionDate(importOrder.getSubmissionDate());
+                        order.setPrice(importOrder.getPrice());
+                        order.setGaragePlaceId(importOrder.getGaragePlaceId());
+                        order.setCraftsmen(importOrder.getCraftsmenId());
+                    }
+                });
+    }
+
+    @Override
+    public void exportOrders() {
+
+        List<Order> orders = orderDAO
+                .getOrders()
+                .stream()
+                .sorted(Comparator.comparing(Order::getId))
+                .collect(Collectors.toList());
+
+        orderDAO.exportOrders(orders, Constants.PATH_TO_ORDERS_CSV);
     }
 
     private List<Order> getArchivedOrders() {

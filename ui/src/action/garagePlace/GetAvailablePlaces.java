@@ -12,9 +12,6 @@ public class GetAvailablePlaces implements IAction {
         GaragePlaceService
                 .getInstance()
                 .getAvailablePlaces()
-                .forEach(garagePlace -> System.out.println("id = " + garagePlace.getId()
-                        + ", number = " + garagePlace.getNumber()
-                        + ", space = " + garagePlace.getSpace()));
-
+                .forEach(garagePlace -> System.out.println(garagePlace.toString()));
     }
 }

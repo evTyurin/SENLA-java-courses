@@ -13,8 +13,6 @@ public class GetSortedAlphabetically implements IAction {
         CraftsmanService
                 .getInstance()
                 .getSortedAlphabetically()
-                .forEach(craftsman -> System.out.println("id = " + craftsman.getId()
-                        + ", surname = " + craftsman.getSurname()
-                        + ", name = " + craftsman.getName()));
+                .forEach(craftsman -> System.out.println(craftsman.toString()));
     }
 }

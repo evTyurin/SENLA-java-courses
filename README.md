@@ -1,5 +1,5 @@
 # SENLA-java-courses
-## TASK 5
+## TASK 6
 ### Electronic Vehicle Garage Administrator
 ### The programme shall provide the possibility of:
 
@@ -18,3 +18,5 @@
 * The nearest available date.
 
 #### Added user interface module that contain a user console interface and allow to perform all the functions included in the program
+
+#### Added the ability to import and export data from/to file

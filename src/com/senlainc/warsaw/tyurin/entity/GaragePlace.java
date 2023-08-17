@@ -51,10 +51,16 @@ public class GaragePlace {
 
     @Override
     public String toString() {
-        return "GaragePlace{" +
-                "id=" + id +
-                ", number=" + number +
-                ", space=" + space +
-                '}';
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder
+                .append("id:")
+                .append(id)
+                .append(",number:")
+                .append(number)
+                .append(",space:")
+                .append(space);
+
+        return stringBuilder.toString();
     }
 }

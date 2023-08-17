@@ -1,7 +1,6 @@
 package action.order;
 
 import action.IAction;
-import util.Printer;
 import com.senlainc.warsaw.tyurin.service.OrderService;
 
 public class GetCurrentlyExecutedOrdersSortedByPrice implements IAction {
@@ -13,7 +12,6 @@ public class GetCurrentlyExecutedOrdersSortedByPrice implements IAction {
         OrderService
                 .getInstance()
                 .getCurrentlyExecutedOrdersSortedByPrice()
-                .forEach(Printer::printOrder);
-
+                .forEach(order -> System.out.println(order.toString()));
     }
 }
