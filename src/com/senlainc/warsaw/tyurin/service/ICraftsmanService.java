@@ -18,7 +18,7 @@ public interface ICraftsmanService {
 
     Craftsman getCraftsmanById(Long id);
 
-    Craftsman createCraftsmen(String data);
+    Craftsman createCraftsmen(long id, String name, String surname);
 
     List<Craftsman> getCraftsmen();
 

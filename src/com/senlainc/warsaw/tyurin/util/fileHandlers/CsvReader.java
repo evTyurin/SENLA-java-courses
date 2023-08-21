@@ -23,6 +23,7 @@ public class CsvReader {
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
 
+            bufferedReader.readLine();
             String entity = null;
             while ((entity = bufferedReader.readLine()) != null) {
                 rawEntities.add(entity);

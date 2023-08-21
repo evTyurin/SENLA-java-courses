@@ -53,11 +53,10 @@ public class Craftsman{
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-                .append("id:")
                 .append(id)
-                .append(",name:")
+                .append(",")
                 .append(name)
-                .append(",surname:")
+                .append(",")
                 .append(surname);
 
         return stringBuilder.toString();

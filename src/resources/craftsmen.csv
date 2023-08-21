@@ -1,3 +1,4 @@
-id:1,name:bob,surname:smith
-id:3,name:stan,surname:smith
-id:6,name:bob,surname:smith
+id,name,surname
+1,bob,smith
+3,stan,smith
+6,bob,smith

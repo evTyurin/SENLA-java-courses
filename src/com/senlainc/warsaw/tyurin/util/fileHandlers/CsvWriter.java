@@ -16,12 +16,13 @@ public class CsvWriter {
         return INSTANCE;
     }
 
-    public List<String> writeEntities(List<String> rawEntities, String path) {
+    public List<String> writeEntities(List<String> rawEntities, String header, String path) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path))) {
+            bufferedWriter.write(header);
             rawEntities.forEach(rawEntity -> {
                 try {
-                    bufferedWriter.write(rawEntity);
                     bufferedWriter.newLine();
+                    bufferedWriter.write(rawEntity);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

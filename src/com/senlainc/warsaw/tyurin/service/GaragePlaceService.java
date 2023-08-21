@@ -140,30 +140,11 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public GaragePlace createGaragePlace(String data) {
+    public GaragePlace createGaragePlace(long id, int number, double space) {
         GaragePlace garagePlace = new GaragePlace();
-        String[] keyValuePairs = data.split(",");
-        Arrays.stream(keyValuePairs).forEach(keyValue -> {
-            if (keyValue.startsWith("id")) {
-                try {
-                    garagePlace.setId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("You enter not a number as garage place id");
-                }
-            } else if (keyValue.startsWith("number")) {
-                try {
-                    garagePlace.setNumber(Integer.parseInt(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("You enter not a number as garage place number");
-                }
-            } else if (keyValue.startsWith("space")) {
-                try {
-                    garagePlace.setSpace(Double.parseDouble(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("You enter not a number as garage place space");
-                }
-            }
-        });
+        garagePlace.setId(id);
+        garagePlace.setNumber(number);
+        garagePlace.setSpace(space);
         return garagePlace;
     }
 
@@ -172,8 +153,6 @@ public class GaragePlaceService implements IGaragePlaceService{
 
         garagePlaceDAO
                 .importGaragePlaces(Constants.PATH_TO_GARAGE_PLACES_CSV)
-                .stream()
-                .map(this::createGaragePlace)
                 .forEach(importGaragePlace -> {
                     GaragePlace garagePlace = getGaragePlaceById(importGaragePlace.getId());
                     if (garagePlace == null) {

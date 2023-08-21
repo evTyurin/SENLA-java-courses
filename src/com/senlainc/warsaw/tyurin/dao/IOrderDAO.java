@@ -12,7 +12,7 @@ public interface IOrderDAO {
 
     List<Order> getOrders();
 
-    List<String> importOrders(String path);
+    List<Order> importOrders(String path);
 
     void exportOrders(List<Order> orders, String path);
 }

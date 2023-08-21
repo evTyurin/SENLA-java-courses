@@ -148,19 +148,18 @@ public class Order {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder
-                .append("id:")
                 .append(id)
-                .append(",price:")
+                .append(",")
                 .append(price)
-                .append(",submissionDate:")
+                .append(",")
                 .append(submissionDate)
-                .append(",startDate:")
+                .append(",")
                 .append(startDate)
-                .append(",completionDate:")
+                .append(",")
                 .append(completionDate)
-                .append(",orderStatus:")
+                .append(",")
                 .append(orderStatus)
-                .append(",craftsmenId:");
+                .append(",");
         craftsmenId.forEach(id -> stringBuilder
                 .append(id)
                 .append(";"));
@@ -168,7 +167,7 @@ public class Order {
         stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(";"));
 
         stringBuilder
-                .append(",garagePlaceId:")
+                .append(",")
                 .append(garagePlaceId);
 
         return stringBuilder.toString();

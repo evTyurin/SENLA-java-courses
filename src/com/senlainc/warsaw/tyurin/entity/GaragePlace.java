@@ -54,11 +54,10 @@ public class GaragePlace {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder
-                .append("id:")
                 .append(id)
-                .append(",number:")
+                .append(",")
                 .append(number)
-                .append(",space:")
+                .append(",")
                 .append(space);
 
         return stringBuilder.toString();

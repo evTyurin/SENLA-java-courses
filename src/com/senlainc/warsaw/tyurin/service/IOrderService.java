@@ -38,7 +38,12 @@ public interface IOrderService {
 
     List<Order> getOrders();
 
-    Order createOrder(String data);
+    Order createOrder(long id,
+                      double price,
+                      LocalDateTime startDate,
+                      LocalDateTime completionDate,
+                      List<Long> craftsmenId,
+                      long garagePlaceId);
 
     void addOrder(Order order);
 

@@ -7,7 +7,6 @@ import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -189,69 +188,19 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public Order createOrder(String data) {
+    public Order createOrder(long id,
+                             double price,
+                             LocalDateTime startDate,
+                             LocalDateTime completionDate,
+                             List<Long> craftsmenId,
+                             long garagePlaceId) {
         Order order = new Order();
-        String[] keyValuePairs = data.split(",");
-        Arrays.stream(keyValuePairs).forEach(keyValue -> {
-            if (keyValue.startsWith("id")) {
-                try {
-                    order.setId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("You enter not a number as order id");
-                }
-            } else if (keyValue.startsWith("price")) {
-                try {
-                    order.setPrice(Double.parseDouble(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("You enter not a number as order price");
-                }
-            } else if (keyValue.startsWith("submissionDate")) {
-                try {
-                    order.setSubmissionDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (DateTimeParseException e) {
-                    throw new IllegalArgumentException("You enter not a date as submission date");
-                }
-            } else if (keyValue.startsWith("startDate")) {
-                try {
-                    order.setStartDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (DateTimeParseException e) {
-                    throw new IllegalArgumentException("You enter not a date as submission date");
-                }
-            } else if (keyValue.startsWith("completionDate")) {
-                try {
-                    order.setCompletionDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (DateTimeParseException e) {
-                    throw new IllegalArgumentException("You enter not a date as submission date");
-                }
-            } else if (keyValue.startsWith("orderStatus")) {
-                if (keyValue.endsWith("COMPLETED")) {
-                    order.setOrderStatus(OrderStatus.COMPLETED);
-                } else if (keyValue.endsWith("CANCELED")) {
-                    order.setOrderStatus(OrderStatus.CANCELED);
-                } else if (keyValue.endsWith("NEW")) {
-                    order.setOrderStatus(OrderStatus.NEW);
-                } else if (keyValue.endsWith("IN_PROGRESS")) {
-                    order.setOrderStatus(OrderStatus.IN_PROGRESS);
-                } else if (keyValue.endsWith("DELETED")) {
-                    order.setOrderStatus(OrderStatus.DELETED);
-                }
-            } else if (keyValue.startsWith("craftsmenId")) {
-                String[] craftsmanIdList = keyValue.substring(keyValue.indexOf(":") + 1).split(";");
-                try {
-                    Arrays.stream(craftsmanIdList).forEach(id -> {
-                        order.getCraftsmenId().add(Long.parseLong(id));
-                    });
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("You enter not a number as craftsman id");
-                }
-            } else if (keyValue.startsWith("garagePlaceId")) {
-                try {
-                    order.setGaragePlaceId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("You enter not a number as garage place id");
-                }
-            }
-        });
+        order.setId(id);
+        order.setPrice(price);
+        order.setStartDate(startDate);
+        order.setCompletionDate(completionDate);
+        order.setCraftsmen(craftsmenId);
+        order.setGaragePlaceId(garagePlaceId);
         return order;
     }
 
@@ -276,8 +225,6 @@ public class OrderService implements IOrderService{
 
         orderDAO
                 .importOrders(Constants.PATH_TO_ORDERS_CSV)
-                .stream()
-                .map(this::createOrder)
                 .forEach(importOrder -> {
                     Order order = getOrderById(importOrder.getId());
                     if (order == null) {

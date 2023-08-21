@@ -114,22 +114,11 @@ public class CraftsmanService implements ICraftsmanService{
     }
 
     @Override
-    public Craftsman createCraftsmen(String data) {
+    public Craftsman createCraftsmen(long id, String name, String surname) {
         Craftsman craftsman = new Craftsman();
-        String[] keyValuePairs = data.split(",");
-        Arrays.stream(keyValuePairs).forEach(keyValue -> {
-            if (keyValue.startsWith("id")) {
-                try {
-                    craftsman.setId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("You enter not a number as craftsman id");
-                }
-            } else if (keyValue.startsWith("name")) {
-                craftsman.setName(keyValue.substring(keyValue.indexOf(":") + 1));
-            } else if (keyValue.startsWith("surname")) {
-                craftsman.setSurname(keyValue.substring(keyValue.indexOf(":") + 1));
-            }
-        });
+        craftsman.setId(id);
+        craftsman.setName(name);
+        craftsman.setSurname(surname);
         return craftsman;
     }
 
@@ -143,8 +132,6 @@ public class CraftsmanService implements ICraftsmanService{
 
         craftsmanDAO
                 .importCraftsmen(Constants.PATH_TO_CRAFTSMEN_CSV)
-                .stream()
-                .map(this::createCraftsmen)
                 .forEach(importedCraftsman -> {
                     Craftsman craftsman = getCraftsmanById(importedCraftsman.getId());
                     if (craftsman == null) {

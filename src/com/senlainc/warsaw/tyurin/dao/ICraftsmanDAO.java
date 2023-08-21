@@ -12,7 +12,7 @@ public interface ICraftsmanDAO {
 
     List<Craftsman> getCraftsmen();
 
-    List<String> importCraftsmen(String path);
+    List<Craftsman> importCraftsmen(String path);
 
     void exportCraftsmen(List<Craftsman> craftsmen, String path);
 }

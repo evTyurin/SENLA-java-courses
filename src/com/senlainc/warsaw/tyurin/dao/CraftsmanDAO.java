@@ -1,6 +1,7 @@
 package com.senlainc.warsaw.tyurin.dao;
 
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
+import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.fileHandlers.CsvReader;
 import com.senlainc.warsaw.tyurin.util.fileHandlers.CsvWriter;
 
@@ -44,8 +45,18 @@ public class CraftsmanDAO implements ICraftsmanDAO{
     }
 
     @Override
-    public List<String> importCraftsmen(String path) {
-        return csvReader.readEntities(path);
+    public List<Craftsman> importCraftsmen(String path) {
+        return csvReader
+                .readEntities(path)
+                .stream()
+                .map(entity -> {
+                    String[] values = entity.split(",");
+                    Craftsman craftsman = new Craftsman();
+                    craftsman.setId(Long.parseLong(values[0]));
+                    craftsman.setName(values[1]);
+                    craftsman.setSurname(values[2]);
+                    return craftsman;
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -56,7 +67,7 @@ public class CraftsmanDAO implements ICraftsmanDAO{
                 .map(Craftsman::toString)
                 .collect(Collectors.toList());
 
-        csvWriter.writeEntities(rawCraftsmen, path);
+        csvWriter.writeEntities(rawCraftsmen, Constants.CRAFTSMEN_CSV_HEADER, path);
     }
 }
 

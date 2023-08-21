@@ -12,7 +12,7 @@ public interface IGaragePlaceDAO {
 
     List<GaragePlace> getGaragePlaces();
 
-    List<String> importGaragePlaces(String path);
+    List<GaragePlace> importGaragePlaces(String path);
 
     void exportGaragePlaces(List<GaragePlace> garagePlaces, String path);
 }
