@@ -11,4 +11,8 @@ public interface IOrderDAO {
     void deleteOrder(Order order);
 
     List<Order> getOrders();
+
+    List<Order> importOrders(String path);
+
+    void exportOrders(List<Order> orders, String path);
 }

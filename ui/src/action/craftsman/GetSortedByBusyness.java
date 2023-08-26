@@ -11,8 +11,6 @@ public class GetSortedByBusyness implements IAction {
         CraftsmanService
                 .getInstance()
                 .getSortedByBusyness()
-                .forEach(craftsman -> System.out.println("id = " + craftsman.getId()
-                        + ", surname = " + craftsman.getSurname()
-                        + ", name = " + craftsman.getName()));
+                .forEach(craftsman -> System.out.println(craftsman.toString()));
     }
 }

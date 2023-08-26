@@ -46,6 +46,8 @@ public class Builder {
         craftsmanMenu.getMenuItems().add(new MenuItem("Get sorted craftsmen alphabetically", new GetSortedAlphabetically(), craftsmanMenu));
         craftsmanMenu.getMenuItems().add(new MenuItem("Get sorted craftsmen by busyness", new GetSortedByBusyness(), craftsmanMenu));
         craftsmanMenu.getMenuItems().add(new MenuItem("Get craftsmen by order", new GetCraftsmenByOrder(), craftsmanMenu));
+        craftsmanMenu.getMenuItems().add(new MenuItem("Import craftsmen", new ImportCraftsmen(), craftsmanMenu));
+        craftsmanMenu.getMenuItems().add(new MenuItem("Export craftsmen", new ExportCraftsmen(), craftsmanMenu));
         craftsmanMenu.getMenuItems().add(new MenuItem("Exit to root menu", getRootMenu()));
 
         return craftsmanMenu;
@@ -72,6 +74,8 @@ public class Builder {
         orderMenu.getMenuItems().add(new MenuItem("Shift order completion date time", new ShiftCompletionDateTime(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Shift order start date time", new ShiftStartDateTime(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Change order status", new ChangeOrderStatus(), orderMenu));
+        orderMenu.getMenuItems().add(new MenuItem("Import orders", new ImportOrders(), orderMenu));
+        orderMenu.getMenuItems().add(new MenuItem("Export orders", new ExportOrders(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Exit to root menu", getRootMenu()));
 
         return orderMenu;
@@ -88,6 +92,8 @@ public class Builder {
         garagePlaceMenu.getMenuItems().add(new MenuItem("Get available garage places amount", new GetAvailablePlacesAmount(), garagePlaceMenu));
         garagePlaceMenu.getMenuItems().add(new MenuItem("Get available garage places", new GetAvailablePlaces(), garagePlaceMenu));
         garagePlaceMenu.getMenuItems().add(new MenuItem("Get nearest available date", new GetNearestAvailableDate(), garagePlaceMenu));
+        garagePlaceMenu.getMenuItems().add(new MenuItem("Import garage places", new ImportGaragePlaces(), garagePlaceMenu));
+        garagePlaceMenu.getMenuItems().add(new MenuItem("Export garage places", new ExportGaragePlaces(), garagePlaceMenu));
         garagePlaceMenu.getMenuItems().add(new MenuItem("Exit to root menu", getRootMenu()));
 
         return garagePlaceMenu;

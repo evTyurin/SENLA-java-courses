@@ -1,7 +1,6 @@
 package action.order;
 
 import action.IAction;
-import util.Printer;
 import com.senlainc.warsaw.tyurin.service.OrderService;
 
 public class GetCurrentlyExecutedOrdersSortedByCompletionDate implements IAction {
@@ -14,6 +13,6 @@ public class GetCurrentlyExecutedOrdersSortedByCompletionDate implements IAction
         OrderService
                 .getInstance()
                 .getCurrentlyExecutedOrdersSortedByCompletionDate()
-                .forEach(Printer::printOrder);
+                .forEach(order -> System.out.println(order.toString()));
     }
 }

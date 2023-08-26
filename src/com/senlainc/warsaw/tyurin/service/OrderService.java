@@ -2,8 +2,8 @@ package com.senlainc.warsaw.tyurin.service;
 
 import com.senlainc.warsaw.tyurin.dao.IOrderDAO;
 import com.senlainc.warsaw.tyurin.dao.OrderDAO;
-import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.Order;
+import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
 import java.time.LocalDateTime;
@@ -188,41 +188,19 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public Order createOrder(String data) {
+    public Order createOrder(long id,
+                             double price,
+                             LocalDateTime startDate,
+                             LocalDateTime completionDate,
+                             List<Long> craftsmenId,
+                             long garagePlaceId) {
         Order order = new Order();
-        String[] keyValuePairs = data.split(",");
-        Arrays.stream(keyValuePairs).forEach(keyValue -> {
-            if (keyValue.startsWith("id")) {
-                order.setId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
-            } else if (keyValue.startsWith("price")) {
-                order.setPrice(Double.parseDouble(keyValue.substring(keyValue.indexOf(":") + 1)));
-            } else if (keyValue.startsWith("submissionDate")) {
-                order.setSubmissionDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
-            } else if (keyValue.startsWith("startDate")) {
-                order.setStartDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
-            } else if (keyValue.startsWith("completionDate")) {
-                order.setCompletionDate(LocalDateTime.parse(keyValue.substring(keyValue.indexOf(":") + 1)));
-            } else if (keyValue.startsWith("orderStatus")) {
-                if (keyValue.endsWith("COMPLETED")) {
-                    order.setOrderStatus(OrderStatus.COMPLETED);
-                } else if (keyValue.endsWith("CANCELED")) {
-                    order.setOrderStatus(OrderStatus.CANCELED);
-                } else if (keyValue.endsWith("NEW")) {
-                    order.setOrderStatus(OrderStatus.NEW);
-                } else if (keyValue.endsWith("IN_PROGRESS")) {
-                    order.setOrderStatus(OrderStatus.IN_PROGRESS);
-                } else if (keyValue.endsWith("DELETED")) {
-                    order.setOrderStatus(OrderStatus.DELETED);
-                }
-            } else if (keyValue.startsWith("craftsmenId")) {
-                String[] craftsmanIdList = keyValue.substring(keyValue.indexOf(":") + 1).split(";");
-                Arrays.stream(craftsmanIdList).forEach(id -> {
-                    order.getCraftsmenId().add(Long.parseLong(id));
-                });
-            } else if (keyValue.startsWith("garagePlaceId")) {
-                order.setGaragePlaceId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
-            }
-        });
+        order.setId(id);
+        order.setPrice(price);
+        order.setStartDate(startDate);
+        order.setCompletionDate(completionDate);
+        order.setCraftsmen(craftsmenId);
+        order.setGaragePlaceId(garagePlaceId);
         return order;
     }
 
@@ -233,14 +211,46 @@ public class OrderService implements IOrderService{
 
     @Override
     public Order getOrderById(long id) {
-        List<Order> orders = orderDAO.getOrders();
 
-        for (Order order : orders) {
-            if(order.getId() == id) {
-                return order;
-            }
-        }
-        return null;
+        return orderDAO
+                .getOrders()
+                .stream()
+                .filter(order -> order.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public void importOrders() {
+
+        orderDAO
+                .importOrders(Constants.PATH_TO_ORDERS_CSV)
+                .forEach(importOrder -> {
+                    Order order = getOrderById(importOrder.getId());
+                    if (order == null) {
+                        orderDAO.addOrder(importOrder);
+                    } else if (!order.equals(importOrder)) {
+                        order.setOrderStatus(importOrder.getOrderStatus());
+                        order.setStartDate(importOrder.getStartDate());
+                        order.setCompletionDate(importOrder.getCompletionDate());
+                        order.setSubmissionDate(importOrder.getSubmissionDate());
+                        order.setPrice(importOrder.getPrice());
+                        order.setGaragePlaceId(importOrder.getGaragePlaceId());
+                        order.setCraftsmen(importOrder.getCraftsmenId());
+                    }
+                });
+    }
+
+    @Override
+    public void exportOrders() {
+
+        List<Order> orders = orderDAO
+                .getOrders()
+                .stream()
+                .sorted(Comparator.comparing(Order::getId))
+                .collect(Collectors.toList());
+
+        orderDAO.exportOrders(orders, Constants.PATH_TO_ORDERS_CSV);
     }
 
     private List<Order> getArchivedOrders() {

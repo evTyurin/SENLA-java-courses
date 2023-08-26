@@ -1,7 +1,6 @@
 package action.order;
 
 import action.IAction;
-import util.Printer;
 import com.senlainc.warsaw.tyurin.service.OrderService;
 
 public class GetSortedBySubmissionDate implements IAction {
@@ -13,6 +12,6 @@ public class GetSortedBySubmissionDate implements IAction {
         OrderService
                 .getInstance()
                 .getSortedBySubmissionDate()
-                .forEach(Printer::printOrder);
+                .forEach(order -> System.out.println(order.toString()));
     }
 }

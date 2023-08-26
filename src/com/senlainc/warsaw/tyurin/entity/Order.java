@@ -144,15 +144,32 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", price=" + price +
-                ", submissionDate=" + submissionDate +
-                ", startDate=" + startDate +
-                ", completionDate=" + completionDate +
-                ", orderStatus=" + orderStatus +
-                ", craftsmenId=" + craftsmenId +
-                ", garagePlaceId=" + garagePlaceId +
-                '}';
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder
+                .append(id)
+                .append(",")
+                .append(price)
+                .append(",")
+                .append(submissionDate)
+                .append(",")
+                .append(startDate)
+                .append(",")
+                .append(completionDate)
+                .append(",")
+                .append(orderStatus)
+                .append(",");
+        craftsmenId.forEach(id -> stringBuilder
+                .append(id)
+                .append(";"));
+
+        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(";"));
+
+        stringBuilder
+                .append(",")
+                .append(garagePlaceId);
+
+        return stringBuilder.toString();
     }
 }

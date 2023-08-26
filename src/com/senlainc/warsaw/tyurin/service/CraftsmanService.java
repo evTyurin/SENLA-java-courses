@@ -3,6 +3,7 @@ package com.senlainc.warsaw.tyurin.service;
 import com.senlainc.warsaw.tyurin.dao.CraftsmanDAO;
 import com.senlainc.warsaw.tyurin.dao.ICraftsmanDAO;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
+import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
 import java.util.*;
@@ -28,9 +29,7 @@ public class CraftsmanService implements ICraftsmanService{
 
     @Override
     public void addCraftsman(Craftsman craftsman) {
-        craftsmanDAO
-                .getCraftsmen()
-                .add(craftsman);
+        craftsmanDAO.addCraftsman(craftsman);
     }
 
     @Override
@@ -105,35 +104,54 @@ public class CraftsmanService implements ICraftsmanService{
 
     @Override
     public Craftsman getCraftsmanById(Long id) {
-        List<Craftsman> craftsmen = craftsmanDAO.getCraftsmen();
 
-        for (Craftsman craftsman : craftsmen) {
-            if(craftsman.getId() == id) {
-                return craftsman;
-            }
-        }
-
-        return null;
+        return craftsmanDAO
+                .getCraftsmen()
+                .stream()
+                .filter(craftsman -> craftsman.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
-    public Craftsman createCraftsmen(String data) {
+    public Craftsman createCraftsmen(long id, String name, String surname) {
         Craftsman craftsman = new Craftsman();
-        String[] keyValuePairs = data.split(",");
-        Arrays.stream(keyValuePairs).forEach(keyValue -> {
-            if (keyValue.startsWith("id")) {
-                craftsman.setId(Long.parseLong(keyValue.substring(keyValue.indexOf(":") + 1)));
-            } else if (keyValue.startsWith("name")) {
-                craftsman.setName(keyValue.substring(keyValue.indexOf(":") + 1));
-            } else if (keyValue.startsWith("surname")) {
-                craftsman.setSurname(keyValue.substring(keyValue.indexOf(":") + 1));
-            }
-        });
+        craftsman.setId(id);
+        craftsman.setName(name);
+        craftsman.setSurname(surname);
         return craftsman;
     }
 
     @Override
     public List<Craftsman> getCraftsmen() {
         return craftsmanDAO.getCraftsmen();
+    }
+
+    @Override
+    public void importCraftsmen() {
+
+        craftsmanDAO
+                .importCraftsmen(Constants.PATH_TO_CRAFTSMEN_CSV)
+                .forEach(importedCraftsman -> {
+                    Craftsman craftsman = getCraftsmanById(importedCraftsman.getId());
+                    if (craftsman == null) {
+                        craftsmanDAO.addCraftsman(importedCraftsman);
+                    } else if (!craftsman.equals(importedCraftsman)) {
+                        craftsman.setSurname(importedCraftsman.getSurname());
+                        craftsman.setName(importedCraftsman.getName());
+                    }
+                });
+    }
+
+    @Override
+    public void exportCraftsmen() {
+
+        List<Craftsman> craftsmen = craftsmanDAO
+                .getCraftsmen()
+                .stream()
+                .sorted(Comparator.comparing(Craftsman::getId))
+                .collect(Collectors.toList());
+
+        craftsmanDAO.exportCraftsmen(craftsmen, Constants.PATH_TO_CRAFTSMEN_CSV);
     }
 }

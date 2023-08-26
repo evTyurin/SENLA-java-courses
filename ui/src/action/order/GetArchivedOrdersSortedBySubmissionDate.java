@@ -1,7 +1,6 @@
 package action.order;
 
 import action.IAction;
-import util.Printer;
 import com.senlainc.warsaw.tyurin.service.OrderService;
 
 public class GetArchivedOrdersSortedBySubmissionDate implements IAction {
@@ -14,6 +13,6 @@ public class GetArchivedOrdersSortedBySubmissionDate implements IAction {
         OrderService
                 .getInstance()
                 .getArchivedOrdersSortedByCompletionDate()
-                .forEach(Printer::printOrder);
-                    }
+                .forEach(order -> System.out.println(order.toString()));
+    }
 }

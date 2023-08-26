@@ -11,4 +11,8 @@ public interface ICraftsmanDAO {
     void deleteCraftsman(Craftsman craftsman);
 
     List<Craftsman> getCraftsmen();
+
+    List<Craftsman> importCraftsmen(String path);
+
+    void exportCraftsmen(List<Craftsman> craftsmen, String path);
 }

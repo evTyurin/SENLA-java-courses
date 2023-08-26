@@ -1,7 +1,5 @@
 package com.senlainc.warsaw.tyurin.service;
 
-
-import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
@@ -40,9 +38,18 @@ public interface IOrderService {
 
     List<Order> getOrders();
 
-    Order createOrder(String data);
+    Order createOrder(long id,
+                      double price,
+                      LocalDateTime startDate,
+                      LocalDateTime completionDate,
+                      List<Long> craftsmenId,
+                      long garagePlaceId);
 
     void addOrder(Order order);
 
     Order getOrderById(long id);
+
+    void importOrders();
+
+    void exportOrders();
 }

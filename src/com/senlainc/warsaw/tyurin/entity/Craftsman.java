@@ -51,10 +51,14 @@ public class Craftsman{
 
     @Override
     public String toString() {
-        return "Craftsman{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                '}';
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append(id)
+                .append(",")
+                .append(name)
+                .append(",")
+                .append(surname);
+
+        return stringBuilder.toString();
     }
 }

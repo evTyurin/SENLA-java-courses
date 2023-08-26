@@ -17,6 +17,12 @@ public interface IGaragePlaceService {
 
     LocalDateTime getNearestAvailableDate();
 
-    GaragePlace createGaragePlace(String data);
+    GaragePlace createGaragePlace(long id, int number, double space);
+
+    void importGaragePlaces();
+
+    GaragePlace getGaragePlaceById(Long id);
+
+    void exportGaragePlaces();
 }
 

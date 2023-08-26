@@ -11,25 +11,28 @@ public class AddCraftsman implements IAction {
     public void execute() {
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter craftsman id ");
-        String craftsmanId = scanner.nextLine();
+        long craftsmanId = 0;
+        do {
+            System.out.println("Enter craftsman id ");
+            try {
+                craftsmanId = Long.parseLong(scanner.nextLine());
+                if (craftsmanId <= 0) {
+                    System.out.println("Craftsman id must be bigger then 0");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("You enter not a number as craftsman id");
+            }
+        } while (craftsmanId <= 0);
+
         System.out.println("Enter craftsman name ");
         String craftsmanName = scanner.nextLine();
         System.out.println("Enter craftsman surname ");
         String craftsmanSurname = scanner.nextLine();
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append("id:")
-                .append(craftsmanId)
-                .append(",name:")
-                .append(craftsmanName)
-                .append(",surname:")
-                .append(craftsmanSurname);
 
         CraftsmanService
                 .getInstance()
                 .addCraftsman(CraftsmanService
                         .getInstance()
-                        .createCraftsmen(stringBuilder.toString()));
+                        .createCraftsmen(craftsmanId, craftsmanName, craftsmanSurname));
     }
 }

@@ -1,7 +1,6 @@
 package com.senlainc.warsaw.tyurin.service;
 
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
-import com.senlainc.warsaw.tyurin.entity.Order;
 
 import java.util.List;
 
@@ -19,7 +18,11 @@ public interface ICraftsmanService {
 
     Craftsman getCraftsmanById(Long id);
 
-    Craftsman createCraftsmen(String data);
+    Craftsman createCraftsmen(long id, String name, String surname);
 
     List<Craftsman> getCraftsmen();
+
+    void importCraftsmen();
+
+    void exportCraftsmen();
 }

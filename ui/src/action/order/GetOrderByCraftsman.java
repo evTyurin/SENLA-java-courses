@@ -1,7 +1,6 @@
 package action.order;
 
 import action.IAction;
-import util.Printer;
 import com.senlainc.warsaw.tyurin.service.OrderService;
 
 import java.util.Scanner;
@@ -13,6 +12,8 @@ public class GetOrderByCraftsman implements IAction {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter craftsman id ");
         long craftsmanId = scanner.nextLong();
-        Printer.printOrder(OrderService.getInstance().getOrderByCraftsmen(craftsmanId));
+        System.out.println(OrderService
+                .getInstance()
+                .getOrderByCraftsmen(craftsmanId).toString());
     }
 }
