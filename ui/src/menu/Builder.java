@@ -46,8 +46,10 @@ public class Builder {
         craftsmanMenu.getMenuItems().add(new MenuItem("Get sorted craftsmen alphabetically", new GetSortedAlphabetically(), craftsmanMenu));
         craftsmanMenu.getMenuItems().add(new MenuItem("Get sorted craftsmen by busyness", new GetSortedByBusyness(), craftsmanMenu));
         craftsmanMenu.getMenuItems().add(new MenuItem("Get craftsmen by order", new GetCraftsmenByOrder(), craftsmanMenu));
-        craftsmanMenu.getMenuItems().add(new MenuItem("Import craftsmen", new ImportCraftsmen(), craftsmanMenu));
-        craftsmanMenu.getMenuItems().add(new MenuItem("Export craftsmen", new ExportCraftsmen(), craftsmanMenu));
+        craftsmanMenu.getMenuItems().add(new MenuItem("Import craftsmen from csv", new ImportCraftsmenFromCsv(), craftsmanMenu));
+        craftsmanMenu.getMenuItems().add(new MenuItem("Export craftsmen to csv", new ExportCraftsmenToCsv(), craftsmanMenu));
+        craftsmanMenu.getMenuItems().add(new MenuItem("Import craftsmen from json", new ImportCraftsmenFromJson(), craftsmanMenu));
+        craftsmanMenu.getMenuItems().add(new MenuItem("Export craftsmen to json", new ExportCraftsmenToJson(), craftsmanMenu));
         craftsmanMenu.getMenuItems().add(new MenuItem("Exit to root menu", getRootMenu()));
 
         return craftsmanMenu;
@@ -60,6 +62,7 @@ public class Builder {
         orderMenu.setName("Order menu");
 
         orderMenu.getMenuItems().add(new MenuItem("Add order", new AddOrder(), orderMenu));
+        orderMenu.getMenuItems().add(new MenuItem("Remove order", new RemoveOrder(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Get archived orders sorted by completion date", new GetArchivedOrdersSortedByCompletionDate(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Get archived orders sorted by price", new GetArchivedOrdersSortedByPrice(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Get archived orders sorted by submission date", new GetArchivedOrdersSortedBySubmissionDate(), orderMenu));
@@ -74,8 +77,10 @@ public class Builder {
         orderMenu.getMenuItems().add(new MenuItem("Shift order completion date time", new ShiftCompletionDateTime(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Shift order start date time", new ShiftStartDateTime(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Change order status", new ChangeOrderStatus(), orderMenu));
-        orderMenu.getMenuItems().add(new MenuItem("Import orders", new ImportOrders(), orderMenu));
-        orderMenu.getMenuItems().add(new MenuItem("Export orders", new ExportOrders(), orderMenu));
+        orderMenu.getMenuItems().add(new MenuItem("Import orders from csv", new ImportOrdersFromCsv(), orderMenu));
+        orderMenu.getMenuItems().add(new MenuItem("Export orders to csv", new ExportOrdersToCsv(), orderMenu));
+        orderMenu.getMenuItems().add(new MenuItem("Import orders from json", new ImportOrdersFromJson(), orderMenu));
+        orderMenu.getMenuItems().add(new MenuItem("Export orders to json", new ExportOrdersToJson(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Exit to root menu", getRootMenu()));
 
         return orderMenu;
@@ -92,8 +97,10 @@ public class Builder {
         garagePlaceMenu.getMenuItems().add(new MenuItem("Get available garage places amount", new GetAvailablePlacesAmount(), garagePlaceMenu));
         garagePlaceMenu.getMenuItems().add(new MenuItem("Get available garage places", new GetAvailablePlaces(), garagePlaceMenu));
         garagePlaceMenu.getMenuItems().add(new MenuItem("Get nearest available date", new GetNearestAvailableDate(), garagePlaceMenu));
-        garagePlaceMenu.getMenuItems().add(new MenuItem("Import garage places", new ImportGaragePlaces(), garagePlaceMenu));
-        garagePlaceMenu.getMenuItems().add(new MenuItem("Export garage places", new ExportGaragePlaces(), garagePlaceMenu));
+        garagePlaceMenu.getMenuItems().add(new MenuItem("Import garage places from csv", new ImportGaragePlacesFromCsv(), garagePlaceMenu));
+        garagePlaceMenu.getMenuItems().add(new MenuItem("Export garage places to csv", new ExportGaragePlacesToCsv(), garagePlaceMenu));
+        garagePlaceMenu.getMenuItems().add(new MenuItem("Import garage places from json", new ImportGaragePlacesFromJson(), garagePlaceMenu));
+        garagePlaceMenu.getMenuItems().add(new MenuItem("Export garage places to json", new ExportGaragePlacesToJson(), garagePlaceMenu));
         garagePlaceMenu.getMenuItems().add(new MenuItem("Exit to root menu", getRootMenu()));
 
         return garagePlaceMenu;
