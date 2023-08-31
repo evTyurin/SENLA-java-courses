@@ -6,6 +6,10 @@ import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
+import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
+import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
+import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
+import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
 import com.senlainc.warsaw.tyurin.util.propertyHandlers.PropertyReader;
 
 import java.time.LocalDateTime;
@@ -19,12 +23,20 @@ public class GaragePlaceService implements IGaragePlaceService{
     private IOrderService orderService;
     private ICraftsmanService craftsmanService;
     private PropertyReader propertyReader;
+    private CsvReader csvReader;
+    private CsvWriter csvWriter;
+    private JsonReader jsonReader;
+    private JsonWriter jsonWriter;
 
     private GaragePlaceService() {
         garagePlaceDAO = GaragePlaceDAO.getInstance();
         orderService = OrderService.getInstance();
         craftsmanService = CraftsmanService.getInstance();
         propertyReader = PropertyReader.getInstance();
+        csvReader = CsvReader.getInstance();
+        csvWriter = CsvWriter.getInstance();
+        jsonReader = JsonReader.getInstance();
+        jsonWriter = JsonWriter.getInstance();
     }
 
     public static GaragePlaceService getInstance() {
@@ -163,8 +175,17 @@ public class GaragePlaceService implements IGaragePlaceService{
     @Override
     public void importGaragePlacesFromCsv() {
 
-        garagePlaceDAO
-                .importGaragePlacesFromCsv(Constants.PATH_TO_GARAGE_PLACES_CSV)
+        csvReader
+                .readEntities(Constants.PATH_TO_GARAGE_PLACES_CSV)
+                .stream()
+                .map(entity -> {
+                    String[] values = entity.split(",");
+                    GaragePlace garagePlace = new GaragePlace();
+                    garagePlace.setId(Long.parseLong(values[0]));
+                    garagePlace.setNumber(Integer.parseInt(values[1]));
+                    garagePlace.setSpace(Double.parseDouble(values[2]));
+                    return garagePlace;
+                })
                 .forEach(importGaragePlace -> {
                     GaragePlace garagePlace = getGaragePlaceById(importGaragePlace.getId());
                     if (garagePlace == null) {
@@ -190,33 +211,36 @@ public class GaragePlaceService implements IGaragePlaceService{
     @Override
     public void exportGaragePlacesToCsv() {
 
-        List<GaragePlace> garagePlaces = garagePlaceDAO
+        List<String> garagePlaces = garagePlaceDAO
                 .getGaragePlaces()
                 .stream()
                 .sorted(Comparator.comparing(GaragePlace::getId))
+                .map(GaragePlace::toString)
                 .collect(Collectors.toList());
 
-        garagePlaceDAO.exportGaragePlacesToCsv(garagePlaces, Constants.PATH_TO_GARAGE_PLACES_CSV);
+        csvWriter.writeEntities(garagePlaces,
+                Constants.GARAGE_PLACES_CSV_HEADER,
+                Constants.PATH_TO_GARAGE_PLACES_CSV);
     }
 
     @Override
     public void importGaragePlacesFromJson() {
 
-        garagePlaceDAO
-                .importGaragePlacesFromJson(Constants.PATH_TO_GARAGE_PLACES_JSON)
+        jsonReader
+                .readEntities(GaragePlace.class, Constants.PATH_TO_GARAGE_PLACES_JSON)
                 .forEach(importGaragePlace -> {
-            GaragePlace garagePlace = getGaragePlaceById(importGaragePlace.getId());
-            if (garagePlace == null) {
-                garagePlaceDAO.addGaragePlace(importGaragePlace);
-            } else if (!garagePlace.equals(importGaragePlace)) {
-                garagePlace.setNumber(importGaragePlace.getNumber());
-                garagePlace.setSpace(importGaragePlace.getSpace());
-            }
-        });
+                    GaragePlace garagePlace = getGaragePlaceById(importGaragePlace.getId());
+                    if (garagePlace == null) {
+                        garagePlaceDAO.addGaragePlace(importGaragePlace);
+                    } else if (!garagePlace.equals(importGaragePlace)) {
+                        garagePlace.setNumber(importGaragePlace.getNumber());
+                        garagePlace.setSpace(importGaragePlace.getSpace());
+                    }
+                });
     }
 
     @Override
     public void exportGaragePlacesToJson() {
-        garagePlaceDAO.exportGaragePlacesToJson(garagePlaceDAO.getGaragePlaces(), Constants.PATH_TO_GARAGE_PLACES_JSON);
+        jsonWriter.writeEntities(garagePlaceDAO.getGaragePlaces(), Constants.PATH_TO_GARAGE_PLACES_JSON);
     }
 }

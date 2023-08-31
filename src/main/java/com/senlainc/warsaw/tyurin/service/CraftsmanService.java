@@ -5,6 +5,10 @@ import com.senlainc.warsaw.tyurin.dao.ICraftsmanDAO;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
+import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
+import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
+import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
+import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,11 +18,18 @@ public class CraftsmanService implements ICraftsmanService{
     private static CraftsmanService INSTANCE;
     private ICraftsmanDAO craftsmanDAO;
     private IOrderService orderService;
-
+    private CsvReader csvReader;
+    private CsvWriter csvWriter;
+    private JsonReader jsonReader;
+    private JsonWriter jsonWriter;
 
     private CraftsmanService() {
         craftsmanDAO = CraftsmanDAO.getInstance();
         orderService =OrderService.getInstance();
+        csvReader = CsvReader.getInstance();
+        csvWriter = CsvWriter.getInstance();
+        jsonReader = JsonReader.getInstance();
+        jsonWriter = JsonWriter.getInstance();
     }
 
     public static CraftsmanService getInstance() {
@@ -131,8 +142,17 @@ public class CraftsmanService implements ICraftsmanService{
     @Override
     public void importCraftsmenFromCsv() {
 
-        craftsmanDAO
-                .importCraftsmenFromCsv(Constants.PATH_TO_CRAFTSMEN_CSV)
+        csvReader
+                .readEntities(Constants.PATH_TO_CRAFTSMEN_CSV)
+                .stream()
+                .map(entity -> {
+                    String[] values = entity.split(",");
+                    Craftsman craftsman = new Craftsman();
+                    craftsman.setId(Long.parseLong(values[0]));
+                    craftsman.setName(values[1]);
+                    craftsman.setSurname(values[2]);
+                    return craftsman;
+                })
                 .forEach(importedCraftsman -> {
                     Craftsman craftsman = getCraftsmanById(importedCraftsman.getId());
                     if (craftsman == null) {
@@ -147,33 +167,35 @@ public class CraftsmanService implements ICraftsmanService{
     @Override
     public void exportCraftsmenToCsv() {
 
-        List<Craftsman> craftsmen = craftsmanDAO
+        List<String> craftsmen = craftsmanDAO
                 .getCraftsmen()
                 .stream()
                 .sorted(Comparator.comparing(Craftsman::getId))
+                .map(Craftsman::toString)
                 .collect(Collectors.toList());
 
-        craftsmanDAO.exportCraftsmenToCsv(craftsmen, Constants.PATH_TO_CRAFTSMEN_CSV);
+        csvWriter.writeEntities(craftsmen,
+                Constants.CRAFTSMEN_CSV_HEADER,
+                Constants.PATH_TO_CRAFTSMEN_CSV);
     }
 
     @Override
     public void importCraftsmenFromJson() {
 
-        craftsmanDAO
-                .importCraftsmenFromJson(Constants.PATH_TO_CRAFTSMEN_JSON)
+        jsonReader.readEntities(Craftsman.class, Constants.PATH_TO_CRAFTSMEN_JSON)
                 .forEach(importedCraftsman -> {
-            Craftsman craftsman = getCraftsmanById(importedCraftsman.getId());
-            if (craftsman == null) {
-                craftsmanDAO.addCraftsman(importedCraftsman);
-            } else if (!craftsman.equals(importedCraftsman)) {
-                craftsman.setSurname(importedCraftsman.getSurname());
-                craftsman.setName(importedCraftsman.getName());
-            }
-        });
+                    Craftsman craftsman = getCraftsmanById(importedCraftsman.getId());
+                    if (craftsman == null) {
+                        craftsmanDAO.addCraftsman(importedCraftsman);
+                    } else if (!craftsman.equals(importedCraftsman)) {
+                        craftsman.setSurname(importedCraftsman.getSurname());
+                        craftsman.setName(importedCraftsman.getName());
+                    }
+                });
     }
 
     @Override
     public void exportCraftsmenToJson() {
-        craftsmanDAO.exportCraftsmenToJson(craftsmanDAO.getCraftsmen(), Constants.PATH_TO_CRAFTSMEN_JSON);
+        jsonWriter.writeEntities(craftsmanDAO.getCraftsmen(), Constants.PATH_TO_CRAFTSMEN_JSON);
     }
 }

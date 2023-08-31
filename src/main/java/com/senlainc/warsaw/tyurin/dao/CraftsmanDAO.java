@@ -1,31 +1,17 @@
 package com.senlainc.warsaw.tyurin.dao;
 
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
-import com.senlainc.warsaw.tyurin.util.Constants;
-import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
-import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
-import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
-import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CraftsmanDAO implements ICraftsmanDAO{
 
     private static CraftsmanDAO INSTANCE;
     private List<Craftsman> craftsmen;
-    private CsvReader csvReader;
-    private CsvWriter csvWriter;
-    private JsonReader jsonReader;
-    private JsonWriter jsonWriter;
 
     private CraftsmanDAO() {
         craftsmen = new ArrayList<>();
-        csvReader = CsvReader.getInstance();
-        csvWriter = CsvWriter.getInstance();
-        jsonReader = JsonReader.getInstance();
-        jsonWriter = JsonWriter.getInstance();
     }
 
     public static CraftsmanDAO getInstance() {
@@ -48,42 +34,6 @@ public class CraftsmanDAO implements ICraftsmanDAO{
     @Override
     public List<Craftsman> getCraftsmen() {
         return craftsmen;
-    }
-
-    @Override
-    public List<Craftsman> importCraftsmenFromCsv(String path) {
-        return csvReader
-                .readEntities(path)
-                .stream()
-                .map(entity -> {
-                    String[] values = entity.split(",");
-                    Craftsman craftsman = new Craftsman();
-                    craftsman.setId(Long.parseLong(values[0]));
-                    craftsman.setName(values[1]);
-                    craftsman.setSurname(values[2]);
-                    return craftsman;
-                }).collect(Collectors.toList());
-    }
-
-    @Override
-    public void exportCraftsmenToCsv(List<Craftsman> craftsmen, String path) {
-
-        List<String> rawCraftsmen = craftsmen
-                .stream()
-                .map(Craftsman::toString)
-                .collect(Collectors.toList());
-
-        csvWriter.writeEntities(rawCraftsmen, Constants.CRAFTSMEN_CSV_HEADER, path);
-    }
-
-    @Override
-    public List<Craftsman> importCraftsmenFromJson(String path) {
-        return jsonReader.readEntities(Craftsman.class, path);
-    }
-
-    @Override
-    public void exportCraftsmenToJson(List<Craftsman> craftsmen, String path) {
-        jsonWriter.writeEntities(craftsmen,path);
     }
 }
 

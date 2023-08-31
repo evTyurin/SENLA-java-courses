@@ -11,12 +11,4 @@ public interface IGaragePlaceDAO {
     void deleteGaragePlace(GaragePlace garagePlace);
 
     List<GaragePlace> getGaragePlaces();
-
-    List<GaragePlace> importGaragePlacesFromCsv(String path);
-
-    void exportGaragePlacesToCsv(List<GaragePlace> garagePlaces, String path);
-
-    List<GaragePlace> importGaragePlacesFromJson(String path);
-
-    void exportGaragePlacesToJson(List<GaragePlace> garagePlaces, String path);
 }

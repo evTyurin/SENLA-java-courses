@@ -5,6 +5,10 @@ import com.senlainc.warsaw.tyurin.dao.OrderDAO;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
+import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
+import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
+import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
+import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
 import com.senlainc.warsaw.tyurin.util.propertyHandlers.PropertyReader;
 
 import java.time.LocalDateTime;
@@ -15,10 +19,18 @@ public class OrderService implements IOrderService{
     private static OrderService INSTANCE;
     private IOrderDAO orderDAO;
     private PropertyReader propertyReader;
+    private CsvReader csvReader;
+    private CsvWriter csvWriter;
+    private JsonReader jsonReader;
+    private JsonWriter jsonWriter;
 
     private OrderService() {
         orderDAO = OrderDAO.getInstance();
         propertyReader = PropertyReader.getInstance();
+        csvReader = CsvReader.getInstance();
+        csvWriter = CsvWriter.getInstance();
+        jsonReader = JsonReader.getInstance();
+        jsonWriter = JsonWriter.getInstance();
     }
 
     public static OrderService getInstance() {
@@ -230,8 +242,41 @@ public class OrderService implements IOrderService{
     @Override
     public void importOrdersFromCsv() {
 
-        orderDAO
-                .importOrdersFromCsv(Constants.PATH_TO_ORDERS_CSV)
+        csvReader
+                .readEntities(Constants.PATH_TO_ORDERS_CSV)
+                .stream()
+                .map(entity -> {
+                    String[] values = entity.split(",");
+                    Order order = new Order();
+                    order.setId(Long.parseLong(values[0]));
+                    order.setPrice(Double.parseDouble(values[1]));
+                    order.setSubmissionDate(LocalDateTime.parse(values[2]));
+                    order.setStartDate(LocalDateTime.parse(values[3]));
+                    order.setCompletionDate(LocalDateTime.parse(values[4]));
+                    switch (values[5]) {
+                        case "COMPLETED":
+                            order.setOrderStatus(OrderStatus.COMPLETED);
+                            break;
+                        case "CANCELED":
+                            order.setOrderStatus(OrderStatus.CANCELED);
+                            break;
+                        case "NEW":
+                            order.setOrderStatus(OrderStatus.NEW);
+                            break;
+                        case "IN_PROGRESS":
+                            order.setOrderStatus(OrderStatus.IN_PROGRESS);
+                            break;
+                        case "DELETED":
+                            order.setOrderStatus(OrderStatus.DELETED);
+                            break;
+                    }
+                    String[] craftsmanIdList = values[6].split(";");
+                    Arrays.stream(craftsmanIdList).forEach(id -> {
+                        order.getCraftsmenId().add(Long.parseLong(id));
+                    });
+                    order.setGaragePlaceId(Long.parseLong(values[7]));
+                    return order;
+                })
                 .forEach(importOrder -> {
                     Order order = getOrderById(importOrder.getId());
                     if (order == null) {
@@ -251,13 +296,16 @@ public class OrderService implements IOrderService{
     @Override
     public void exportOrdersToCsv() {
 
-        List<Order> orders = orderDAO
+        List<String> orders = orderDAO
                 .getOrders()
                 .stream()
                 .sorted(Comparator.comparing(Order::getId))
+                .map(Order::toString)
                 .collect(Collectors.toList());
 
-        orderDAO.exportOrdersToCsv(orders, Constants.PATH_TO_ORDERS_CSV);
+        csvWriter.writeEntities(orders,
+                Constants.ORDERS_CSV_HEADER,
+                Constants.PATH_TO_ORDERS_CSV);
     }
 
     @Override
@@ -280,27 +328,27 @@ public class OrderService implements IOrderService{
     @Override
     public void importOrdersFromJson() {
 
-        orderDAO
-                .importOrdersFromJson(Constants.PATH_TO_ORDERS_JSON)
+        jsonReader
+                .readEntities(Order.class, Constants.PATH_TO_ORDERS_JSON)
                 .forEach(importOrder -> {
-            Order order = getOrderById(importOrder.getId());
-            if (order == null) {
-                orderDAO.addOrder(importOrder);
-            } else if (!order.equals(importOrder)) {
-                order.setOrderStatus(importOrder.getOrderStatus());
-                order.setStartDate(importOrder.getStartDate());
-                order.setCompletionDate(importOrder.getCompletionDate());
-                order.setSubmissionDate(importOrder.getSubmissionDate());
-                order.setPrice(importOrder.getPrice());
-                order.setGaragePlaceId(importOrder.getGaragePlaceId());
-                order.setCraftsmen(importOrder.getCraftsmenId());
-            }
-        });
+                    Order order = getOrderById(importOrder.getId());
+                    if (order == null) {
+                        orderDAO.addOrder(importOrder);
+                    } else if (!order.equals(importOrder)) {
+                        order.setOrderStatus(importOrder.getOrderStatus());
+                        order.setStartDate(importOrder.getStartDate());
+                        order.setCompletionDate(importOrder.getCompletionDate());
+                        order.setSubmissionDate(importOrder.getSubmissionDate());
+                        order.setPrice(importOrder.getPrice());
+                        order.setGaragePlaceId(importOrder.getGaragePlaceId());
+                        order.setCraftsmen(importOrder.getCraftsmenId());
+                    }
+                });
     }
 
     @Override
     public void exportOrdersToJson() {
-        orderDAO.exportOrdersToJson(orderDAO.getOrders(), Constants.PATH_TO_ORDERS_JSON);
+        jsonWriter.writeEntities(orderDAO.getOrders(), Constants.PATH_TO_ORDERS_JSON);
     }
 
     private List<Order> getArchivedOrders() {
