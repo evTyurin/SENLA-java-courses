@@ -49,7 +49,7 @@ public class GaragePlaceService implements IGaragePlaceService{
     @Override
     public void addGaragePlace(GaragePlace garagePlace) {
 
-        if (Boolean.parseBoolean(propertyReader.readProperties(Constants.ABILITY_TO_ADD_GARAGE_PLACE, Constants.PATH_TO_PROPERTIES))) {
+        if (Boolean.parseBoolean(propertyReader.getProperty(Constants.ABILITY_TO_ADD_GARAGE_PLACE))) {
             garagePlaceDAO.addGaragePlace(garagePlace);
         } else {
             System.out.println("Adding garage places was prohibited");
@@ -59,7 +59,7 @@ public class GaragePlaceService implements IGaragePlaceService{
     @Override
     public void removeGaragePlace(long id) {
 
-        if (Boolean.parseBoolean(propertyReader.readProperties(Constants.ABILITY_TO_REMOVE_GARAGE_PLACE, Constants.PATH_TO_PROPERTIES))) {
+        if (Boolean.parseBoolean(propertyReader.getProperty(Constants.ABILITY_TO_REMOVE_GARAGE_PLACE))) {
             garagePlaceDAO
                     .getGaragePlaces()
                     .remove(garagePlaceDAO

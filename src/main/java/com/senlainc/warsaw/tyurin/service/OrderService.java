@@ -57,7 +57,7 @@ public class OrderService implements IOrderService{
 
     @Override
     public void shiftCompletionDateTime(Order order, LocalDateTime completionDateTime) {
-        if (Boolean.parseBoolean(propertyReader.readProperties(Constants.ABILITY_TO_SHIFT_ORDER_COMPLETION_TIME, Constants.PATH_TO_PROPERTIES))) {
+        if (Boolean.parseBoolean(propertyReader.getProperty(Constants.ABILITY_TO_SHIFT_ORDER_COMPLETION_TIME))) {
             order.setCompletionDate(completionDateTime);
         } else {
             System.out.println("Shifting completion time was prohibited");
@@ -311,7 +311,7 @@ public class OrderService implements IOrderService{
     @Override
     public void removeOrder(Long id) {
 
-        if (Boolean.parseBoolean(propertyReader.readProperties(Constants.ABILITY_TO_REMOVE_ORDER, Constants.PATH_TO_PROPERTIES))) {
+        if (Boolean.parseBoolean(propertyReader.getProperty(Constants.ABILITY_TO_REMOVE_ORDER))) {
             orderDAO
                     .getOrders()
                     .remove(orderDAO
