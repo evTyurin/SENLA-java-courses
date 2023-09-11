@@ -1,5 +1,5 @@
 # SENLA-java-courses
-## TASK 6
+## TASK 7
 ### Electronic Vehicle Garage Administrator
 ### The programme shall provide the possibility of:
 
@@ -17,6 +17,10 @@
 * The number of available places on the service for any date in the future (calculated from the number of available mechanics and garage space);
 * The nearest available date.
 
-#### Added user interface module that contain a user console interface and allow to perform all the functions included in the program
+#### Added user interface module that contain a user console interface and allow to perform all the functions included in the program.
 
-#### Added the ability to import and export data from/to file
+#### Added the ability to import and export data from/to file.
+
+#### Added the ability to serialize objects to a JSON. Jackson used as a serializer.
+
+#### Added the ability to configure the program using the property file.
