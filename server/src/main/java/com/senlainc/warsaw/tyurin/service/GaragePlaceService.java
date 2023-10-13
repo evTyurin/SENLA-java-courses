@@ -3,7 +3,7 @@ package com.senlainc.warsaw.tyurin.service;
 import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
-import com.senlainc.warsaw.tyurin.dao.GaragePlaceDAO;
+import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDAO;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
@@ -13,7 +13,6 @@ import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
-import com.senlainc.warsaw.tyurin.util.propertyHandlers.PropertyReader;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,30 +31,26 @@ public class GaragePlaceService implements IGaragePlaceService{
     private IOrderService orderService;
     @DependencyComponent
     private ICraftsmanService craftsmanService;
+    @DependencyComponent
     private CsvReader csvReader;
+    @DependencyComponent
     private CsvWriter csvWriter;
+    @DependencyComponent
     private JsonReader jsonReader;
+    @DependencyComponent
     private JsonWriter jsonWriter;
     @ConfigProperty(propertyKey = Constants.ABILITY_TO_ADD_GARAGE_PLACE)
     private boolean isGaragePlaceAddable;
     @ConfigProperty(propertyKey = Constants.ABILITY_TO_REMOVE_GARAGE_PLACE)
     private boolean isGaragePlaceRemovable;
 
-    public GaragePlaceService() {
-        garagePlaceDAO = GaragePlaceDAO.getInstance();
-        orderService = OrderService.getInstance();
-        craftsmanService = CraftsmanService.getInstance();
-        csvReader = CsvReader.getInstance();
-        csvWriter = CsvWriter.getInstance();
-        jsonReader = JsonReader.getInstance();
-        jsonWriter = JsonWriter.getInstance();
+    public static GaragePlaceService getInstance() {
+        return INSTANCE;
     }
 
-    public static GaragePlaceService getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new GaragePlaceService();
-        }
-        return INSTANCE;
+    @DependencyInitMethod
+    public void setInstance() {
+        INSTANCE = this;
     }
 
     @Override

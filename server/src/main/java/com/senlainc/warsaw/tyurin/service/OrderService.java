@@ -3,8 +3,8 @@ package com.senlainc.warsaw.tyurin.service;
 import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
+import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.dao.IOrderDAO;
-import com.senlainc.warsaw.tyurin.dao.OrderDAO;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
@@ -12,7 +12,7 @@ import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
-import com.senlainc.warsaw.tyurin.util.propertyHandlers.PropertyReader;
+//import com.senlainc.warsaw.tyurin.util.propertyHandlers.PropertyReader;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -24,13 +24,17 @@ import java.util.stream.Collectors;
 
 @DependencyClass
 public class OrderService implements IOrderService{
+
     private static OrderService INSTANCE;
     @DependencyComponent
     private IOrderDAO orderDAO;
-    private PropertyReader propertyReader;
+    @DependencyComponent
     private CsvReader csvReader;
+    @DependencyComponent
     private CsvWriter csvWriter;
+    @DependencyComponent
     private JsonReader jsonReader;
+    @DependencyComponent
     private JsonWriter jsonWriter;
 
     @ConfigProperty(propertyKey = Constants.ABILITY_TO_SHIFT_ORDER_COMPLETION_TIME)
@@ -38,20 +42,13 @@ public class OrderService implements IOrderService{
     @ConfigProperty(propertyKey = Constants.ABILITY_TO_REMOVE_ORDER)
     private boolean isOrderRemovable;
 
-    public OrderService() {
-        orderDAO = OrderDAO.getInstance();
-        propertyReader = PropertyReader.getInstance();
-        csvReader = CsvReader.getInstance();
-        csvWriter = CsvWriter.getInstance();
-        jsonReader = JsonReader.getInstance();
-        jsonWriter = JsonWriter.getInstance();
+    public static OrderService getInstance() {
+        return INSTANCE;
     }
 
-    public static OrderService getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new OrderService();
-        }
-        return INSTANCE;
+    @DependencyInitMethod
+    public void setInstance() {
+        INSTANCE = this;
     }
 
     @Override

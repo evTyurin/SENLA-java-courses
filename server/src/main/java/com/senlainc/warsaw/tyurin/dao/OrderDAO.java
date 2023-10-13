@@ -1,6 +1,7 @@
 package com.senlainc.warsaw.tyurin.dao;
 
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
+import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.entity.Order;
 
 import java.util.ArrayList;
@@ -17,10 +18,12 @@ public class OrderDAO implements IOrderDAO{
     }
 
     public static OrderDAO getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new OrderDAO();
-        }
         return INSTANCE;
+    }
+
+    @DependencyInitMethod
+    public void setInstance() {
+        INSTANCE = this;
     }
 
     @Override

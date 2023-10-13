@@ -5,17 +5,13 @@ import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.service.CraftsmanService;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class GetCraftsmenByOrder implements IAction {
 
     @Override
     public void execute() {
 
-        System.out.println("Id of craftsman");
-        Scanner scanner = new Scanner(System.in);
-        long orderId = scanner.nextLong();
-        List<Craftsman> craftsmen = CraftsmanService.getInstance().getCraftsmenByOrder(orderId);
+        List<Craftsman> craftsmen = CraftsmanService.getInstance().getCraftsmenByOrder(1);
         craftsmen.forEach(craftsman -> System.out.println(craftsman.toString()));
     }
 }

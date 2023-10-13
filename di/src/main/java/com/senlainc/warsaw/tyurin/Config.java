@@ -9,23 +9,22 @@ import java.util.Set;
 public class Config {
 
     private Reflections scanner;
-    private Map<Class, Class> ifc2Impl;
+    private Map<Class, Class> diContainer;
 
     public Config(String packageToScan) {
-        this.ifc2Impl = new HashMap<>();
+        this.diContainer = new HashMap<>();
         this.scanner = new Reflections(packageToScan);
     }
 
-    public <T> Class<? extends T> getImplClass(Class<T> ifc) {
-        return ifc2Impl.computeIfAbsent(ifc, aClass -> {
-           Set<Class<? extends T>> classes = scanner.getSubTypesOf(ifc);
+    public <T> Class<? extends T> getImplClass(Class<T> injectableInterface) {
+        return diContainer.computeIfAbsent(injectableInterface, aClass -> {
+           Set<Class<? extends T>> classes = scanner.getSubTypesOf(injectableInterface);
            if (classes.size() != 1) {
-               throw new RuntimeException(ifc + " has 0 or more than one implementations. Please update your configuration.");
+               throw new RuntimeException(injectableInterface + " has 0 or more than one implementations");
            }
            return classes.iterator().next();
         });
     }
-
 
     public Reflections getScanner() {
         return scanner;

@@ -1,15 +1,18 @@
 package com.senlainc.warsaw.tyurin.util.csvHandlers;
 
+import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+@DependencyClass
 public class CsvWriter {
 
     private static CsvWriter INSTANCE;
 
-    private CsvWriter() {}
+//    private CsvWriter() {}
 
     public static CsvWriter getInstance() {
         if (INSTANCE == null) {

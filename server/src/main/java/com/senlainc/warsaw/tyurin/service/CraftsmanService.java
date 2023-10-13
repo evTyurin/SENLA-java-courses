@@ -2,7 +2,7 @@ package com.senlainc.warsaw.tyurin.service;
 
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
-import com.senlainc.warsaw.tyurin.dao.CraftsmanDAO;
+import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.dao.ICraftsmanDAO;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.util.Constants;
@@ -27,31 +27,27 @@ public class CraftsmanService implements ICraftsmanService{
     private ICraftsmanDAO craftsmanDAO;
     @DependencyComponent
     private IOrderService orderService;
+    @DependencyComponent
     private CsvReader csvReader;
+    @DependencyComponent
     private CsvWriter csvWriter;
+    @DependencyComponent
     private JsonReader jsonReader;
+    @DependencyComponent
     private JsonWriter jsonWriter;
 
-    public CraftsmanService() {
-        craftsmanDAO = CraftsmanDAO.getInstance();
-        orderService =OrderService.getInstance();
-        csvReader = CsvReader.getInstance();
-        csvWriter = CsvWriter.getInstance();
-        jsonReader = JsonReader.getInstance();
-        jsonWriter = JsonWriter.getInstance();
+    public static CraftsmanService getInstance() {
+        return INSTANCE;
     }
 
-    public static CraftsmanService getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new CraftsmanService();
-        }
-        return INSTANCE;
+    @DependencyInitMethod
+    public void setInstance() {
+        INSTANCE = this;
     }
 
     @Override
     public void addCraftsman(Craftsman craftsman) {
         craftsmanDAO.addCraftsman(craftsman);
-        System.out.println("craftsmen was added");
     }
 
     @Override

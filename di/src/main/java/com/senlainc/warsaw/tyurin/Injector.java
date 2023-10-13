@@ -3,6 +3,7 @@ package com.senlainc.warsaw.tyurin;
 import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 
+import javax.lang.model.type.PrimitiveType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -48,26 +49,21 @@ public class Injector {
     }
 
     private Object customConverter(Field field, String variable){
-        final String variableType=field.getType().getSimpleName().toLowerCase();
-        switch (variableType){
-            case "byte":
-                return Byte.parseByte(variable);
-            case "short":
-                return Short.parseShort(variable);
-            case  "integer":
-                return Integer.parseInt(variable);
-            case "long":
-                return Long.parseLong(variable);
-            case "float":
-                return Float.parseFloat(variable);
-            case "double":
-                return Double.parseDouble(variable);
-            case "boolean":
-                return Boolean.parseBoolean(variable);
-            case "character":
-                return variable.charAt(0);
-            default:
-                return variable;
+        if (boolean.class.equals(field.getType())) {
+            return Boolean.parseBoolean(variable);
+        } else if (byte.class.equals(field.getType())) {
+            return Byte.parseByte(variable);
+        } else if (short.class.equals(field.getType())) {
+            return Short.parseShort(variable);
+        } else if (int.class.equals(field.getType())) {
+            return Integer.parseInt(variable);
+        } else if (long.class.equals(field.getType())) {
+            return Long.parseLong(variable);
+        } else if (float.class.equals(field.getType())) {
+            return Float.parseFloat(variable);
+        } else if (double.class.equals(field.getType())) {
+            return Float.parseFloat(variable);
         }
+        return variable;
     }
 }
