@@ -1,12 +1,7 @@
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
-        ThreadDemo threadDemo = new ThreadDemo(1);
-
-        Thread thread = new Thread(threadDemo);
-        thread.setDaemon(true);
-        thread.start();
-        thread.join();
+        new SystemTimeScheduler(1);
     }
 }

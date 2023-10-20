@@ -1,6 +1,6 @@
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         DataBuffer dataBuffer = new DataBuffer(2);
 
@@ -28,8 +28,5 @@ public class Main {
 
         producer.start();
         consumer.start();
-
-        producer.join();
-        consumer.join();
     }
 }
