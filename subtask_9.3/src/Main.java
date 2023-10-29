@@ -1,30 +1,14 @@
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 public class Main {
 
     public static void main(String[] args) {
 
-        DataBuffer dataBuffer = new DataBuffer(2);
+        BlockingQueue<Integer> buffer = new ArrayBlockingQueue<>(3);
 
-        Thread producer = new Thread(() -> {
-            {
-                try {
-                    dataBuffer.produce();
-                }
-                catch (InterruptedException exception) {
-                    exception.printStackTrace();
-                }
-            }
-        });
-
-        Thread consumer = new Thread(() -> {
-            {
-                try {
-                    dataBuffer.consume();
-                }
-                catch (InterruptedException exception) {
-                    exception.printStackTrace();
-                }
-            }
-        });
+        Thread producer = new Thread(new Producer(buffer));
+        Thread consumer = new Thread(new Consumer(buffer));
 
         producer.start();
         consumer.start();
