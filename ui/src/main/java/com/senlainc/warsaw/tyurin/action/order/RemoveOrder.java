@@ -6,7 +6,7 @@ import com.senlainc.warsaw.tyurin.service.OrderService;
 public class RemoveOrder implements IAction {
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         OrderService.getInstance().removeOrder(1L);
     }

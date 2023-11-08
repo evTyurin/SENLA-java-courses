@@ -6,24 +6,24 @@ import com.senlainc.warsaw.tyurin.service.CraftsmanService;
 public class AddCraftsman implements IAction {
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         CraftsmanService
                 .getInstance()
                 .addCraftsman(CraftsmanService
                         .getInstance()
-                        .createCraftsmen(4, "Nick", "Smart"));
+                        .createCraftsmen("Nick", "Smart"));
 
         CraftsmanService
                 .getInstance()
                 .addCraftsman(CraftsmanService
                         .getInstance()
-                        .createCraftsmen(8, "Jack", "Jones"));
+                        .createCraftsmen("Jack", "Jones"));
 
         CraftsmanService
                 .getInstance()
                 .addCraftsman(CraftsmanService
                         .getInstance()
-                        .createCraftsmen(9, "Star", "Wars"));
+                        .createCraftsmen("Star", "Wars"));
     }
 }

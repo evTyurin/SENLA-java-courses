@@ -14,8 +14,7 @@ public class AddOrder implements IAction {
 
         OrderService
                 .getInstance()
-                .createOrder(1,
-                        100,
+                .createOrder(100,
                         LocalDateTime.of(2023, 10, 10, 12, 0),
                         LocalDateTime.of(2023, 10, 20, 10, 0),
                         new ArrayList(Arrays. asList(1, 2)),

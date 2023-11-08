@@ -6,7 +6,7 @@ import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
 public class RemoveGaragePlace implements IAction {
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         GaragePlaceService.getInstance().removeGaragePlace(1);
     }

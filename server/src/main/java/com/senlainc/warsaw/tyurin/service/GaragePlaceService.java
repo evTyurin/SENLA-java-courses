@@ -8,15 +8,12 @@ import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDAO;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.Constants;
-import com.senlainc.warsaw.tyurin.util.OrderStatus;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +51,7 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public void addGaragePlace(GaragePlace garagePlace) {
+    public void addGaragePlace(GaragePlace garagePlace) throws Exception {
 
         if (isGaragePlaceAddable) {
             garagePlaceDAO.addGaragePlace(garagePlace);
@@ -64,82 +61,27 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public void removeGaragePlace(long id) {
+    public void removeGaragePlace(long id) throws Exception {
 
         if (isGaragePlaceRemovable) {
-            garagePlaceDAO
-                    .getGaragePlaces()
-                    .remove(garagePlaceDAO
-                            .getGaragePlaces()
-                            .stream()
-                            .filter(garagePlace -> garagePlace.getId() == id)
-                            .findFirst()
-                            .orElse(null));
+            garagePlaceDAO.deleteGaragePlace(id);
         } else {
             System.out.println("Removing garage places was prohibited");
         }
     }
 
     @Override
-    public List<GaragePlace> getAvailablePlaces() {
-        List<GaragePlace> availablePlaces = new ArrayList<>();
-
-        List<Long> unavailableGaragePlaceNumbers = orderService
-                .getOrders()
-                .stream()
-                .filter(order -> order
-                        .getOrderStatus().equals(OrderStatus.IN_PROGRESS))
-                .map(Order::getGaragePlaceId)
-                .collect(Collectors.toList());
-
-        garagePlaceDAO.getGaragePlaces().forEach(garagePlace -> {
-            if (!unavailableGaragePlaceNumbers.contains(garagePlace.getId())) {
-                availablePlaces.add(garagePlace);
-            }
-        });
-
-        return availablePlaces;
+    public List<GaragePlace> getAvailablePlaces() throws Exception {
+        return garagePlaceDAO.getAvailableGaragePlaces();
     }
 
     @Override
-    public long getAvailablePlacesAmount(LocalDateTime localDateTime) {
-        LocalDateTime searchTime = localDateTime
-                .minusMinutes(localDateTime.getMinute())
-                .minusSeconds(localDateTime.getSecond())
-                .minusNanos(localDateTime.getNano());
-
-        List<Order> searchTimeOrders = orderService
-                .getOrders()
-                .stream()
-                .filter(order -> order
-                        .getStartDate()
-                        .isBefore(searchTime) && order
-                        .getCompletionDate()
-                        .isAfter(searchTime) && !order
-                .getOrderStatus().equals(OrderStatus.CANCELED))
-                .collect(Collectors.toList());
-
-        List<Long> orders = searchTimeOrders
-                .stream()
-                .map(Order::getGaragePlaceId)
-                .collect(Collectors.toList());
-
-        int availablePlacesAmount = garagePlaceDAO.getGaragePlaces().size() - orders.size();
-
-        int unavailableCraftsmenAmount = searchTimeOrders
-                .stream()
-                .map(Order::getCraftsmenId)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet())
-                .size();
-
-        int availableCraftsmenAmount = craftsmanService.getCraftsmen().size() - unavailableCraftsmenAmount;
-
-        return Math.min(availablePlacesAmount, availableCraftsmenAmount);
+    public long getAvailablePlacesAmount(LocalDateTime localDateTime) throws Exception {
+       return garagePlaceDAO.getAvailablePlacesAmount(localDateTime);
     }
 
     @Override
-    public LocalDateTime getNearestAvailableDate() {
+    public LocalDateTime getNearestAvailableDate() throws Exception {
         LocalDateTime currantTime = LocalDateTime.now();
 
         LocalDateTime searchTime = currantTime
@@ -151,29 +93,18 @@ public class GaragePlaceService implements IGaragePlaceService{
         if (getAvailablePlacesAmount(searchTime) > 0) {
             return searchTime;
         }
-
-        List<Order> ordersInProgress = orderService
-                .getOrders()
-                .stream()
-                .filter(order -> (order
-                        .getOrderStatus().equals(OrderStatus.IN_PROGRESS)) || (order
-                        .getOrderStatus().equals(OrderStatus.NEW)))
-                .sorted(Comparator.comparing(Order::getCompletionDate))
-                .collect(Collectors.toList());
-
+        List<Order> ordersInProgress = orderService.getArchivedOrdersSortedByCompletionDate();
         for (Order order : ordersInProgress) {
             if (getAvailablePlacesAmount(order.getCompletionDate()) > 0) {
                 return order.getCompletionDate();
             }
         }
-
         return null;
     }
 
     @Override
-    public GaragePlace createGaragePlace(long id, int number, double space) {
+    public GaragePlace createGaragePlace(int number, double space) {
         GaragePlace garagePlace = new GaragePlace();
-        garagePlace.setId(id);
         garagePlace.setNumber(number);
         garagePlace.setSpace(space);
         return garagePlace;
@@ -194,9 +125,18 @@ public class GaragePlaceService implements IGaragePlaceService{
                     return garagePlace;
                 })
                 .forEach(importGaragePlace -> {
-                    GaragePlace garagePlace = getGaragePlaceById(importGaragePlace.getId());
+                    GaragePlace garagePlace = null;
+                    try {
+                        garagePlace = getGaragePlaceById(importGaragePlace.getId());
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                     if (garagePlace == null) {
-                        garagePlaceDAO.addGaragePlace(importGaragePlace);
+                        try {
+                            garagePlaceDAO.addGaragePlace(importGaragePlace);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
                     } else if (!garagePlace.equals(importGaragePlace)) {
                         garagePlace.setNumber(importGaragePlace.getNumber());
                         garagePlace.setSpace(importGaragePlace.getSpace());
@@ -205,18 +145,12 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public GaragePlace getGaragePlaceById(Long id) {
-
-        return garagePlaceDAO
-                .getGaragePlaces()
-                .stream()
-                .filter(garagePlace -> garagePlace.getId() == id)
-                .findFirst()
-                .orElse(null);
+    public GaragePlace getGaragePlaceById(Long id) throws Exception {
+        return garagePlaceDAO.getGaragePlace(id);
     }
 
     @Override
-    public void exportGaragePlacesToCsv() {
+    public void exportGaragePlacesToCsv() throws Exception {
 
         List<String> garagePlaces = garagePlaceDAO
                 .getGaragePlaces()
@@ -236,9 +170,18 @@ public class GaragePlaceService implements IGaragePlaceService{
         jsonReader
                 .readEntities(GaragePlace.class, Constants.PATH_TO_GARAGE_PLACES_JSON)
                 .forEach(importGaragePlace -> {
-                    GaragePlace garagePlace = getGaragePlaceById(importGaragePlace.getId());
+                    GaragePlace garagePlace = null;
+                    try {
+                        garagePlace = getGaragePlaceById(importGaragePlace.getId());
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                     if (garagePlace == null) {
-                        garagePlaceDAO.addGaragePlace(importGaragePlace);
+                        try {
+                            garagePlaceDAO.addGaragePlace(importGaragePlace);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
                     } else if (!garagePlace.equals(importGaragePlace)) {
                         garagePlace.setNumber(importGaragePlace.getNumber());
                         garagePlace.setSpace(importGaragePlace.getSpace());
@@ -247,7 +190,7 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public void exportGaragePlacesToJson() {
+    public void exportGaragePlacesToJson() throws Exception {
         jsonWriter.writeEntities(garagePlaceDAO.getGaragePlaces(), Constants.PATH_TO_GARAGE_PLACES_JSON);
     }
 }

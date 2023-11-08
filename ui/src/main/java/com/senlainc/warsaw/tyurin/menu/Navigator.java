@@ -22,10 +22,10 @@ public class Navigator {
         }
     }
 
-    public void navigate(Integer integer) {
+    public void navigate(Integer integer) throws Exception {
 
         if (integer < 1 || integer > currentMenu.getMenuItems().size()) {
-            System.out.println("Incorrect com.senlainc.warsaw.tyurin.action. Please, try again");
+            System.out.println("Incorrect action. Please, try again");
         }
 
         if (currentMenu == currentMenu.getMenuItems().get(integer - 1).getNextMenu()) {

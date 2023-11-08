@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class ShiftCompletionDateTime implements IAction {
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         Order order = OrderService.getInstance().getOrderById(1);
         order.setCompletionDate(LocalDateTime.of(2023, 10, 10, 12, 0));

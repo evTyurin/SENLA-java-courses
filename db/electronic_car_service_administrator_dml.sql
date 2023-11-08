@@ -19,7 +19,7 @@ INSERT INTO electronic_car_service_administrator.garage_place (number, space) VA
 -- -----------------------------------------------------
 -- Filling order
 -- -----------------------------------------------------
-INSERT INTO electronic_car_service_administrator.order (price, submission_date, start_date, completion_date, order_status, garage_place_id) VALUES
+INSERT INTO electronic_car_service_administrator.orders (price, submission_date, start_date, completion_date, order_status_id, garage_place_id) VALUES
 (100, '2023-11-01 14:25:00', '2023-11-10 18:00:00', '2023-11-30 10:00:00', 'NEW', 1),
 (300, '2023-10-01 17:29:00', '2023-10-15 16:00:00', '2023-10-26 10:00:00', 'COMPLETED', 1),
 (500, '2023-10-26 13:56:00', '2023-11-01 14:00:00', '2023-11-05 10:00:00', 'IN_PROGRESS', 2),
@@ -36,3 +36,13 @@ INSERT INTO electronic_car_service_administrator.order_craftsman (order_id, craf
 (3, 3),
 (4, 1),
 (4, 4);
+
+-- -----------------------------------------------------
+-- Filling order_status
+-- -----------------------------------------------------
+INSERT INTO electronic_car_service_administrator.order_status (id, order_status) VALUES
+(1, 'NEW'),
+(2, 'COMPLETED'),
+(3, 'IN_PROGRESS'),
+(4, 'CANCELED'),
+(4, 'DELETED');

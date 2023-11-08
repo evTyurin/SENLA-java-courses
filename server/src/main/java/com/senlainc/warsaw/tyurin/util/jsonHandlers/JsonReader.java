@@ -13,8 +13,6 @@ import java.util.List;
 public class JsonReader {
     private static JsonReader INSTANCE;
 
-//    private JsonReader() {}
-
     public static JsonReader getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new JsonReader();

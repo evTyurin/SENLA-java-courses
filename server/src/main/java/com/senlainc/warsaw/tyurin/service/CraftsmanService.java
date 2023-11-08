@@ -6,17 +6,13 @@ import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.dao.ICraftsmanDAO;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.util.Constants;
-import com.senlainc.warsaw.tyurin.util.OrderStatus;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @DependencyClass
@@ -46,95 +42,38 @@ public class CraftsmanService implements ICraftsmanService{
     }
 
     @Override
-    public void addCraftsman(Craftsman craftsman) {
+    public void addCraftsman(Craftsman craftsman) throws Exception {
         craftsmanDAO.addCraftsman(craftsman);
     }
 
     @Override
-    public void removeCraftsmanById(long id) {
-
-        craftsmanDAO
-                .getCraftsmen()
-                .remove(craftsmanDAO
-                        .getCraftsmen()
-                        .stream()
-                        .filter(craftsman -> craftsman.getId() == id)
-                        .findFirst()
-                        .orElse(null));
+    public void removeCraftsmanById(long id) throws Exception {
+        craftsmanDAO.deleteCraftsman(id);
     }
 
     @Override
-    public List<Craftsman> getCraftsmenByOrder(long id) {
-        List<Craftsman> craftsmen = new ArrayList<>();
-
-        orderService
-                .getOrderById(id)
-                .getCraftsmenId()
-                .forEach(craftsmanId -> craftsmen.add(getCraftsmanById(craftsmanId)));
-
-        return craftsmen;
+    public List<Craftsman> getCraftsmenByOrder(long id) throws Exception {
+        return craftsmanDAO.getCraftsmenByOrder(id);
     }
 
     @Override
-    public List<Craftsman> getSortedAlphabetically() {
-        return craftsmanDAO
-                .getCraftsmen()
-                .stream()
-                .sorted(Comparator
-                        .comparing(craftsman -> ((Craftsman)craftsman)
-                                .getSurname())
-                        .thenComparing(craftsman -> ((Craftsman)craftsman)
-                                .getName()))
-                .collect(Collectors.toList());
+    public List<Craftsman> getSortedAlphabetically() throws Exception {
+        return craftsmanDAO.getSortedAlphabetically();
     }
 
     @Override
-    public List<Craftsman> getSortedByBusyness() {
-        Map<Long, Integer> craftsmenBusiness = new HashMap<>();
-        List<Craftsman> sortedCraftsmen = new ArrayList<>();
-
-        orderService
-                .getOrders()
-                .stream()
-                .filter(order -> ((!order
-                        .getOrderStatus()
-                        .equals(OrderStatus.CANCELED))))
-                .forEach(order -> order
-                                .getCraftsmenId()
-                                .forEach(id -> {
-                            if (craftsmenBusiness.containsKey(id)) {
-                                craftsmenBusiness.replace(id, craftsmenBusiness.get(id) + 1);
-                            } else {
-                                craftsmenBusiness.put(id, 1);
-                            }
-                        }));
-
-        craftsmenBusiness
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue())
-                .forEach(id -> {
-            sortedCraftsmen.add(getCraftsmanById(id.getKey()));
-        });
-
-        return sortedCraftsmen;
+    public List<Craftsman> getSortedByBusyness() throws Exception {
+        return craftsmanDAO.getSortedByBusyness();
     }
 
     @Override
-    public Craftsman getCraftsmanById(Long id) {
-
-        return craftsmanDAO
-                .getCraftsmen()
-                .stream()
-                .filter(craftsman -> craftsman.getId() == id)
-                .findFirst()
-                .orElse(null);
+    public Craftsman getCraftsmanById(Long id) throws Exception {
+        return craftsmanDAO.getCraftsman(id);
     }
 
     @Override
-    public Craftsman createCraftsmen(long id, String name, String surname) {
+    public Craftsman createCraftsmen(String name, String surname) {
         Craftsman craftsman = new Craftsman();
-        craftsman.setId(id);
         craftsman.setName(name);
         craftsman.setSurname(surname);
         System.out.println("craftsmen was created");
@@ -142,7 +81,7 @@ public class CraftsmanService implements ICraftsmanService{
     }
 
     @Override
-    public List<Craftsman> getCraftsmen() {
+    public List<Craftsman> getCraftsmen() throws Exception {
         return craftsmanDAO.getCraftsmen();
     }
 
@@ -161,9 +100,18 @@ public class CraftsmanService implements ICraftsmanService{
                     return craftsman;
                 })
                 .forEach(importedCraftsman -> {
-                    Craftsman craftsman = getCraftsmanById(importedCraftsman.getId());
+                    Craftsman craftsman = null;
+                    try {
+                        craftsman = getCraftsmanById(importedCraftsman.getId());
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                     if (craftsman == null) {
-                        craftsmanDAO.addCraftsman(importedCraftsman);
+                        try {
+                            craftsmanDAO.addCraftsman(importedCraftsman);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
                     } else if (!craftsman.equals(importedCraftsman)) {
                         craftsman.setSurname(importedCraftsman.getSurname());
                         craftsman.setName(importedCraftsman.getName());
@@ -172,7 +120,7 @@ public class CraftsmanService implements ICraftsmanService{
     }
 
     @Override
-    public void exportCraftsmenToCsv() {
+    public void exportCraftsmenToCsv() throws Exception {
 
         List<String> craftsmen = craftsmanDAO
                 .getCraftsmen()
@@ -191,9 +139,18 @@ public class CraftsmanService implements ICraftsmanService{
 
         jsonReader.readEntities(Craftsman.class, Constants.PATH_TO_CRAFTSMEN_JSON)
                 .forEach(importedCraftsman -> {
-                    Craftsman craftsman = getCraftsmanById(importedCraftsman.getId());
+                    Craftsman craftsman = null;
+                    try {
+                        craftsman = getCraftsmanById(importedCraftsman.getId());
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                     if (craftsman == null) {
-                        craftsmanDAO.addCraftsman(importedCraftsman);
+                        try {
+                            craftsmanDAO.addCraftsman(importedCraftsman);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
                     } else if (!craftsman.equals(importedCraftsman)) {
                         craftsman.setSurname(importedCraftsman.getSurname());
                         craftsman.setName(importedCraftsman.getName());
@@ -202,7 +159,7 @@ public class CraftsmanService implements ICraftsmanService{
     }
 
     @Override
-    public void exportCraftsmenToJson() {
+    public void exportCraftsmenToJson() throws Exception {
         jsonWriter.writeEntities(craftsmanDAO.getCraftsmen(), Constants.PATH_TO_CRAFTSMEN_JSON);
     }
 }

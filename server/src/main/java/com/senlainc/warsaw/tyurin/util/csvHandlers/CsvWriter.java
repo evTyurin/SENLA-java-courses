@@ -12,8 +12,6 @@ public class CsvWriter {
 
     private static CsvWriter INSTANCE;
 
-//    private CsvWriter() {}
-
     public static CsvWriter getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new CsvWriter();

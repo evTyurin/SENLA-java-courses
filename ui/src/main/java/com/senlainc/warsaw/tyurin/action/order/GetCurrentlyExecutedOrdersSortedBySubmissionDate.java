@@ -5,7 +5,7 @@ import com.senlainc.warsaw.tyurin.service.OrderService;
 
 public class GetCurrentlyExecutedOrdersSortedBySubmissionDate implements IAction {
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         System.out.println("List of currently executed orders sorted by submission date");
 

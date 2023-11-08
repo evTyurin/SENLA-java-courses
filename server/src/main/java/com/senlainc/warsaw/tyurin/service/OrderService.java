@@ -12,14 +12,11 @@ import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
-//import com.senlainc.warsaw.tyurin.util.propertyHandlers.PropertyReader;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @DependencyClass
@@ -52,180 +49,91 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public void changeStatus(Order order, OrderStatus status) {
-        for (Order storageOrder : orderDAO.getOrders()) {
-            if (storageOrder.getId() == order.getId()) {
-                storageOrder.setOrderStatus(status);
-                break;
-            }
-        }
+    public void changeStatus(long id, OrderStatus status) throws Exception {
+        orderDAO.getOrder(id).setOrderStatus(status);
     }
 
     @Override
-    public void shiftStartDateTime(Order order, LocalDateTime startDateTime) {
-        order.setStartDate(startDateTime);
+    public void shiftStartDateTime(long id, LocalDateTime startDateTime) throws Exception {
+        orderDAO.getOrder(id).setStartDate(startDateTime);
     }
 
     @Override
-    public void shiftCompletionDateTime(Order order, LocalDateTime completionDateTime) {
+    public void shiftCompletionDateTime(long id, LocalDateTime completionDateTime) throws Exception {
         if (isCompletionDateTimeShiftable) {
-            order.setCompletionDate(completionDateTime);
+            orderDAO.getOrder(id).setCompletionDate(completionDateTime);
         } else {
             System.out.println("Shifting completion time was prohibited");
         }
     }
 
     @Override
-    public List<Order> getSortedBySubmissionDate() {
-        return orderDAO
-                .getOrders()
-                .stream()
-                .sorted(Comparator
-                        .comparing(Order::getSubmissionDate))
-                .collect(Collectors.toList());
+    public List<Order> getSortedBySubmissionDate() throws Exception {
+        return orderDAO.getOrdersSubmissionDateSorted();
     }
 
     @Override
-    public List<Order> getSortedByCompletionDate() {
-        return orderDAO
-                .getOrders()
-                .stream()
-                .sorted(Comparator
-                        .comparing(Order::getCompletionDate))
-                .collect(Collectors.toList());
+    public List<Order> getSortedByCompletionDate() throws Exception {
+        return orderDAO.getOrdersCompletionDateSorted();
     }
 
     @Override
-    public List<Order> getSortedByStartDate() {
-        return orderDAO
-                .getOrders()
-                .stream()
-                .sorted(Comparator
-                        .comparing(Order::getStartDate))
-                .collect(Collectors.toList());
+    public List<Order> getSortedByStartDate() throws Exception {
+        return orderDAO.getOrdersStartDateSorted();
     }
 
     @Override
-    public List<Order> getSortedByPrice() {
-        return orderDAO
-                .getOrders()
-                .stream()
-                .sorted(Comparator
-                        .comparing(Order::getPrice))
-                .collect(Collectors.toList());
+    public List<Order> getSortedByPrice() throws Exception {
+        return orderDAO.getOrdersPriceSorted();
     }
 
     @Override
-    public List<Order> getCurrentlyExecutedOrdersSortedBySubmissionDate() {
-        List<Order> currentlyExecutedOrders = getCurrentlyExecutedOrders();
-
-        if (currentlyExecutedOrders.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-
-        return currentlyExecutedOrders
-                .stream()
-                .sorted(Comparator.comparing(Order::getSubmissionDate))
-                .collect(Collectors.toList());
+    public List<Order> getCurrentlyExecutedOrdersSortedBySubmissionDate() throws Exception {
+        return orderDAO.getInProgressOrdersSubmissionDateSorted();
     }
 
     @Override
-    public List<Order> getCurrentlyExecutedOrdersSortedByCompletionDate() {
-        List<Order> currentlyExecutedOrders = getCurrentlyExecutedOrders();
-
-        if (currentlyExecutedOrders.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-
-        return currentlyExecutedOrders
-                .stream()
-                .sorted(Comparator.comparing(Order::getCompletionDate))
-                .collect(Collectors.toList());
+    public List<Order> getCurrentlyExecutedOrdersSortedByCompletionDate() throws Exception {
+        return orderDAO.getInProgressOrdersCompletionDateSorted();
     }
 
     @Override
-    public List<Order> getCurrentlyExecutedOrdersSortedByPrice() {
-        List<Order> currentlyExecutedOrders = getCurrentlyExecutedOrders();
-
-        if (currentlyExecutedOrders.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-
-        return currentlyExecutedOrders
-                .stream()
-                .sorted(Comparator.comparing(Order::getPrice))
-                .collect(Collectors.toList());
+    public List<Order> getCurrentlyExecutedOrdersSortedByPrice() throws Exception {
+        return orderDAO.getInProgressOrdersStartDateSorted();
     }
 
     @Override
-    public List<Order> getArchivedOrdersSortedBySubmissionDate() {
-        List<Order> archivedOrders = getArchivedOrders();
-        if (archivedOrders.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-        return archivedOrders
-                .stream()
-                .sorted(Comparator.comparing(Order::getSubmissionDate))
-                .collect(Collectors.toList());
+    public List<Order> getArchivedOrdersSortedBySubmissionDate() throws Exception {
+        return orderDAO.getArchivedOrdersSubmissionDateSorted();
     }
 
     @Override
-    public List<Order> getArchivedOrdersSortedByCompletionDate() {
-        List<Order> archivedOrders = getArchivedOrders();
-
-        if (archivedOrders.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-
-        return archivedOrders
-                .stream()
-                .sorted(Comparator.comparing(Order::getCompletionDate))
-                .collect(Collectors.toList());
+    public List<Order> getArchivedOrdersSortedByCompletionDate() throws Exception {
+        return orderDAO.getArchivedOrdersCompletionDateSorted();
     }
 
     @Override
-    public List<Order> getArchivedOrdersSortedByPrice() {
-        List<Order> archivedOrders = getArchivedOrders();
-
-        if (archivedOrders.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-
-        return archivedOrders
-                .stream()
-                .sorted(Comparator.comparing(Order::getPrice))
-                .collect(Collectors.toList());
+    public List<Order> getArchivedOrdersSortedByPrice() throws Exception {
+        return orderDAO.getArchivedOrdersPriceSorted();
     }
 
     @Override
-    public Order getOrderByCraftsmen(long craftsmanId) {
-        Optional<Order> optionalOrder = orderDAO
-                .getOrders()
-                .stream()
-                .filter(order -> (order
-                        .getCraftsmenId()
-                        .contains(craftsmanId) && order
-                        .getOrderStatus()
-                        .equals(OrderStatus.IN_PROGRESS)))
-                .findFirst();
-
-        return optionalOrder.orElse(null);
+    public Order getOrderByCraftsmen(long craftsmanId) throws Exception {
+        return orderDAO.getOrderByCraftsmen(craftsmanId);
     }
 
     @Override
-    public List<Order> getOrders() {
+    public List<Order> getOrders() throws Exception {
         return orderDAO.getOrders();
     }
 
     @Override
-    public Order createOrder(long id,
-                             double price,
+    public Order createOrder(double price,
                              LocalDateTime startDate,
                              LocalDateTime completionDate,
                              List<Long> craftsmenId,
                              long garagePlaceId) {
         Order order = new Order();
-        order.setId(id);
         order.setPrice(price);
         order.setStartDate(startDate);
         order.setCompletionDate(completionDate);
@@ -235,19 +143,13 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public void addOrder(Order order) {
+    public void addOrder(Order order) throws Exception {
         orderDAO.addOrder(order);
     }
 
     @Override
-    public Order getOrderById(long id) {
-
-        return orderDAO
-                .getOrders()
-                .stream()
-                .filter(order -> order.getId() == id)
-                .findFirst()
-                .orElse(null);
+    public Order getOrderById(long id) throws Exception {
+        return orderDAO.getOrder(id);
     }
 
     @Override
@@ -289,9 +191,18 @@ public class OrderService implements IOrderService{
                     return order;
                 })
                 .forEach(importOrder -> {
-                    Order order = getOrderById(importOrder.getId());
+                    Order order = null;
+                    try {
+                        order = getOrderById(importOrder.getId());
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                     if (order == null) {
-                        orderDAO.addOrder(importOrder);
+                        try {
+                            orderDAO.addOrder(importOrder);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
                     } else if (!order.equals(importOrder)) {
                         order.setOrderStatus(importOrder.getOrderStatus());
                         order.setStartDate(importOrder.getStartDate());
@@ -305,7 +216,7 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public void exportOrdersToCsv() {
+    public void exportOrdersToCsv() throws Exception {
 
         List<String> orders = orderDAO
                 .getOrders()
@@ -320,17 +231,10 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public void removeOrder(Long id) {
+    public void removeOrder(Long id) throws Exception {
 
         if (isOrderRemovable) {
-            orderDAO
-                    .getOrders()
-                    .remove(orderDAO
-                            .getOrders()
-                            .stream()
-                            .filter(order -> order.getId() == id)
-                            .findFirst()
-                            .orElse(null));
+            orderDAO.deleteOrder(id);
         } else {
             System.out.println("Removing order was prohibited");
         }
@@ -342,9 +246,18 @@ public class OrderService implements IOrderService{
         jsonReader
                 .readEntities(Order.class, Constants.PATH_TO_ORDERS_JSON)
                 .forEach(importOrder -> {
-                    Order order = getOrderById(importOrder.getId());
+                    Order order = null;
+                    try {
+                        order = getOrderById(importOrder.getId());
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                     if (order == null) {
-                        orderDAO.addOrder(importOrder);
+                        try {
+                            orderDAO.addOrder(importOrder);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
                     } else if (!order.equals(importOrder)) {
                         order.setOrderStatus(importOrder.getOrderStatus());
                         order.setStartDate(importOrder.getStartDate());
@@ -358,29 +271,17 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public void exportOrdersToJson() {
+    public void exportOrdersToJson() throws Exception {
         jsonWriter.writeEntities(orderDAO.getOrders(), Constants.PATH_TO_ORDERS_JSON);
     }
 
-    private List<Order> getArchivedOrders() {
-        return orderDAO
-                .getOrders()
-                .stream()
-                .filter(order -> ((!order
-                        .getOrderStatus()
-                        .equals(OrderStatus.NEW)) && (!order
-                        .getOrderStatus()
-                        .equals(OrderStatus.IN_PROGRESS))))
-                .collect(Collectors.toList());
+    @Override
+    public List<Order> getNotCanceledOrders() throws Exception {
+        return orderDAO.getNotCanceledOrders();
     }
 
-    private List<Order> getCurrentlyExecutedOrders() {
-        return orderDAO
-                .getOrders()
-                .stream()
-                .filter(order -> order
-                        .getOrderStatus()
-                        .equals(OrderStatus.IN_PROGRESS))
-                .collect(Collectors.toList());
+    @Override
+    public List<Order> getInProgressOrders() throws Exception {
+        return orderDAO.getInProgressOrders();
     }
 }

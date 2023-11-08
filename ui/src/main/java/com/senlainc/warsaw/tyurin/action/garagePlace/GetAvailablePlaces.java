@@ -6,7 +6,7 @@ import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
 public class GetAvailablePlaces implements IAction {
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         System.out.println("List of available garage places");
         GaragePlaceService

@@ -13,8 +13,6 @@ public class JsonWriter {
 
     private static JsonWriter INSTANCE;
 
- //   private JsonWriter() {}
-
     public static JsonWriter getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new JsonWriter();
