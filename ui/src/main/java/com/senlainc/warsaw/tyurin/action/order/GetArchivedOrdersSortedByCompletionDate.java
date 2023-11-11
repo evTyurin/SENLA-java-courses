@@ -6,7 +6,7 @@ import com.senlainc.warsaw.tyurin.service.OrderService;
 public class GetArchivedOrdersSortedByCompletionDate implements IAction {
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         System.out.println("List of archived orders sorted by completion date");
         OrderService

@@ -43,7 +43,7 @@ public class MenuItem {
         this.nextMenu = nextMenu;
     }
 
-    public void doAction() {
+    public void doAction() throws Exception {
         action.execute();
     }
 }

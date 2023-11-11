@@ -8,54 +8,57 @@ import java.util.List;
 
 public interface IOrderService {
 
-    void changeStatus(Order order, OrderStatus status);
+    void changeStatus(long id, OrderStatus status) throws Exception;
 
-    void shiftStartDateTime(Order order, LocalDateTime startDateTime);
+    void shiftStartDateTime(long id, LocalDateTime startDateTime) throws Exception;
 
-    void shiftCompletionDateTime(Order order, LocalDateTime completionDateTime);
+    void shiftCompletionDateTime(long id, LocalDateTime completionDateTime) throws Exception;
 
-    List<Order> getSortedBySubmissionDate();
+    List<Order> getSortedBySubmissionDate() throws Exception;
 
-    List<Order> getSortedByCompletionDate();
+    List<Order> getSortedByCompletionDate() throws Exception;
 
-    List<Order> getSortedByStartDate();
+    List<Order> getSortedByStartDate() throws Exception;
 
-    List<Order> getSortedByPrice();
+    List<Order> getSortedByPrice() throws Exception;
 
-    List<Order> getCurrentlyExecutedOrdersSortedBySubmissionDate();
+    List<Order> getCurrentlyExecutedOrdersSortedBySubmissionDate() throws Exception;
 
-    List<Order> getCurrentlyExecutedOrdersSortedByCompletionDate();
+    List<Order> getCurrentlyExecutedOrdersSortedByCompletionDate() throws Exception;
 
-    List<Order> getCurrentlyExecutedOrdersSortedByPrice();
+    List<Order> getCurrentlyExecutedOrdersSortedByPrice() throws Exception;
 
-    List<Order> getArchivedOrdersSortedBySubmissionDate();
+    List<Order> getArchivedOrdersSortedBySubmissionDate() throws Exception;
 
-    List<Order> getArchivedOrdersSortedByCompletionDate();
+    List<Order> getArchivedOrdersSortedByCompletionDate() throws Exception;
 
-    List<Order> getArchivedOrdersSortedByPrice();
+    List<Order> getArchivedOrdersSortedByPrice() throws Exception;
 
-    Order getOrderByCraftsmen(long craftsmanId);
+    Order getOrderByCraftsmen(long craftsmanId) throws Exception;
 
-    List<Order> getOrders();
+    List<Order> getOrders() throws Exception;
 
-    Order createOrder(long id,
-                      double price,
+    Order createOrder(double price,
                       LocalDateTime startDate,
                       LocalDateTime completionDate,
                       List<Long> craftsmenId,
                       long garagePlaceId);
 
-    void addOrder(Order order);
+    void addOrder(Order order) throws Exception;
 
-    Order getOrderById(long id);
+    Order getOrderById(long id) throws Exception;
 
     void importOrdersFromCsv();
 
-    void exportOrdersToCsv();
+    void exportOrdersToCsv() throws Exception;
 
-    void removeOrder(Long id);
+    void removeOrder(Long id) throws Exception;
 
     void importOrdersFromJson();
 
-    void exportOrdersToJson();
+    void exportOrdersToJson() throws Exception;
+
+    List<Order> getNotCanceledOrders() throws Exception;
+
+    List<Order> getInProgressOrders() throws Exception;
 }

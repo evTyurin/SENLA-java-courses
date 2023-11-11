@@ -14,4 +14,8 @@ public class Constants {
     public static final String PATH_TO_CRAFTSMEN_JSON = "server\\src\\main\\resources\\craftsmen.json";
     public static final String PATH_TO_ORDERS_JSON = "server\\src\\main\\resources\\orders.json";
     public static final String PATH_TO_GARAGE_PLACES_JSON = "server\\src\\main\\resources\\garagePlaces.json";
+    public static final String DB_DRIVER = "db.driver";
+    public static final String DB_URL = "db.url";
+    public static final String DB_USER = "db.user";
+    public static final String DB_PASSWORD = "db.password";
 }

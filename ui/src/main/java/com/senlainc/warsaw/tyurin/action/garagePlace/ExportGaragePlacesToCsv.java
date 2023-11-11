@@ -6,7 +6,7 @@ import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
 public class ExportGaragePlacesToCsv implements IAction {
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         System.out.println("Export to csv");
         GaragePlaceService

@@ -5,7 +5,7 @@ import com.senlainc.warsaw.tyurin.service.CraftsmanService;
 
 public class GetSortedByBusyness implements IAction {
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         System.out.println("List of craftsmen sorted by busyness");
         CraftsmanService

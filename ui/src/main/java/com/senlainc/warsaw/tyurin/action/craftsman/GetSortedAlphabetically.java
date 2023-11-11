@@ -6,7 +6,7 @@ import com.senlainc.warsaw.tyurin.service.CraftsmanService;
 public class GetSortedAlphabetically implements IAction {
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         System.out.println("List of craftsmen sorted alphabetically");
         CraftsmanService

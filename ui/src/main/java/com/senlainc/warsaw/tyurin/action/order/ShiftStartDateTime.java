@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class ShiftStartDateTime implements IAction {
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         Order order = OrderService.getInstance().getOrderById(1);
         order.setStartDate(LocalDateTime.of(2023, 10, 15, 10, 0));

@@ -9,7 +9,7 @@ import java.util.List;
 public class GetCraftsmenByOrder implements IAction {
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         List<Craftsman> craftsmen = CraftsmanService.getInstance().getCraftsmenByOrder(1);
         craftsmen.forEach(craftsman -> System.out.println(craftsman.toString()));

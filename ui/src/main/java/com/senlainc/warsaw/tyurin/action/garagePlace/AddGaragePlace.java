@@ -6,24 +6,24 @@ import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
 public class AddGaragePlace implements IAction {
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
 
         GaragePlaceService
                 .getInstance()
                 .addGaragePlace(GaragePlaceService
                         .getInstance()
-                        .createGaragePlace(11, 11, 15));
+                        .createGaragePlace(11, 15));
 
         GaragePlaceService
                 .getInstance()
                 .addGaragePlace(GaragePlaceService
                         .getInstance()
-                        .createGaragePlace(15, 15, 25));
+                        .createGaragePlace(15, 25));
 
         GaragePlaceService
                 .getInstance()
                 .addGaragePlace(GaragePlaceService
                         .getInstance()
-                        .createGaragePlace(7, 7, 15));
+                        .createGaragePlace(7, 15));
     }
 }

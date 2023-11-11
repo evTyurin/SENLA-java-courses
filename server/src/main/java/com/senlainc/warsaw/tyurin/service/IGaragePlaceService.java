@@ -7,26 +7,26 @@ import java.util.List;
 
 public interface IGaragePlaceService {
 
-    void addGaragePlace(GaragePlace garagePlace);
+    void addGaragePlace(GaragePlace garagePlace) throws Exception;
 
-    void removeGaragePlace(long id);
+    void removeGaragePlace(long id) throws Exception;
 
-    List<GaragePlace> getAvailablePlaces();
+    List<GaragePlace> getAvailablePlaces() throws Exception;
 
-    long getAvailablePlacesAmount(LocalDateTime localDateTime);
+    long getAvailablePlacesAmount(LocalDateTime localDateTime) throws Exception;
 
-    LocalDateTime getNearestAvailableDate();
+    LocalDateTime getNearestAvailableDate() throws Exception;
 
-    GaragePlace createGaragePlace(long id, int number, double space);
+    GaragePlace createGaragePlace(int number, double space);
 
-    GaragePlace getGaragePlaceById(Long id);
+    GaragePlace getGaragePlaceById(Long id) throws Exception;
 
     void importGaragePlacesFromCsv();
 
-    void exportGaragePlacesToCsv();
+    void exportGaragePlacesToCsv() throws Exception;
 
     void importGaragePlacesFromJson();
 
-    void exportGaragePlacesToJson();
+    void exportGaragePlacesToJson() throws Exception;
 }
 
