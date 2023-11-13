@@ -12,6 +12,7 @@ import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
+import org.apache.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 
 @DependencyClass
 public class GaragePlaceService implements IGaragePlaceService{
+
+    private final static Logger logger = Logger.getLogger(GaragePlaceService.class);
 
     private static GaragePlaceService INSTANCE;
     @DependencyComponent
@@ -56,6 +59,7 @@ public class GaragePlaceService implements IGaragePlaceService{
         if (isGaragePlaceAddable) {
             garagePlaceDAO.addGaragePlace(garagePlace);
         } else {
+            logger.error("Adding garage places was prohibited");
             System.out.println("Adding garage places was prohibited");
         }
     }
@@ -66,6 +70,7 @@ public class GaragePlaceService implements IGaragePlaceService{
         if (isGaragePlaceRemovable) {
             garagePlaceDAO.deleteGaragePlace(id);
         } else {
+            logger.error("Removing garage places was prohibited");
             System.out.println("Removing garage places was prohibited");
         }
     }
@@ -129,13 +134,13 @@ public class GaragePlaceService implements IGaragePlaceService{
                     try {
                         garagePlace = getGaragePlaceById(importGaragePlace.getId());
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        logger.error("Can't get garage place", exception);
                     }
                     if (garagePlace == null) {
                         try {
                             garagePlaceDAO.addGaragePlace(importGaragePlace);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            logger.error("Can't add garage place", exception);
                         }
                     } else if (!garagePlace.equals(importGaragePlace)) {
                         garagePlace.setNumber(importGaragePlace.getNumber());
@@ -174,13 +179,13 @@ public class GaragePlaceService implements IGaragePlaceService{
                     try {
                         garagePlace = getGaragePlaceById(importGaragePlace.getId());
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        logger.error("Can't get garage place", exception);
                     }
                     if (garagePlace == null) {
                         try {
                             garagePlaceDAO.addGaragePlace(importGaragePlace);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            logger.error("Can't add garage place", exception);
                         }
                     } else if (!garagePlace.equals(importGaragePlace)) {
                         garagePlace.setNumber(importGaragePlace.getNumber());

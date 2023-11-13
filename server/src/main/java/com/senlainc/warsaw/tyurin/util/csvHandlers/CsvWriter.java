@@ -1,6 +1,7 @@
 package com.senlainc.warsaw.tyurin.util.csvHandlers;
 
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -9,6 +10,8 @@ import java.util.List;
 
 @DependencyClass
 public class CsvWriter {
+
+    private final static Logger logger = Logger.getLogger(CsvWriter.class);
 
     private static CsvWriter INSTANCE;
 
@@ -30,8 +33,8 @@ public class CsvWriter {
                     e.printStackTrace();
                 }
             });
-        } catch (IOException e) {
-            System.out.println("Exception occurred during writing into file " + path.substring(path.lastIndexOf("\\") + 1));
+        } catch (IOException exception) {
+            logger.error("Exception occurred during writing into file " + path.substring(path.lastIndexOf("\\") + 1), exception);
         }
         return rawEntities;
     }

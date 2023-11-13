@@ -10,6 +10,7 @@ import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
+import org.apache.log4j.Logger;
 
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
 
 @DependencyClass
 public class CraftsmanService implements ICraftsmanService{
+
+    private final static Logger logger = Logger.getLogger(CraftsmanService.class);
 
     private static CraftsmanService INSTANCE;
     @DependencyComponent
@@ -104,13 +107,13 @@ public class CraftsmanService implements ICraftsmanService{
                     try {
                         craftsman = getCraftsmanById(importedCraftsman.getId());
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        logger.error("Can't get craftsman", exception);
                     }
                     if (craftsman == null) {
                         try {
                             craftsmanDAO.addCraftsman(importedCraftsman);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            logger.error("Can't add craftsman", exception);
                         }
                     } else if (!craftsman.equals(importedCraftsman)) {
                         craftsman.setSurname(importedCraftsman.getSurname());
@@ -143,13 +146,13 @@ public class CraftsmanService implements ICraftsmanService{
                     try {
                         craftsman = getCraftsmanById(importedCraftsman.getId());
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        logger.error("Can't get craftsman", exception);
                     }
                     if (craftsman == null) {
                         try {
                             craftsmanDAO.addCraftsman(importedCraftsman);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            logger.error("Can't add craftsman", exception);
                         }
                     } else if (!craftsman.equals(importedCraftsman)) {
                         craftsman.setSurname(importedCraftsman.getSurname());

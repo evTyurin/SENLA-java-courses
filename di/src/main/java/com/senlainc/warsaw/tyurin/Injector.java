@@ -2,14 +2,16 @@ package com.senlainc.warsaw.tyurin;
 
 import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
+import org.apache.log4j.Logger;
 
-import javax.lang.model.type.PrimitiveType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Properties;
 
 public class Injector {
+
+    private final static Logger logger = Logger.getLogger(Injector.class);
 
     private Properties properties;
 
@@ -21,8 +23,8 @@ public class Injector {
     private void readProperties() {
         try (InputStream input = Injector.class.getClassLoader().getResourceAsStream("application.properties")) {
             properties.load(input);
-        } catch (IOException e) {
-            System.out.println("Exception occurred during reading from file");
+        } catch (IOException exception) {
+            logger.error("Exception occurred during reading from file", exception);
         }
     }
 

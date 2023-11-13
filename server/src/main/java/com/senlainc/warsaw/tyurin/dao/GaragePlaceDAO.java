@@ -6,11 +6,11 @@ import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.util.EntityBuilder;
 import com.senlainc.warsaw.tyurin.util.dbConnection.DBConnector;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,6 +19,8 @@ import java.util.List;
 
 @DependencyClass
 public class GaragePlaceDAO implements IGaragePlaceDAO{
+
+    private final static Logger logger = Logger.getLogger(GaragePlaceDAO.class);
 
     @DependencyComponent
     private DBConnector dbConnector;
@@ -47,7 +49,7 @@ public class GaragePlaceDAO implements IGaragePlaceDAO{
             preparedStatement.setDouble(2, garagePlace.getSpace());
             preparedStatement.executeUpdate();
         } catch (Exception exception) {
-            throw new Exception("Can't add garage place");
+            logger.error("Can't add garage place", exception);
         }
     }
 
@@ -58,7 +60,7 @@ public class GaragePlaceDAO implements IGaragePlaceDAO{
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (Exception exception) {
-            throw new Exception("Can't delete garage place");
+            logger.error("Can't delete garage place", exception);
         }
     }
 
@@ -74,12 +76,13 @@ public class GaragePlaceDAO implements IGaragePlaceDAO{
             }
             return garagePlaces;
         } catch (Exception exception) {
-            throw new Exception("Can't get garage places");
+            logger.error("Can't get garage places", exception);
         }
+        return Collections.EMPTY_LIST;
     }
 
     @Override
-    public GaragePlace getGaragePlace(long id) throws Exception {
+    public GaragePlace getGaragePlace(long id) {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select * " +
                      "from garage_place where id =?;");
@@ -89,13 +92,13 @@ public class GaragePlaceDAO implements IGaragePlaceDAO{
                 return EntityBuilder.buildGaragePlace(resultSet);
             }
         } catch (Exception exception) {
-            throw new Exception("Can't get garage place by id");
+            logger.error("Can't get garage place by id", exception);
         }
         return null;
     }
 
     @Override
-    public List<GaragePlace> getAvailableGaragePlaces() throws Exception {
+    public List<GaragePlace> getAvailableGaragePlaces() {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select distinct garage_place.id, " +
                      "garage_place.number, garage_place.space " +
@@ -108,12 +111,13 @@ public class GaragePlaceDAO implements IGaragePlaceDAO{
             }
             return garagePlaces;
         } catch (Exception exception) {
-            throw new Exception("Can't available garage places");
+            logger.error("Can't available garage places", exception);
         }
+        return Collections.EMPTY_LIST;
     }
 
     @Override
-    public long getAvailablePlacesAmount(LocalDateTime localDateTime) throws Exception {
+    public long getAvailablePlacesAmount(LocalDateTime localDateTime) {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select LEAST(count(order_craftsman.order_id), count(order_craftsman.craftsman_id)) as amount\n" +
                      "from orders join garage_place on garage_place.id=orders.garage_place_id \n" +
@@ -131,7 +135,7 @@ public class GaragePlaceDAO implements IGaragePlaceDAO{
                 return resultSet.getLong("amount");
             }
         } catch (Exception exception) {
-            throw new Exception("Can't available garage places amount");
+            logger.error("Can't available garage places amount", exception);
         }
         return 0;
     }

@@ -6,6 +6,7 @@ import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.EntityBuilder;
 import com.senlainc.warsaw.tyurin.util.dbConnection.DBConnector;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +18,8 @@ import java.util.List;
 
 @DependencyClass
 public class OrderDAO implements IOrderDAO{
+
+    private final static Logger logger = Logger.getLogger(OrderDAO.class);
 
     @DependencyComponent
     private DBConnector dbConnector;
@@ -39,7 +42,7 @@ public class OrderDAO implements IOrderDAO{
     }
 
     @Override
-    public void addOrder(Order order) throws Exception {
+    public void addOrder(Order order) {
         long orderStatusId = getOrderStatusId(order.getOrderStatus().toString());
         try(Connection connection = dbConnector.createConnection();
             PreparedStatement ordersInsert = connection.prepareStatement("insert into orders (price, " +
@@ -62,29 +65,29 @@ public class OrderDAO implements IOrderDAO{
                     orderCraftsmanInsert.setLong(2, craftsmanId);
                     orderCraftsmanInsert.executeUpdate();
                 } catch (SQLException exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't add craftsman", exception);
                 }
             });
             connection.commit();
             connection.setAutoCommit(true);
         } catch (Exception exception) {
-            throw new Exception("Can't add order");
+            logger.error("Can't add order", exception);
         }
     }
 
     @Override
-    public void deleteOrder(long id) throws Exception {
+    public void deleteOrder(long id) {
         try(Connection connection = dbConnector.createConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("delete from orders where id=?;")){
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (Exception exception) {
-            throw new Exception("Can't delete order");
+            logger.error("Can't delete order", exception);
         }
     }
 
     @Override
-    public List<Order> getOrders() throws Exception {
+    public List<Order> getOrders() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
@@ -100,17 +103,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get orders");
+            logger.error("Can't get orders", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getOrdersPriceSorted() throws Exception {
+    public List<Order> getOrdersPriceSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
@@ -127,17 +130,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get orders sorted by price");
+            logger.error("Can't get orders sorted by price", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getOrdersSubmissionDateSorted() throws Exception {
+    public List<Order> getOrdersSubmissionDateSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, orders.price, " +
@@ -155,17 +158,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get orders sorted by submission date");
+            logger.error("Can't get orders sorted by submission date", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getOrdersCompletionDateSorted() throws Exception {
+    public List<Order> getOrdersCompletionDateSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, orders.price, " +
@@ -183,17 +186,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get orders sorted by completion date");
+            logger.error("Can't get orders sorted by completion date", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getOrdersStartDateSorted() throws Exception {
+    public List<Order> getOrdersStartDateSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, orders.price, " +
@@ -211,17 +214,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get orders sorted by start date");
+            logger.error("Can't get orders sorted by start date", exception);
         }
         return orders;
     }
 
     @Override
-    public Order getOrder(long id) throws Exception {
+    public Order getOrder(long id) {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
                      "orders.price, orders.submission_date, " +
@@ -237,7 +240,7 @@ public class OrderDAO implements IOrderDAO{
                 order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
             }
         } catch (Exception exception) {
-            throw new Exception("Can't get order by id");
+            logger.error("Can't get order by id", exception);
         }
         return null;
     }
@@ -260,17 +263,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get non canceled orders");
+            logger.error("Can't get non canceled orders", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getInProgressOrdersCompletionDateSorted() throws Exception {
+    public List<Order> getInProgressOrdersCompletionDateSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
@@ -288,17 +291,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get orders in progress sorted by completion date");
+            logger.error("Can't get orders in progress sorted by completion date", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getInProgressOrdersSubmissionDateSorted() throws Exception {
+    public List<Order> getInProgressOrdersSubmissionDateSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
@@ -316,17 +319,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get orders in progress sorted by submission date");
+            logger.error("Can't get orders in progress sorted by submission date", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getInProgressOrdersStartDateSorted() throws Exception {
+    public List<Order> getInProgressOrdersStartDateSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
@@ -344,17 +347,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get orders in progress sorted by start date");
+            logger.error("Can't get orders in progress sorted by start date", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getInProgressOrders() throws Exception {
+    public List<Order> getInProgressOrders() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
@@ -371,17 +374,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get orders in progress");
+            logger.error("Can't get orders in progress", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getArchivedOrdersPriceSorted() throws Exception {
+    public List<Order> getArchivedOrdersPriceSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
@@ -399,17 +402,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get archives orders sorted by price");
+            logger.error("Can't get archives orders sorted by price", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getArchivedOrdersCompletionDateSorted() throws Exception {
+    public List<Order> getArchivedOrdersCompletionDateSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
@@ -427,17 +430,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get archives orders sorted by completion date");
+            logger.error("Can't get archives orders sorted by completion date", exception);
         }
         return orders;
     }
 
     @Override
-    public List<Order> getArchivedOrdersSubmissionDateSorted() throws Exception {
+    public List<Order> getArchivedOrdersSubmissionDateSorted() {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = dbConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
@@ -455,17 +458,17 @@ public class OrderDAO implements IOrderDAO{
                 try {
                     order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    logger.error("Can't set craftsman", exception);
                 }
             });
         } catch (Exception exception) {
-            throw new Exception("Can't get archives orders sorted by submission date");
+            logger.error("Can't get archives orders sorted by submission date", exception);
         }
         return orders;
     }
 
     @Override
-    public Order getOrderByCraftsmen(long craftsmanId) throws Exception {
+    public Order getOrderByCraftsmen(long craftsmanId) {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.order_id, " +
                      "orders.price, orders.submission_date, orders.start_date, " +
@@ -480,13 +483,13 @@ public class OrderDAO implements IOrderDAO{
                 order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
             }
         } catch (Exception exception) {
-            throw new Exception("Can't get order by craftsman id");
+            logger.error("Can't get order by craftsman id", exception);
         }
         return null;
     }
 
     @Override
-    public Long getOrderStatusId(String orderStatus) throws Exception {
+    public Long getOrderStatusId(String orderStatus) {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select id " +
                      "from order_status where order_status=?;");
@@ -496,7 +499,7 @@ public class OrderDAO implements IOrderDAO{
                 return resultSet.getLong("id");
             }
         } catch (Exception exception) {
-            throw new Exception("Can't get order status id");
+            logger.error("Can't get order status id", exception);
         }
         return null;
     }

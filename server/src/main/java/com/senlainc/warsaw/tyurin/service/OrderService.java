@@ -12,6 +12,7 @@ import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
 import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
+import org.apache.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 
 @DependencyClass
 public class OrderService implements IOrderService{
+
+    private final static Logger logger = Logger.getLogger(OrderService.class);
 
     private static OrderService INSTANCE;
     @DependencyComponent
@@ -64,6 +67,7 @@ public class OrderService implements IOrderService{
             orderDAO.getOrder(id).setCompletionDate(completionDateTime);
         } else {
             System.out.println("Shifting completion time was prohibited");
+            logger.error("Shifting completion time was prohibited");
         }
     }
 
@@ -195,13 +199,13 @@ public class OrderService implements IOrderService{
                     try {
                         order = getOrderById(importOrder.getId());
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        logger.error("Can't get order", exception);
                     }
                     if (order == null) {
                         try {
                             orderDAO.addOrder(importOrder);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            logger.error("Can't add order", exception);
                         }
                     } else if (!order.equals(importOrder)) {
                         order.setOrderStatus(importOrder.getOrderStatus());
@@ -237,6 +241,7 @@ public class OrderService implements IOrderService{
             orderDAO.deleteOrder(id);
         } else {
             System.out.println("Removing order was prohibited");
+            logger.error("Removing order was prohibited");
         }
     }
 
@@ -250,13 +255,13 @@ public class OrderService implements IOrderService{
                     try {
                         order = getOrderById(importOrder.getId());
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        logger.error("Can't get order", exception);
                     }
                     if (order == null) {
                         try {
                             orderDAO.addOrder(importOrder);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            logger.error("Can't add order", exception);
                         }
                     } else if (!order.equals(importOrder)) {
                         order.setOrderStatus(importOrder.getOrderStatus());
