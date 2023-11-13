@@ -60,7 +60,6 @@ public class GaragePlaceService implements IGaragePlaceService{
             garagePlaceDAO.addGaragePlace(garagePlace);
         } else {
             logger.error("Adding garage places was prohibited");
-            System.out.println("Adding garage places was prohibited");
         }
     }
 
@@ -71,7 +70,6 @@ public class GaragePlaceService implements IGaragePlaceService{
             garagePlaceDAO.deleteGaragePlace(id);
         } else {
             logger.error("Removing garage places was prohibited");
-            System.out.println("Removing garage places was prohibited");
         }
     }
 

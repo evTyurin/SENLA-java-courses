@@ -66,7 +66,6 @@ public class OrderService implements IOrderService{
         if (isCompletionDateTimeShiftable) {
             orderDAO.getOrder(id).setCompletionDate(completionDateTime);
         } else {
-            System.out.println("Shifting completion time was prohibited");
             logger.error("Shifting completion time was prohibited");
         }
     }
@@ -240,7 +239,6 @@ public class OrderService implements IOrderService{
         if (isOrderRemovable) {
             orderDAO.deleteOrder(id);
         } else {
-            System.out.println("Removing order was prohibited");
             logger.error("Removing order was prohibited");
         }
     }

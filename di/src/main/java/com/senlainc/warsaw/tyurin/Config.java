@@ -24,7 +24,6 @@ public class Config {
            Set<Class<? extends T>> classes = scanner.getSubTypesOf(injectableInterface);
            if (classes.size() != 1) {
                logger.error(injectableInterface + " has 0 or more than one implementations");
-               throw new RuntimeException(injectableInterface + " has 0 or more than one implementations");
            }
            return classes.iterator().next();
         });
