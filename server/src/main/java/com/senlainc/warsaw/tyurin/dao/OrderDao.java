@@ -5,7 +5,7 @@ import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.EntityBuilder;
-import com.senlainc.warsaw.tyurin.util.dbConnection.DBConnector;
+import com.senlainc.warsaw.tyurin.util.dbconnection.DbConnector;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -17,22 +17,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @DependencyClass
-public class OrderDAO implements IOrderDAO{
+public class OrderDao implements IOrderDao {
 
-    private final static Logger logger = Logger.getLogger(OrderDAO.class);
+    private final static Logger logger = Logger.getLogger(OrderDao.class);
 
     @DependencyComponent
-    private DBConnector dbConnector;
+    private DbConnector dbConnector;
     @DependencyComponent
-    private ICraftsmanDAO craftsmanDAO;
-    private static OrderDAO INSTANCE;
+    private ICraftsmanDao craftsmanDao;
+    private static OrderDao INSTANCE;
     private List<Order> orders;
 
-    public OrderDAO() {
+    public OrderDao() {
         orders = new ArrayList<>();
     }
 
-    public static OrderDAO getInstance() {
+    public static OrderDao getInstance() {
         return INSTANCE;
     }
 
@@ -101,7 +101,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -128,7 +128,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -156,7 +156,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -184,7 +184,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -212,7 +212,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -237,7 +237,7 @@ public class OrderDAO implements IOrderDAO{
             preparedStatement.setLong(1, id);
             if (resultSet.next()) {
                 Order order = EntityBuilder.buildOrder(resultSet);
-                order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
             }
         } catch (Exception exception) {
             logger.error("Can't get order by id", exception);
@@ -261,7 +261,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -289,7 +289,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -317,7 +317,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -345,7 +345,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -372,7 +372,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -400,7 +400,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -428,7 +428,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -456,7 +456,7 @@ public class OrderDAO implements IOrderDAO{
             }
             orders.forEach(order -> {
                 try {
-                    order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                    order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
                 } catch (Exception exception) {
                     logger.error("Can't set craftsman", exception);
                 }
@@ -480,7 +480,7 @@ public class OrderDAO implements IOrderDAO{
             preparedStatement.setLong(1, craftsmanId);
             if (resultSet.next()) {
                 Order order = EntityBuilder.buildOrder(resultSet);
-                order.setCraftsmen(craftsmanDAO.getCraftsmenIdByOrder(order.getId()));
+                order.setCraftsmen(craftsmanDao.getCraftsmenIdByOrder(order.getId()));
             }
         } catch (Exception exception) {
             logger.error("Can't get order by craftsman id", exception);

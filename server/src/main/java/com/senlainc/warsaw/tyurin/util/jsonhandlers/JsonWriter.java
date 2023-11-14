@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.util.jsonHandlers;
+package com.senlainc.warsaw.tyurin.util.jsonhandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

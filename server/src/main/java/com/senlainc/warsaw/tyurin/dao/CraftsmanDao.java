@@ -5,7 +5,7 @@ import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.util.EntityBuilder;
-import com.senlainc.warsaw.tyurin.util.dbConnection.DBConnector;
+import com.senlainc.warsaw.tyurin.util.dbconnection.DbConnector;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -16,20 +16,20 @@ import java.util.Collections;
 import java.util.List;
 
 @DependencyClass
-public class CraftsmanDAO implements ICraftsmanDAO{
+public class CraftsmanDao implements ICraftsmanDao {
 
-    private final static Logger logger = Logger.getLogger(CraftsmanDAO.class);
+    private final static Logger logger = Logger.getLogger(CraftsmanDao.class);
 
     @DependencyComponent
-    private DBConnector dbConnector;
-    private static CraftsmanDAO INSTANCE;
+    private DbConnector dbConnector;
+    private static CraftsmanDao INSTANCE;
     private List<Craftsman> craftsmen;
 
-    public CraftsmanDAO() {
+    public CraftsmanDao() {
         craftsmen = new ArrayList<>();
     }
 
-    public static CraftsmanDAO getInstance() {
+    public static CraftsmanDao getInstance() {
         return INSTANCE;
     }
 

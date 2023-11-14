@@ -5,7 +5,7 @@ import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface IGaragePlaceDAO {
+public interface IGaragePlaceDao {
 
     void addGaragePlace(GaragePlace garagePlace) throws Exception;
 

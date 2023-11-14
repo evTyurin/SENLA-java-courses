@@ -4,7 +4,7 @@ import com.senlainc.warsaw.tyurin.entity.Craftsman;
 
 import java.util.List;
 
-public interface ICraftsmanDAO {
+public interface ICraftsmanDao {
 
     void addCraftsman(Craftsman craftsman) throws Exception;
 

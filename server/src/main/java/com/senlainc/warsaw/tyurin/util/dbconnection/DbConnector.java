@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.util.dbConnection;
+package com.senlainc.warsaw.tyurin.util.dbconnection;
 
 import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
@@ -10,9 +10,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @DependencyClass
-public class DBConnector {
+public class DbConnector {
 
-    private final static Logger logger = Logger.getLogger(DBConnector.class);
+    private final static Logger logger = Logger.getLogger(DbConnector.class);
 
     @ConfigProperty(propertyKey = Constants.DB_DRIVER)
     private String driver;
@@ -22,7 +22,7 @@ public class DBConnector {
     private String user;
     @ConfigProperty(propertyKey = Constants.DB_PASSWORD)
     private String password;
-    private static DBConnector INSTANCE;
+    private static DbConnector INSTANCE;
 
     public Connection createConnection() throws Exception {
         Connection connection = null;

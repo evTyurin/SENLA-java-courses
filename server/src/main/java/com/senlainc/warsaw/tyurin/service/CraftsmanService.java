@@ -3,13 +3,13 @@ package com.senlainc.warsaw.tyurin.service;
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
-import com.senlainc.warsaw.tyurin.dao.ICraftsmanDAO;
+import com.senlainc.warsaw.tyurin.dao.ICraftsmanDao;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.util.Constants;
-import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
-import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
-import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
-import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
+import com.senlainc.warsaw.tyurin.util.csvhandlers.CsvReader;
+import com.senlainc.warsaw.tyurin.util.csvhandlers.CsvWriter;
+import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonReader;
+import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonWriter;
 import org.apache.log4j.Logger;
 
 import java.util.Comparator;
@@ -23,7 +23,7 @@ public class CraftsmanService implements ICraftsmanService{
 
     private static CraftsmanService INSTANCE;
     @DependencyComponent
-    private ICraftsmanDAO craftsmanDAO;
+    private ICraftsmanDao craftsmanDao;
     @DependencyComponent
     private IOrderService orderService;
     @DependencyComponent
@@ -46,32 +46,32 @@ public class CraftsmanService implements ICraftsmanService{
 
     @Override
     public void addCraftsman(Craftsman craftsman) throws Exception {
-        craftsmanDAO.addCraftsman(craftsman);
+        craftsmanDao.addCraftsman(craftsman);
     }
 
     @Override
     public void removeCraftsmanById(long id) throws Exception {
-        craftsmanDAO.deleteCraftsman(id);
+        craftsmanDao.deleteCraftsman(id);
     }
 
     @Override
     public List<Craftsman> getCraftsmenByOrder(long id) throws Exception {
-        return craftsmanDAO.getCraftsmenByOrder(id);
+        return craftsmanDao.getCraftsmenByOrder(id);
     }
 
     @Override
     public List<Craftsman> getSortedAlphabetically() throws Exception {
-        return craftsmanDAO.getSortedAlphabetically();
+        return craftsmanDao.getSortedAlphabetically();
     }
 
     @Override
     public List<Craftsman> getSortedByBusyness() throws Exception {
-        return craftsmanDAO.getSortedByBusyness();
+        return craftsmanDao.getSortedByBusyness();
     }
 
     @Override
     public Craftsman getCraftsmanById(Long id) throws Exception {
-        return craftsmanDAO.getCraftsman(id);
+        return craftsmanDao.getCraftsman(id);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class CraftsmanService implements ICraftsmanService{
 
     @Override
     public List<Craftsman> getCraftsmen() throws Exception {
-        return craftsmanDAO.getCraftsmen();
+        return craftsmanDao.getCraftsmen();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class CraftsmanService implements ICraftsmanService{
                     }
                     if (craftsman == null) {
                         try {
-                            craftsmanDAO.addCraftsman(importedCraftsman);
+                            craftsmanDao.addCraftsman(importedCraftsman);
                         } catch (Exception exception) {
                             logger.error("Can't add craftsman", exception);
                         }
@@ -125,7 +125,7 @@ public class CraftsmanService implements ICraftsmanService{
     @Override
     public void exportCraftsmenToCsv() throws Exception {
 
-        List<String> craftsmen = craftsmanDAO
+        List<String> craftsmen = craftsmanDao
                 .getCraftsmen()
                 .stream()
                 .sorted(Comparator.comparing(Craftsman::getId))
@@ -150,7 +150,7 @@ public class CraftsmanService implements ICraftsmanService{
                     }
                     if (craftsman == null) {
                         try {
-                            craftsmanDAO.addCraftsman(importedCraftsman);
+                            craftsmanDao.addCraftsman(importedCraftsman);
                         } catch (Exception exception) {
                             logger.error("Can't add craftsman", exception);
                         }
@@ -163,6 +163,6 @@ public class CraftsmanService implements ICraftsmanService{
 
     @Override
     public void exportCraftsmenToJson() throws Exception {
-        jsonWriter.writeEntities(craftsmanDAO.getCraftsmen(), Constants.PATH_TO_CRAFTSMEN_JSON);
+        jsonWriter.writeEntities(craftsmanDao.getCraftsmen(), Constants.PATH_TO_CRAFTSMEN_JSON);
     }
 }

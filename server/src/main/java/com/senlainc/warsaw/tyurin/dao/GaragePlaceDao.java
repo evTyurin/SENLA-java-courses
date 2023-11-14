@@ -5,7 +5,7 @@ import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.util.EntityBuilder;
-import com.senlainc.warsaw.tyurin.util.dbConnection.DBConnector;
+import com.senlainc.warsaw.tyurin.util.dbconnection.DbConnector;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -18,20 +18,20 @@ import java.util.Collections;
 import java.util.List;
 
 @DependencyClass
-public class GaragePlaceDAO implements IGaragePlaceDAO{
+public class GaragePlaceDao implements IGaragePlaceDao {
 
-    private final static Logger logger = Logger.getLogger(GaragePlaceDAO.class);
+    private final static Logger logger = Logger.getLogger(GaragePlaceDao.class);
 
     @DependencyComponent
-    private DBConnector dbConnector;
-    private static GaragePlaceDAO INSTANCE;
+    private DbConnector dbConnector;
+    private static GaragePlaceDao INSTANCE;
     private List<GaragePlace> garagePlaces;
 
-    public GaragePlaceDAO() {
+    public GaragePlaceDao() {
         garagePlaces = new ArrayList<>();
     }
 
-    public static GaragePlaceDAO getInstance() {
+    public static GaragePlaceDao getInstance() {
         return INSTANCE;
     }
 

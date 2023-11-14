@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.util.csvHandlers;
+package com.senlainc.warsaw.tyurin.util.csvhandlers;
 
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import org.apache.log4j.Logger;
