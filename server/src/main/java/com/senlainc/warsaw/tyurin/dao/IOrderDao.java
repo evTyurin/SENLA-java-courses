@@ -4,7 +4,7 @@ import com.senlainc.warsaw.tyurin.entity.Order;
 
 import java.util.List;
 
-public interface IOrderDAO {
+public interface IOrderDao {
 
     void addOrder(Order order) throws Exception;
 

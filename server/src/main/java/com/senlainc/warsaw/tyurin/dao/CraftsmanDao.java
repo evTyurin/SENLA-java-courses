@@ -5,27 +5,31 @@ import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.util.EntityBuilder;
-import com.senlainc.warsaw.tyurin.util.dbConnection.DBConnector;
+import com.senlainc.warsaw.tyurin.util.dbconnection.DbConnector;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @DependencyClass
-public class CraftsmanDAO implements ICraftsmanDAO{
+public class CraftsmanDao implements ICraftsmanDao {
+
+    private final static Logger logger = Logger.getLogger(CraftsmanDao.class);
 
     @DependencyComponent
-    private DBConnector dbConnector;
-    private static CraftsmanDAO INSTANCE;
+    private DbConnector dbConnector;
+    private static CraftsmanDao INSTANCE;
     private List<Craftsman> craftsmen;
 
-    public CraftsmanDAO() {
+    public CraftsmanDao() {
         craftsmen = new ArrayList<>();
     }
 
-    public static CraftsmanDAO getInstance() {
+    public static CraftsmanDao getInstance() {
         return INSTANCE;
     }
 
@@ -35,7 +39,7 @@ public class CraftsmanDAO implements ICraftsmanDAO{
     }
 
     @Override
-    public void addCraftsman(Craftsman craftsman) throws Exception {
+    public void addCraftsman(Craftsman craftsman) {
 
         try(Connection connection = dbConnector.createConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("insert into craftsman (name, surname) " +
@@ -44,24 +48,24 @@ public class CraftsmanDAO implements ICraftsmanDAO{
             preparedStatement.setString(2, craftsman.getSurname());
             preparedStatement.executeUpdate();
         } catch (Exception exception) {
-            throw new Exception("Can't add craftsman");
+            logger.error("Can't add craftsman", exception);
         }
     }
 
     @Override
-    public void deleteCraftsman(long id) throws Exception {
+    public void deleteCraftsman(long id) {
 
         try(Connection connection = dbConnector.createConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("delete from craftsman where id=?;")){
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (Exception exception) {
-            throw new Exception("Can't delete craftsman");
+            logger.error("Can't delete craftsman", exception);
         }
     }
 
     @Override
-    public List<Craftsman> getCraftsmen() throws Exception {
+    public List<Craftsman> getCraftsmen() {
 
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select * from craftsman;");
@@ -72,12 +76,13 @@ public class CraftsmanDAO implements ICraftsmanDAO{
             }
             return craftsmen;
         } catch (Exception exception) {
-            throw new Exception("Can't get craftsmen");
+            logger.error("Can't get craftsmen", exception);
         }
+        return Collections.EMPTY_LIST;
     }
 
     @Override
-    public Craftsman getCraftsman(long id) throws Exception {
+    public Craftsman getCraftsman(long id) {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select * " +
                      "from craftsman where id =?;");
@@ -87,13 +92,13 @@ public class CraftsmanDAO implements ICraftsmanDAO{
                 return EntityBuilder.buildCraftsman(resultSet);
             }
         } catch (Exception exception) {
-            throw new Exception("Can't get craftsman by id");
+            logger.error("Can't get craftsman by id", exception);
         }
         return null;
     }
 
     @Override
-    public List<Craftsman> getCraftsmenByOrder(long id) throws Exception {
+    public List<Craftsman> getCraftsmenByOrder(long id) {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select craftsman.id, " +
                      "craftsman.name, craftsman.surname " +
@@ -107,12 +112,13 @@ public class CraftsmanDAO implements ICraftsmanDAO{
             }
             return craftsmen;
         } catch (Exception exception) {
-            throw new Exception("Can't get craftsman by order id");
+            logger.error("Can't get craftsman by order id", exception);
         }
+        return Collections.EMPTY_LIST;
     }
 
     @Override
-    public List<Long> getCraftsmenIdByOrder(long id) throws Exception {
+    public List<Long> getCraftsmenIdByOrder(long id) {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select craftsman_id " +
                      "from order_craftsman where order_id=?;")){
@@ -124,12 +130,13 @@ public class CraftsmanDAO implements ICraftsmanDAO{
             }
             return craftsmen;
         } catch (Exception exception) {
-            throw new Exception("Can't get craftsmen id by order id");
+            logger.error("Can't get craftsmen id by order id", exception);
         }
+        return Collections.EMPTY_LIST;
     }
 
     @Override
-    public List<Craftsman> getSortedAlphabetically() throws Exception {
+    public List<Craftsman> getSortedAlphabetically() {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select * from craftsman " +
                      "order by surname, name;");
@@ -140,12 +147,13 @@ public class CraftsmanDAO implements ICraftsmanDAO{
             }
             return craftsmen;
         } catch (Exception exception) {
-            throw new Exception("Can't get craftsmen sorted alphabetically");
+            logger.error("Can't get craftsmen sorted alphabetically", exception);
         }
+        return Collections.EMPTY_LIST;
     }
 
     @Override
-    public List<Craftsman> getSortedByBusyness() throws Exception {
+    public List<Craftsman> getSortedByBusyness() {
         try (Connection connection = dbConnector.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select order_craftsman.craftsman_id as id, craftsman.name, craftsman.surname\n" +
                      "from orders join order_craftsman on orders.id=order_craftsman.order_id \n" +
@@ -161,8 +169,9 @@ public class CraftsmanDAO implements ICraftsmanDAO{
             }
             return craftsmen;
         } catch (Exception exception) {
-            throw new Exception("Can't get craftsmen sorted by business");
+            logger.error("Can't get craftsmen sorted by business", exception);
         }
+        return Collections.EMPTY_LIST;
     }
 }
 

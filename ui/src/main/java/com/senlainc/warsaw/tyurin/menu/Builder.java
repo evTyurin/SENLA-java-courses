@@ -62,7 +62,7 @@ public class Builder {
     public void buildMenu() {
         rootMenu = new Menu();
 
-        rootMenu.setName("Root com.senlainc.warsaw.tyurin.menu");
+        rootMenu.setName("Root menu");
 
         rootMenu.getMenuItems().add(new MenuItem("Craftsman menu", getCraftsmanMenu()));
         rootMenu.getMenuItems().add(new MenuItem("Order menu", getOrderMenu()));
@@ -78,7 +78,7 @@ public class Builder {
 
         Menu craftsmanMenu = new Menu();
 
-        craftsmanMenu.setName("Craftsman com.senlainc.warsaw.tyurin.menu");
+        craftsmanMenu.setName("Craftsman menu");
 
         craftsmanMenu.getMenuItems().add(new MenuItem("Add craftsman", new AddCraftsman(), craftsmanMenu));
         craftsmanMenu.getMenuItems().add(new MenuItem("Remove craftsman", new RemoveCraftsman(), craftsmanMenu));
@@ -89,7 +89,7 @@ public class Builder {
         craftsmanMenu.getMenuItems().add(new MenuItem("Export craftsmen to csv", new ExportCraftsmenToCsv(), craftsmanMenu));
         craftsmanMenu.getMenuItems().add(new MenuItem("Import craftsmen from json", new ImportCraftsmenFromJson(), craftsmanMenu));
         craftsmanMenu.getMenuItems().add(new MenuItem("Export craftsmen to json", new ExportCraftsmenToJson(), craftsmanMenu));
-        craftsmanMenu.getMenuItems().add(new MenuItem("Exit to root com.senlainc.warsaw.tyurin.menu", getRootMenu()));
+        craftsmanMenu.getMenuItems().add(new MenuItem("Exit to root menu", getRootMenu()));
 
         return craftsmanMenu;
     }
@@ -98,7 +98,7 @@ public class Builder {
 
         Menu orderMenu = new Menu();
 
-        orderMenu.setName("Order com.senlainc.warsaw.tyurin.menu");
+        orderMenu.setName("Order menu");
 
         orderMenu.getMenuItems().add(new MenuItem("Add order", new AddOrder(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Remove order", new RemoveOrder(), orderMenu));
@@ -120,7 +120,7 @@ public class Builder {
         orderMenu.getMenuItems().add(new MenuItem("Export orders to csv", new ExportOrdersToCsv(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Import orders from json", new ImportOrdersFromJson(), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Export orders to json", new ExportOrdersToJson(), orderMenu));
-        orderMenu.getMenuItems().add(new MenuItem("Exit to root com.senlainc.warsaw.tyurin.menu", getRootMenu()));
+        orderMenu.getMenuItems().add(new MenuItem("Exit to root menu", getRootMenu()));
 
         return orderMenu;
     }
@@ -129,7 +129,7 @@ public class Builder {
 
         Menu garagePlaceMenu = new Menu();
 
-        garagePlaceMenu.setName("Garage place com.senlainc.warsaw.tyurin.menu");
+        garagePlaceMenu.setName("Garage menu");
 
         garagePlaceMenu.getMenuItems().add(new MenuItem("Add garage place", new AddGaragePlace(), garagePlaceMenu));
         garagePlaceMenu.getMenuItems().add(new MenuItem("Remove garage place", new RemoveGaragePlace(), garagePlaceMenu));
@@ -140,7 +140,7 @@ public class Builder {
         garagePlaceMenu.getMenuItems().add(new MenuItem("Export garage places to csv", new ExportGaragePlacesToCsv(), garagePlaceMenu));
         garagePlaceMenu.getMenuItems().add(new MenuItem("Import garage places from json", new ImportGaragePlacesFromJson(), garagePlaceMenu));
         garagePlaceMenu.getMenuItems().add(new MenuItem("Export garage places to json", new ExportGaragePlacesToJson(), garagePlaceMenu));
-        garagePlaceMenu.getMenuItems().add(new MenuItem("Exit to root com.senlainc.warsaw.tyurin.menu", getRootMenu()));
+        garagePlaceMenu.getMenuItems().add(new MenuItem("Exit to root menu", getRootMenu()));
 
         return garagePlaceMenu;
     }

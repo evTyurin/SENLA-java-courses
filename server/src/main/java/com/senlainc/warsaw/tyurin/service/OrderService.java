@@ -4,14 +4,15 @@ import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
-import com.senlainc.warsaw.tyurin.dao.IOrderDAO;
+import com.senlainc.warsaw.tyurin.dao.IOrderDao;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.Constants;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
-import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvReader;
-import com.senlainc.warsaw.tyurin.util.csvHandlers.CsvWriter;
-import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonReader;
-import com.senlainc.warsaw.tyurin.util.jsonHandlers.JsonWriter;
+import com.senlainc.warsaw.tyurin.util.csvhandlers.CsvReader;
+import com.senlainc.warsaw.tyurin.util.csvhandlers.CsvWriter;
+import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonReader;
+import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonWriter;
+import org.apache.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -22,9 +23,11 @@ import java.util.stream.Collectors;
 @DependencyClass
 public class OrderService implements IOrderService{
 
+    private final static Logger logger = Logger.getLogger(OrderService.class);
+
     private static OrderService INSTANCE;
     @DependencyComponent
-    private IOrderDAO orderDAO;
+    private IOrderDao orderDao;
     @DependencyComponent
     private CsvReader csvReader;
     @DependencyComponent
@@ -50,81 +53,81 @@ public class OrderService implements IOrderService{
 
     @Override
     public void changeStatus(long id, OrderStatus status) throws Exception {
-        orderDAO.getOrder(id).setOrderStatus(status);
+        orderDao.getOrder(id).setOrderStatus(status);
     }
 
     @Override
     public void shiftStartDateTime(long id, LocalDateTime startDateTime) throws Exception {
-        orderDAO.getOrder(id).setStartDate(startDateTime);
+        orderDao.getOrder(id).setStartDate(startDateTime);
     }
 
     @Override
     public void shiftCompletionDateTime(long id, LocalDateTime completionDateTime) throws Exception {
         if (isCompletionDateTimeShiftable) {
-            orderDAO.getOrder(id).setCompletionDate(completionDateTime);
+            orderDao.getOrder(id).setCompletionDate(completionDateTime);
         } else {
-            System.out.println("Shifting completion time was prohibited");
+            logger.error("Shifting completion time was prohibited");
         }
     }
 
     @Override
     public List<Order> getSortedBySubmissionDate() throws Exception {
-        return orderDAO.getOrdersSubmissionDateSorted();
+        return orderDao.getOrdersSubmissionDateSorted();
     }
 
     @Override
     public List<Order> getSortedByCompletionDate() throws Exception {
-        return orderDAO.getOrdersCompletionDateSorted();
+        return orderDao.getOrdersCompletionDateSorted();
     }
 
     @Override
     public List<Order> getSortedByStartDate() throws Exception {
-        return orderDAO.getOrdersStartDateSorted();
+        return orderDao.getOrdersStartDateSorted();
     }
 
     @Override
     public List<Order> getSortedByPrice() throws Exception {
-        return orderDAO.getOrdersPriceSorted();
+        return orderDao.getOrdersPriceSorted();
     }
 
     @Override
     public List<Order> getCurrentlyExecutedOrdersSortedBySubmissionDate() throws Exception {
-        return orderDAO.getInProgressOrdersSubmissionDateSorted();
+        return orderDao.getInProgressOrdersSubmissionDateSorted();
     }
 
     @Override
     public List<Order> getCurrentlyExecutedOrdersSortedByCompletionDate() throws Exception {
-        return orderDAO.getInProgressOrdersCompletionDateSorted();
+        return orderDao.getInProgressOrdersCompletionDateSorted();
     }
 
     @Override
     public List<Order> getCurrentlyExecutedOrdersSortedByPrice() throws Exception {
-        return orderDAO.getInProgressOrdersStartDateSorted();
+        return orderDao.getInProgressOrdersStartDateSorted();
     }
 
     @Override
     public List<Order> getArchivedOrdersSortedBySubmissionDate() throws Exception {
-        return orderDAO.getArchivedOrdersSubmissionDateSorted();
+        return orderDao.getArchivedOrdersSubmissionDateSorted();
     }
 
     @Override
     public List<Order> getArchivedOrdersSortedByCompletionDate() throws Exception {
-        return orderDAO.getArchivedOrdersCompletionDateSorted();
+        return orderDao.getArchivedOrdersCompletionDateSorted();
     }
 
     @Override
     public List<Order> getArchivedOrdersSortedByPrice() throws Exception {
-        return orderDAO.getArchivedOrdersPriceSorted();
+        return orderDao.getArchivedOrdersPriceSorted();
     }
 
     @Override
     public Order getOrderByCraftsmen(long craftsmanId) throws Exception {
-        return orderDAO.getOrderByCraftsmen(craftsmanId);
+        return orderDao.getOrderByCraftsmen(craftsmanId);
     }
 
     @Override
     public List<Order> getOrders() throws Exception {
-        return orderDAO.getOrders();
+        return orderDao.getOrders();
     }
 
     @Override
@@ -144,12 +147,12 @@ public class OrderService implements IOrderService{
 
     @Override
     public void addOrder(Order order) throws Exception {
-        orderDAO.addOrder(order);
+        orderDao.addOrder(order);
     }
 
     @Override
     public Order getOrderById(long id) throws Exception {
-        return orderDAO.getOrder(id);
+        return orderDao.getOrder(id);
     }
 
     @Override
@@ -195,13 +198,13 @@ public class OrderService implements IOrderService{
                     try {
                         order = getOrderById(importOrder.getId());
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        logger.error("Can't get order", exception);
                     }
                     if (order == null) {
                         try {
-                            orderDAO.addOrder(importOrder);
+                            orderDao.addOrder(importOrder);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            logger.error("Can't add order", exception);
                         }
                     } else if (!order.equals(importOrder)) {
                         order.setOrderStatus(importOrder.getOrderStatus());
@@ -218,7 +221,7 @@ public class OrderService implements IOrderService{
     @Override
     public void exportOrdersToCsv() throws Exception {
 
-        List<String> orders = orderDAO
+        List<String> orders = orderDao
                 .getOrders()
                 .stream()
                 .sorted(Comparator.comparing(Order::getId))
@@ -234,9 +237,9 @@ public class OrderService implements IOrderService{
     public void removeOrder(Long id) throws Exception {
 
         if (isOrderRemovable) {
-            orderDAO.deleteOrder(id);
+            orderDao.deleteOrder(id);
         } else {
-            System.out.println("Removing order was prohibited");
+            logger.error("Removing order was prohibited");
         }
     }
 
@@ -250,13 +253,13 @@ public class OrderService implements IOrderService{
                     try {
                         order = getOrderById(importOrder.getId());
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        logger.error("Can't get order", exception);
                     }
                     if (order == null) {
                         try {
-                            orderDAO.addOrder(importOrder);
+                            orderDao.addOrder(importOrder);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            logger.error("Can't add order", exception);
                         }
                     } else if (!order.equals(importOrder)) {
                         order.setOrderStatus(importOrder.getOrderStatus());
@@ -272,16 +275,16 @@ public class OrderService implements IOrderService{
 
     @Override
     public void exportOrdersToJson() throws Exception {
-        jsonWriter.writeEntities(orderDAO.getOrders(), Constants.PATH_TO_ORDERS_JSON);
+        jsonWriter.writeEntities(orderDao.getOrders(), Constants.PATH_TO_ORDERS_JSON);
     }
 
     @Override
     public List<Order> getNotCanceledOrders() throws Exception {
-        return orderDAO.getNotCanceledOrders();
+        return orderDao.getNotCanceledOrders();
     }
 
     @Override
     public List<Order> getInProgressOrders() throws Exception {
-        return orderDAO.getInProgressOrders();
+        return orderDao.getInProgressOrders();
     }
 }
