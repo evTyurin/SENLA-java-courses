@@ -6,39 +6,35 @@ import java.util.List;
 
 public interface IOrderDao {
 
-    void addOrder(Order order) throws Exception;
+    void create(Order object);
 
-    void deleteOrder(long id) throws Exception;
+    Order findById(long id);
 
-    List<Order> getOrders() throws Exception;
+    void update(Order order);
 
-    List<Order> getOrdersPriceSorted() throws Exception;
+    void delete(Order object);
 
-    List<Order> getOrdersSubmissionDateSorted() throws Exception;
+    List<Order> getAll();
 
-    List<Order> getOrdersCompletionDateSorted() throws Exception;
+    List<Order> getOrdersPriceSorted();
 
-    List<Order> getOrdersStartDateSorted() throws Exception;
+    List<Order> getOrdersSubmissionDateSorted();
 
-    Order getOrder(long id) throws Exception;
+    List<Order> getOrdersCompletionDateSorted();
 
-    List<Order> getNotCanceledOrders() throws Exception;
+    List<Order> getOrdersStartDateSorted();
 
-    List<Order> getInProgressOrders() throws Exception;
+    List<Order> getInProgressOrdersSubmissionDateSorted();
 
-    List<Order> getInProgressOrdersSubmissionDateSorted() throws Exception;
+    List<Order> getInProgressOrdersCompletionDateSorted();
 
-    List<Order> getInProgressOrdersCompletionDateSorted() throws Exception;
+    List<Order> getInProgressOrdersStartDateSorted();
 
-    List<Order> getInProgressOrdersStartDateSorted() throws Exception;
+    List<Order> getArchivedOrdersSubmissionDateSorted();
 
-    List<Order> getArchivedOrdersSubmissionDateSorted() throws Exception;
+    List<Order> getArchivedOrdersCompletionDateSorted();
 
-    List<Order> getArchivedOrdersCompletionDateSorted() throws Exception;
+    List<Order> getArchivedOrdersPriceSorted();
 
-    List<Order> getArchivedOrdersPriceSorted() throws Exception;
-
-    Order getOrderByCraftsmen(long craftsmanId) throws Exception;
-
-    Long getOrderStatusId(String orderStatus) throws Exception;
+    Order getOrderByCraftsmen(long craftsmanId);
 }

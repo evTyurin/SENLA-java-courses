@@ -9,7 +9,7 @@ public class ExportCraftsmenToJson implements IAction {
     private final static Logger logger = Logger.getLogger(ExportCraftsmenToJson.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("Export to json");
         try {

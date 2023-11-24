@@ -9,7 +9,7 @@ public class GetArchivedOrdersSortedByCompletionDate implements IAction {
     private final static Logger logger = Logger.getLogger(GetArchivedOrdersSortedByCompletionDate.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of archived orders sorted by completion date");
         try {

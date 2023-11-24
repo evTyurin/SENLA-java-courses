@@ -12,7 +12,7 @@ public class GetCraftsmenByOrder implements IAction {
     private final static Logger logger = Logger.getLogger(GetCraftsmenByOrder.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             List<Craftsman> craftsmen = CraftsmanService.getInstance().getCraftsmenByOrder(1);

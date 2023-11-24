@@ -9,7 +9,7 @@ public class GetSortedByStartDate implements IAction {
     private final static Logger logger = Logger.getLogger(GetSortedByStartDate.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of orders sorted by start date");
         try {

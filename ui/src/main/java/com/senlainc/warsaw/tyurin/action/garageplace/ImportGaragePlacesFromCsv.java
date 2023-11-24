@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.action.garagePlace;
+package com.senlainc.warsaw.tyurin.action.garageplace;
 
 import com.senlainc.warsaw.tyurin.action.IAction;
 import com.senlainc.warsaw.tyurin.service.GaragePlaceService;

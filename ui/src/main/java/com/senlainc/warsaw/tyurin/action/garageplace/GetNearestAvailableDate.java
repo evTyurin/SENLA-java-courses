@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.action.garagePlace;
+package com.senlainc.warsaw.tyurin.action.garageplace;
 
 import com.senlainc.warsaw.tyurin.action.IAction;
 import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
@@ -9,7 +9,7 @@ public class GetNearestAvailableDate implements IAction {
     private final static Logger logger = Logger.getLogger(GetNearestAvailableDate.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             System.out.println("Nearest available date = "

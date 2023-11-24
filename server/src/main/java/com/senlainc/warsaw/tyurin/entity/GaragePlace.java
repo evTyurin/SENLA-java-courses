@@ -1,11 +1,18 @@
 package com.senlainc.warsaw.tyurin.entity;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "garage_place")
 public class GaragePlace {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "number")
     private int number;
+    @Column(name = "space")
     private double space;
 
     public GaragePlace() {}

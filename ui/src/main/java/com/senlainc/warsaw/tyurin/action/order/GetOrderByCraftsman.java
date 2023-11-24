@@ -9,7 +9,7 @@ public class GetOrderByCraftsman implements IAction {
     private final static Logger logger = Logger.getLogger(GetOrderByCraftsman.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             System.out.println(OrderService

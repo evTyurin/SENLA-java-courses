@@ -6,19 +6,19 @@ import java.util.List;
 
 public interface ICraftsmanDao {
 
-    void addCraftsman(Craftsman craftsman) throws Exception;
+    void create(Craftsman craftsman);
 
-    void deleteCraftsman(long id) throws Exception;
+    Craftsman findById(long id);
 
-    List<Craftsman> getCraftsmen() throws Exception;
+    void update(Craftsman object);
 
-    Craftsman getCraftsman(long id) throws Exception;
+    void delete(Craftsman object);
 
-    List<Craftsman> getCraftsmenByOrder(long id) throws Exception;
+    List<Craftsman> getAll();
 
-    List<Long> getCraftsmenIdByOrder(long id) throws Exception;
+    List<Craftsman> getCraftsmenByOrder(long id);
 
-    List<Craftsman> getSortedAlphabetically() throws Exception;
+    List<Craftsman> getSortedAlphabetically();
 
-    List<Craftsman> getSortedByBusyness() throws Exception;
+    List<Craftsman> getSortedByBusyness();
 }

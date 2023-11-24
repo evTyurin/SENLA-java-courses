@@ -9,7 +9,7 @@ public class GetSortedByBusyness implements IAction {
     private final static Logger logger = Logger.getLogger(GetSortedByBusyness.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of craftsmen sorted by busyness");
         try {

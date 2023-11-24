@@ -12,7 +12,7 @@ public class ShiftStartDateTime implements IAction {
     private final static Logger logger = Logger.getLogger(ShiftStartDateTime.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             Order order = OrderService.getInstance().getOrderById(1);

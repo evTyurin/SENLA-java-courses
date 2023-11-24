@@ -9,7 +9,7 @@ public class AddCraftsman implements IAction {
     private final static Logger logger = Logger.getLogger(AddCraftsman.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             CraftsmanService

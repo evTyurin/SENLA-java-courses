@@ -9,7 +9,7 @@ public class ExportOrdersToJson implements IAction {
     private final static Logger logger = Logger.getLogger(ExportOrdersToJson.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             System.out.println("Export to json");

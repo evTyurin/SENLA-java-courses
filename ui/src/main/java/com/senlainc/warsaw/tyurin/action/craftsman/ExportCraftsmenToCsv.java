@@ -9,7 +9,7 @@ public class ExportCraftsmenToCsv implements IAction {
     private final static Logger logger = Logger.getLogger(ExportCraftsmenToCsv.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("Export to csv");
         try {

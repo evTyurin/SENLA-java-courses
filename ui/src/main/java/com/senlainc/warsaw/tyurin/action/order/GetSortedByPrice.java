@@ -9,7 +9,7 @@ public class GetSortedByPrice implements IAction {
     private final static Logger logger = Logger.getLogger(GetSortedByPrice.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of orders sorted by price");
         try {

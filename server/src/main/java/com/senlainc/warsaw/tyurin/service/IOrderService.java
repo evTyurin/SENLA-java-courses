@@ -8,35 +8,35 @@ import java.util.List;
 
 public interface IOrderService {
 
-    void changeStatus(long id, OrderStatus status) throws Exception;
+    void changeStatus(long id, OrderStatus status);
 
-    void shiftStartDateTime(long id, LocalDateTime startDateTime) throws Exception;
+    void shiftStartDateTime(long id, LocalDateTime startDateTime);
 
-    void shiftCompletionDateTime(long id, LocalDateTime completionDateTime) throws Exception;
+    void shiftCompletionDateTime(long id, LocalDateTime completionDateTime);
 
-    List<Order> getSortedBySubmissionDate() throws Exception;
+    List<Order> getSortedBySubmissionDate();
 
-    List<Order> getSortedByCompletionDate() throws Exception;
+    List<Order> getSortedByCompletionDate();
 
-    List<Order> getSortedByStartDate() throws Exception;
+    List<Order> getSortedByStartDate();
 
-    List<Order> getSortedByPrice() throws Exception;
+    List<Order> getSortedByPrice();
 
-    List<Order> getCurrentlyExecutedOrdersSortedBySubmissionDate() throws Exception;
+    List<Order> getCurrentlyExecutedOrdersSortedBySubmissionDate();
 
-    List<Order> getCurrentlyExecutedOrdersSortedByCompletionDate() throws Exception;
+    List<Order> getCurrentlyExecutedOrdersSortedByCompletionDate();
 
-    List<Order> getCurrentlyExecutedOrdersSortedByPrice() throws Exception;
+    List<Order> getCurrentlyExecutedOrdersSortedByPrice();
 
-    List<Order> getArchivedOrdersSortedBySubmissionDate() throws Exception;
+    List<Order> getArchivedOrdersSortedBySubmissionDate();
 
-    List<Order> getArchivedOrdersSortedByCompletionDate() throws Exception;
+    List<Order> getArchivedOrdersSortedByCompletionDate();
 
-    List<Order> getArchivedOrdersSortedByPrice() throws Exception;
+    List<Order> getArchivedOrdersSortedByPrice();
 
-    Order getOrderByCraftsmen(long craftsmanId) throws Exception;
+    Order getOrderByCraftsmen(long craftsmanId);
 
-    List<Order> getOrders() throws Exception;
+    List<Order> getOrders();
 
     Order createOrder(double price,
                       LocalDateTime startDate,
@@ -44,21 +44,17 @@ public interface IOrderService {
                       List<Long> craftsmenId,
                       long garagePlaceId);
 
-    void addOrder(Order order) throws Exception;
+    void addOrder(Order order);
 
-    Order getOrderById(long id) throws Exception;
+    Order getOrderById(long id);
 
     void importOrdersFromCsv();
 
-    void exportOrdersToCsv() throws Exception;
+    void exportOrdersToCsv();
 
-    void removeOrder(Long id) throws Exception;
+    void removeOrder(Long id);
 
     void importOrdersFromJson();
 
-    void exportOrdersToJson() throws Exception;
-
-    List<Order> getNotCanceledOrders() throws Exception;
-
-    List<Order> getInProgressOrders() throws Exception;
+    void exportOrdersToJson();
 }

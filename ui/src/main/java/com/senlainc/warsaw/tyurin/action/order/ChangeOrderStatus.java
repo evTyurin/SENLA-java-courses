@@ -11,7 +11,7 @@ public class ChangeOrderStatus implements IAction {
     private final static Logger logger = Logger.getLogger(ChangeOrderStatus.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             Order order = OrderService.getInstance().getOrderById(1);

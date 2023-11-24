@@ -7,15 +7,17 @@ import java.util.List;
 
 public interface IGaragePlaceDao {
 
-    void addGaragePlace(GaragePlace garagePlace) throws Exception;
+    void create(GaragePlace object);
 
-    void deleteGaragePlace(long id) throws Exception;
+    GaragePlace findById(long id);
 
-    List<GaragePlace> getGaragePlaces() throws Exception;
+    void update(GaragePlace object);
 
-    GaragePlace getGaragePlace(long id) throws Exception;
+    void delete(GaragePlace object);
 
-    List<GaragePlace> getAvailableGaragePlaces() throws Exception;
+    List<GaragePlace> getAll();
 
-    long getAvailablePlacesAmount(LocalDateTime localDateTime) throws Exception;
+    List<GaragePlace> getAvailableGaragePlaces();
+
+    long getAvailablePlacesAmount(LocalDateTime localDateTime);
 }

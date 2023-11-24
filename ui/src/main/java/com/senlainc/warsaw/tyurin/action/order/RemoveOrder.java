@@ -9,7 +9,7 @@ public class RemoveOrder implements IAction {
     private final static Logger logger = Logger.getLogger(RemoveOrder.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             OrderService.getInstance().removeOrder(1L);

@@ -9,7 +9,7 @@ public class RemoveCraftsman implements IAction {
     private final static Logger logger = Logger.getLogger(RemoveCraftsman.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         CraftsmanService.getInstance().removeCraftsmanById(1);
 

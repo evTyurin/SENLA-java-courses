@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.action.garagePlace;
+package com.senlainc.warsaw.tyurin.action.garageplace;
 
 import com.senlainc.warsaw.tyurin.action.IAction;
 import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
@@ -11,7 +11,7 @@ public class GetAvailablePlacesAmount implements IAction {
     private final static Logger logger = Logger.getLogger(GetAvailablePlacesAmount.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             System.out.println("Amount of available places = " + GaragePlaceService

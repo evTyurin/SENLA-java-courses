@@ -9,7 +9,7 @@ public class GetCurrentlyExecutedOrdersSortedByCompletionDate implements IAction
     private final static Logger logger = Logger.getLogger(GetCurrentlyExecutedOrdersSortedByCompletionDate.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of currently executed orders sorted by completion date");
         try {

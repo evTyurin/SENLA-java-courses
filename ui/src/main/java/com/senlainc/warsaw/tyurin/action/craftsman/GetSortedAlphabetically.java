@@ -9,7 +9,7 @@ public class GetSortedAlphabetically implements IAction {
     private final static Logger logger = Logger.getLogger(GetSortedAlphabetically.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of craftsmen sorted alphabetically");
         try {

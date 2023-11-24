@@ -2,20 +2,32 @@ package com.senlainc.warsaw.tyurin.entity;
 
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "order")
 public class Order {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "price")
     private double price;
+    @Column(name = "submission_date")
     private LocalDateTime submissionDate;
+    @Column(name = "start_date")
     private LocalDateTime startDate;
+    @Column(name = "completion_date")
     private LocalDateTime completionDate;
+    @Transient
     private OrderStatus orderStatus;
+    @Transient
     private List<Long> craftsmenId;
+    @Column(name = "garage_place_id")
     private long garagePlaceId;
 
     public Order() {
