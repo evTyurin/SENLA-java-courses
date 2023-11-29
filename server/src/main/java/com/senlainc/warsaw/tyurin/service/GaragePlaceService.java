@@ -3,7 +3,6 @@ package com.senlainc.warsaw.tyurin.service;
 import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
-import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDao;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
@@ -24,7 +23,6 @@ public class GaragePlaceService implements IGaragePlaceService{
 
     private final static Logger logger = Logger.getLogger(GaragePlaceService.class);
 
-    private static GaragePlaceService INSTANCE;
     @DependencyComponent
     private IGaragePlaceDao garagePlaceDao;
     @DependencyComponent
@@ -43,15 +41,6 @@ public class GaragePlaceService implements IGaragePlaceService{
     private boolean isGaragePlaceAddable;
     @ConfigProperty(propertyKey = Constants.ABILITY_TO_REMOVE_GARAGE_PLACE)
     private boolean isGaragePlaceRemovable;
-
-    public static GaragePlaceService getInstance() {
-        return INSTANCE;
-    }
-
-    @DependencyInitMethod
-    public void setInstance() {
-        INSTANCE = this;
-    }
 
     @Override
     public void addGaragePlace(GaragePlace garagePlace) {

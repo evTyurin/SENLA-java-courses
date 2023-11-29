@@ -8,13 +8,18 @@ public class ImportOrdersFromCsv implements IAction {
 
     private final static Logger logger = Logger.getLogger(ImportOrdersFromCsv.class);
 
+    private OrderService orderService;
+
+    public ImportOrdersFromCsv(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
     public void execute() {
 
         System.out.println("Import orders from csv");
         try {
-            OrderService
-                    .getInstance()
+            orderService
                     .importOrdersFromCsv();
         } catch (Exception exception) {
             logger.error("Can't import orders from csv", exception);

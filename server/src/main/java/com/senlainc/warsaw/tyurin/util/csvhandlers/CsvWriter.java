@@ -13,15 +13,6 @@ public class CsvWriter {
 
     private final static Logger logger = Logger.getLogger(CsvWriter.class);
 
-    private static CsvWriter INSTANCE;
-
-    public static CsvWriter getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new CsvWriter();
-        }
-        return INSTANCE;
-    }
-
     public List<String> writeEntities(List<String> rawEntities, String header, String path) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path))) {
             bufferedWriter.write(header);

@@ -1,6 +1,9 @@
 package com.senlainc.warsaw.tyurin.entity;
 
+import com.senlainc.warsaw.tyurin.util.OrderStatus;
+
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,6 +17,9 @@ public class GaragePlace {
     private int number;
     @Column(name = "space")
     private double space;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "garage_place_id")
+    private List<Order> orders;
 
     public GaragePlace() {}
 

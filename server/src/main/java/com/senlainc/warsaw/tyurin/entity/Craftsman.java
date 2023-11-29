@@ -1,6 +1,7 @@
 package com.senlainc.warsaw.tyurin.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,6 +15,13 @@ public class Craftsman{
     private String name;
     @Column(name = "surname")
     private String surname;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "craftsman_orders",
+            joinColumns = @JoinColumn(name = "craftsman_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "orders_id", referencedColumnName = "id")
+    )
+    private List<Order> orders;
 
     public Craftsman() {}
 
@@ -39,6 +47,14 @@ public class Craftsman{
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     @Override

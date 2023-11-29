@@ -8,13 +8,18 @@ public class GetSortedByCompletionDate implements IAction {
 
     private final static Logger logger = Logger.getLogger(GetSortedByCompletionDate.class);
 
+    private OrderService orderService;
+
+    public GetSortedByCompletionDate(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
     public void execute() {
 
         System.out.println("List of orders sorted by completion date");
         try {
-            OrderService
-                    .getInstance()
+            orderService
                     .getSortedByCompletionDate()
                     .forEach(order -> System.out.println(order.toString()));
         } catch (Exception exception) {

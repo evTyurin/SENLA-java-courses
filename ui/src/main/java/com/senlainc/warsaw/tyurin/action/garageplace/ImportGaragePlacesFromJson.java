@@ -8,14 +8,18 @@ public class ImportGaragePlacesFromJson implements IAction {
 
     private final static Logger logger = Logger.getLogger(ImportGaragePlacesFromJson.class);
 
+    private GaragePlaceService garagePlaceService;
+
+    public ImportGaragePlacesFromJson(GaragePlaceService garagePlaceService) {
+        this.garagePlaceService = garagePlaceService;
+    }
+
     @Override
     public void execute() {
 
         System.out.println("Import garage places from json");
         try {
-            GaragePlaceService
-                    .getInstance()
-                    .importGaragePlacesFromJson();
+            garagePlaceService.importGaragePlacesFromJson();
         } catch (Exception exception) {
             logger.error("Can't import garage places from json", exception);
         }

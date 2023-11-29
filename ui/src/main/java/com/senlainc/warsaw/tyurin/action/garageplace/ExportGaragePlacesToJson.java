@@ -8,14 +8,18 @@ public class ExportGaragePlacesToJson implements IAction {
 
     private final static Logger logger = Logger.getLogger(ExportGaragePlacesToJson.class);
 
+    private GaragePlaceService garagePlaceService;
+
+    public ExportGaragePlacesToJson(GaragePlaceService garagePlaceService) {
+        this.garagePlaceService = garagePlaceService;
+    }
+
     @Override
     public void execute() {
 
         System.out.println("Export garage place to json");
         try {
-            GaragePlaceService
-                    .getInstance()
-                    .exportGaragePlacesToJson();
+            garagePlaceService.exportGaragePlacesToJson();
         } catch (Exception exception) {
             logger.error("Can't export garage place to json", exception);
         }

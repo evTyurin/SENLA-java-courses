@@ -12,12 +12,17 @@ public class AddOrder implements IAction {
 
     private final static Logger logger = Logger.getLogger(AddOrder.class);
 
+    private OrderService orderService;
+
+    public AddOrder(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
     public void execute() {
 
         try {
-            OrderService
-                    .getInstance()
+            orderService
                     .createOrder(100,
                             LocalDateTime.of(2023, 10, 10, 12, 0),
                             LocalDateTime.of(2023, 10, 20, 10, 0),

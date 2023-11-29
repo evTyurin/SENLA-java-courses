@@ -11,11 +11,17 @@ public class ShiftStartDateTime implements IAction {
 
     private final static Logger logger = Logger.getLogger(ShiftStartDateTime.class);
 
+    private OrderService orderService;
+
+    public ShiftStartDateTime(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
     public void execute() {
 
         try {
-            Order order = OrderService.getInstance().getOrderById(1);
+            Order order = orderService.getOrderById(1);
             order.setStartDate(LocalDateTime.of(2023, 10, 15, 10, 0));
         } catch (Exception exception) {
             logger.error("Can't shift start date time", exception);

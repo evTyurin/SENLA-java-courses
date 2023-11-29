@@ -2,7 +2,6 @@ package com.senlainc.warsaw.tyurin.service;
 
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
-import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.dao.ICraftsmanDao;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.util.Constants;
@@ -21,7 +20,6 @@ public class CraftsmanService implements ICraftsmanService{
 
     private final static Logger logger = Logger.getLogger(CraftsmanService.class);
 
-    private static CraftsmanService INSTANCE;
     @DependencyComponent
     private ICraftsmanDao craftsmanDao;
     @DependencyComponent
@@ -34,15 +32,6 @@ public class CraftsmanService implements ICraftsmanService{
     private JsonReader jsonReader;
     @DependencyComponent
     private JsonWriter jsonWriter;
-
-    public static CraftsmanService getInstance() {
-        return INSTANCE;
-    }
-
-    @DependencyInitMethod
-    public void setInstance() {
-        INSTANCE = this;
-    }
 
     @Override
     public void addCraftsman(Craftsman craftsman) {

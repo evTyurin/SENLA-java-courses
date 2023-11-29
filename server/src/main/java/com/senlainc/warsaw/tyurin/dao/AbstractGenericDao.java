@@ -1,6 +1,7 @@
 package com.senlainc.warsaw.tyurin.dao;
 
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
+import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -18,8 +19,8 @@ public abstract class AbstractGenericDao<T> implements IGenericDao<T>{
 
     private final static Logger logger = Logger.getLogger(AbstractGenericDao.class);
     private final Class<T> entityClass;
-    @DependencyClass
-    public HibernateUtil hibernateUtil;
+    @DependencyComponent
+    protected HibernateUtil hibernateUtil;
 
     public AbstractGenericDao() {
         this.entityClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass())

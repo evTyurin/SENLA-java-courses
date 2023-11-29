@@ -11,11 +11,17 @@ public class ShiftCompletionDateTime implements IAction {
 
     private final static Logger logger = Logger.getLogger(ShiftCompletionDateTime.class);
 
+    private OrderService orderService;
+
+    public ShiftCompletionDateTime(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
     public void execute() {
 
         try {
-            Order order = OrderService.getInstance().getOrderById(1);
+            Order order = orderService.getOrderById(1);
             order.setCompletionDate(LocalDateTime.of(2023, 10, 10, 12, 0));
         } catch (Exception exception) {
             logger.error("Can't shift completion date time", exception);

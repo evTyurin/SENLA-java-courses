@@ -8,13 +8,18 @@ public class ExportCraftsmenToCsv implements IAction {
 
     private final static Logger logger = Logger.getLogger(ExportCraftsmenToCsv.class);
 
+    private CraftsmanService craftsmanService;
+
+    public ExportCraftsmenToCsv(CraftsmanService craftsmanService) {
+        this.craftsmanService = craftsmanService;
+    }
+
     @Override
     public void execute() {
 
         System.out.println("Export to csv");
         try {
-            CraftsmanService
-                    .getInstance()
+            craftsmanService
                     .exportCraftsmenToCsv();
         } catch (Exception exception) {
             logger.error("Can't export craftsman to csv", exception);

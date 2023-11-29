@@ -1,8 +1,6 @@
 package com.senlainc.warsaw.tyurin.dao;
 
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
-import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
-import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import org.apache.log4j.Logger;
@@ -16,19 +14,6 @@ import java.util.List;
 public class OrderDao extends AbstractGenericDao<Order> implements IOrderDao {
 
     private final static Logger logger = Logger.getLogger(OrderDao.class);
-
-    @DependencyComponent
-    private ICraftsmanDao craftsmanDao;
-    private static OrderDao INSTANCE;
-
-    public static OrderDao getInstance() {
-        return INSTANCE;
-    }
-
-    @DependencyInitMethod
-    public void setInstance() {
-        INSTANCE = this;
-    }
 
     @Override
     public List<Order> getOrdersPriceSorted() {

@@ -15,15 +15,6 @@ public class JsonReader {
 
     private final static Logger logger = Logger.getLogger(JsonReader.class);
 
-    private static JsonReader INSTANCE;
-
-    public static JsonReader getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new JsonReader();
-        }
-        return INSTANCE;
-    }
-
     public <T> List<T> readEntities(Class<T> entityClass, String path) {
 
         ObjectMapper objectMapper = new ObjectMapper();

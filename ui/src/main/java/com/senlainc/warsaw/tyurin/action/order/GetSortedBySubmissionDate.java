@@ -8,13 +8,18 @@ public class GetSortedBySubmissionDate implements IAction {
 
     private final static Logger logger = Logger.getLogger(GetSortedBySubmissionDate.class);
 
+    private OrderService orderService;
+
+    public GetSortedBySubmissionDate(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
     public void execute() {
 
         System.out.println("List of orders sorted by submission date");
         try {
-            OrderService
-                    .getInstance()
+            orderService
                     .getSortedBySubmissionDate()
                     .forEach(order -> System.out.println(order.toString()));
         } catch (Exception exception) {

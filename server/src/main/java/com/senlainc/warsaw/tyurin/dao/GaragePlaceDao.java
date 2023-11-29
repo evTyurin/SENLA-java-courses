@@ -1,7 +1,6 @@
 package com.senlainc.warsaw.tyurin.dao;
 
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
-import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import org.apache.log4j.Logger;
@@ -18,16 +17,6 @@ import java.util.List;
 public class GaragePlaceDao extends AbstractGenericDao<GaragePlace> implements IGaragePlaceDao {
 
     private final static Logger logger = Logger.getLogger(GaragePlaceDao.class);
-    private static GaragePlaceDao INSTANCE;
-
-    public static GaragePlaceDao getInstance() {
-        return INSTANCE;
-    }
-
-    @DependencyInitMethod
-    public void setInstance() {
-        INSTANCE = this;
-    }
 
     @Override
     public List<GaragePlace> getAvailableGaragePlaces() {

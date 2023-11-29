@@ -3,7 +3,6 @@ package com.senlainc.warsaw.tyurin.service;
 import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
-import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.dao.IOrderDao;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.Constants;
@@ -25,7 +24,6 @@ public class OrderService implements IOrderService{
 
     private final static Logger logger = Logger.getLogger(OrderService.class);
 
-    private static OrderService INSTANCE;
     @DependencyComponent
     private IOrderDao orderDao;
     @DependencyComponent
@@ -36,20 +34,14 @@ public class OrderService implements IOrderService{
     private JsonReader jsonReader;
     @DependencyComponent
     private JsonWriter jsonWriter;
-
+    @DependencyComponent
+    private ICraftsmanService craftsmanService;
+    @DependencyComponent
+    private IGaragePlaceService garagePlaceService;
     @ConfigProperty(propertyKey = Constants.ABILITY_TO_SHIFT_ORDER_COMPLETION_TIME)
     private boolean isCompletionDateTimeShiftable;
     @ConfigProperty(propertyKey = Constants.ABILITY_TO_REMOVE_ORDER)
     private boolean isOrderRemovable;
-
-    public static OrderService getInstance() {
-        return INSTANCE;
-    }
-
-    @DependencyInitMethod
-    public void setInstance() {
-        INSTANCE = this;
-    }
 
     @Override
     public void changeStatus(long id, OrderStatus status) {
@@ -146,8 +138,15 @@ public class OrderService implements IOrderService{
         order.setPrice(price);
         order.setStartDate(startDate);
         order.setCompletionDate(completionDate);
-        order.setCraftsmen(craftsmenId);
-        order.setGaragePlaceId(garagePlaceId);
+        order.setCraftsmen(craftsmenId
+                .stream()
+                .map(craftsmanId -> craftsmanService
+                        .getCraftsmanById(craftsmanId))
+                .collect(Collectors.toList()));
+        try {
+            order.setGaragePlace(garagePlaceService.getGaragePlaceById(garagePlaceId));        } catch (Exception exception) {
+            logger.error("Can't get garage place", exception);
+        }
         return order;
     }
 
@@ -194,9 +193,13 @@ public class OrderService implements IOrderService{
                     }
                     String[] craftsmanIdList = values[6].split(";");
                     Arrays.stream(craftsmanIdList).forEach(id -> {
-                        order.getCraftsmenId().add(Long.parseLong(id));
+                        order.getCraftsmen().add(craftsmanService.getCraftsmanById(Long.parseLong(id)));
                     });
-                    order.setGaragePlaceId(Long.parseLong(values[7]));
+                    try {
+                        order.setGaragePlace(garagePlaceService.getGaragePlaceById(Long.parseLong(values[7])));
+                    } catch (Exception exception) {
+                        logger.error("Can't get garage place", exception);
+                    }
                     return order;
                 })
                 .forEach(importOrder -> {
@@ -218,8 +221,8 @@ public class OrderService implements IOrderService{
                         order.setCompletionDate(importOrder.getCompletionDate());
                         order.setSubmissionDate(importOrder.getSubmissionDate());
                         order.setPrice(importOrder.getPrice());
-                        order.setGaragePlaceId(importOrder.getGaragePlaceId());
-                        order.setCraftsmen(importOrder.getCraftsmenId());
+                        order.setGaragePlace(importOrder.getGaragePlace());
+                        order.setCraftsmen(importOrder.getCraftsmen());
                     }
                 });
     }
@@ -273,8 +276,8 @@ public class OrderService implements IOrderService{
                         order.setCompletionDate(importOrder.getCompletionDate());
                         order.setSubmissionDate(importOrder.getSubmissionDate());
                         order.setPrice(importOrder.getPrice());
-                        order.setGaragePlaceId(importOrder.getGaragePlaceId());
-                        order.setCraftsmen(importOrder.getCraftsmenId());
+                        order.setGaragePlace(importOrder.getGaragePlace());
+                        order.setCraftsmen(importOrder.getCraftsmen());
                     }
                 });
     }
