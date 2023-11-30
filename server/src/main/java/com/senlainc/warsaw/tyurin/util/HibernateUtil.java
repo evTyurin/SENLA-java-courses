@@ -1,15 +1,16 @@
 package com.senlainc.warsaw.tyurin.util;
 
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
+import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Component;
 
-@DependencyClass
+@Component
 public class HibernateUtil {
 
     private final static Logger logger = Logger.getLogger(HibernateUtil.class);
@@ -22,6 +23,7 @@ public class HibernateUtil {
                 Configuration configuration = new Configuration();
                 configuration.addAnnotatedClass(Craftsman.class);
                 configuration.addAnnotatedClass(Order.class);
+                configuration.addAnnotatedClass(GaragePlace.class);
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());

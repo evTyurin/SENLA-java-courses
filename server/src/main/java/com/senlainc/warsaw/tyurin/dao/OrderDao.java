@@ -1,16 +1,16 @@
 package com.senlainc.warsaw.tyurin.dao;
 
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.*;
 import java.util.Collections;
 import java.util.List;
 
-@DependencyClass
+@Repository
 public class OrderDao extends AbstractGenericDao<Order> implements IOrderDao {
 
     private final static Logger logger = Logger.getLogger(OrderDao.class);

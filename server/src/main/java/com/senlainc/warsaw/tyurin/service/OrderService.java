@@ -1,8 +1,5 @@
 package com.senlainc.warsaw.tyurin.service;
 
-import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
-import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.dao.IOrderDao;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.util.Constants;
@@ -12,6 +9,9 @@ import com.senlainc.warsaw.tyurin.util.csvhandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonWriter;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -19,28 +19,28 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@DependencyClass
+@Service
 public class OrderService implements IOrderService{
 
     private final static Logger logger = Logger.getLogger(OrderService.class);
 
-    @DependencyComponent
+    @Autowired
     private IOrderDao orderDao;
-    @DependencyComponent
+    @Autowired
     private CsvReader csvReader;
-    @DependencyComponent
+    @Autowired
     private CsvWriter csvWriter;
-    @DependencyComponent
+    @Autowired
     private JsonReader jsonReader;
-    @DependencyComponent
+    @Autowired
     private JsonWriter jsonWriter;
-    @DependencyComponent
+    @Autowired
     private ICraftsmanService craftsmanService;
-    @DependencyComponent
+    @Autowired
     private IGaragePlaceService garagePlaceService;
-    @ConfigProperty(propertyKey = Constants.ABILITY_TO_SHIFT_ORDER_COMPLETION_TIME)
+    @Value("${order.shift-completion-time.enabled}")
     private boolean isCompletionDateTimeShiftable;
-    @ConfigProperty(propertyKey = Constants.ABILITY_TO_REMOVE_ORDER)
+    @Value("${order.remove.enabled}")
     private boolean isOrderRemovable;
 
     @Override

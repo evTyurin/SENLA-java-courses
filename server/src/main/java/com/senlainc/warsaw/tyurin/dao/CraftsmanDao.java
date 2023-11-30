@@ -1,16 +1,16 @@
 package com.senlainc.warsaw.tyurin.dao;
 
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.*;
 import java.util.Collections;
 import java.util.List;
 
-@DependencyClass
+@Repository
 public class CraftsmanDao extends AbstractGenericDao<Craftsman> implements ICraftsmanDao {
 
     private final static Logger logger = Logger.getLogger(CraftsmanDao.class);
@@ -44,6 +44,7 @@ public class CraftsmanDao extends AbstractGenericDao<Craftsman> implements ICraf
                             builder.asc(root.get("name")));
             return session.createQuery(criteria).getResultList();
         } catch (Exception exception) {
+            System.out.println(exception);
             logger.error("Can't get craftsmen sorted alphabetically", exception);
         }
         return Collections.EMPTY_LIST;

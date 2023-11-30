@@ -2,15 +2,15 @@ package com.senlainc.warsaw.tyurin.util.jsonhandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-@DependencyClass
+@Component
 public class JsonReader {
 
     private final static Logger logger = Logger.getLogger(JsonReader.class);

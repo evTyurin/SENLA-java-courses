@@ -18,42 +18,23 @@ import com.senlainc.warsaw.tyurin.action.garageplace.GetNearestAvailableDate;
 import com.senlainc.warsaw.tyurin.action.garageplace.ImportGaragePlacesFromCsv;
 import com.senlainc.warsaw.tyurin.action.garageplace.ImportGaragePlacesFromJson;
 import com.senlainc.warsaw.tyurin.action.garageplace.RemoveGaragePlace;
-import com.senlainc.warsaw.tyurin.action.order.AddOrder;
-import com.senlainc.warsaw.tyurin.action.order.ChangeOrderStatus;
-import com.senlainc.warsaw.tyurin.action.order.ExportOrdersToCsv;
-import com.senlainc.warsaw.tyurin.action.order.ExportOrdersToJson;
-import com.senlainc.warsaw.tyurin.action.order.GetArchivedOrdersSortedByCompletionDate;
-import com.senlainc.warsaw.tyurin.action.order.GetArchivedOrdersSortedByPrice;
-import com.senlainc.warsaw.tyurin.action.order.GetArchivedOrdersSortedBySubmissionDate;
-import com.senlainc.warsaw.tyurin.action.order.GetCurrentlyExecutedOrdersSortedByCompletionDate;
-import com.senlainc.warsaw.tyurin.action.order.GetCurrentlyExecutedOrdersSortedByPrice;
-import com.senlainc.warsaw.tyurin.action.order.GetCurrentlyExecutedOrdersSortedBySubmissionDate;
-import com.senlainc.warsaw.tyurin.action.order.GetOrderByCraftsman;
-import com.senlainc.warsaw.tyurin.action.order.GetSortedByCompletionDate;
-import com.senlainc.warsaw.tyurin.action.order.GetSortedByPrice;
-import com.senlainc.warsaw.tyurin.action.order.GetSortedByStartDate;
-import com.senlainc.warsaw.tyurin.action.order.GetSortedBySubmissionDate;
-import com.senlainc.warsaw.tyurin.action.order.ImportOrdersFromCsv;
-import com.senlainc.warsaw.tyurin.action.order.ImportOrdersFromJson;
-import com.senlainc.warsaw.tyurin.action.order.RemoveOrder;
-import com.senlainc.warsaw.tyurin.action.order.ShiftCompletionDateTime;
-import com.senlainc.warsaw.tyurin.action.order.ShiftStartDateTime;
+import com.senlainc.warsaw.tyurin.action.order.*;
 import com.senlainc.warsaw.tyurin.action.util.ExitProgram;
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
-import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.service.CraftsmanService;
 import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
 import com.senlainc.warsaw.tyurin.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@DependencyClass
+@Component
 public class Builder {
 
     private Menu rootMenu;
-    @DependencyComponent
+    @Autowired
     private CraftsmanService craftsmanService;
-    @DependencyComponent
+    @Autowired
     private OrderService orderService;
-    @DependencyComponent
+    @Autowired
     private GaragePlaceService garagePlaceService;
 
     public Builder() {}
@@ -101,6 +82,7 @@ public class Builder {
 
         orderMenu.getMenuItems().add(new MenuItem("Add order", new AddOrder(orderService), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Remove order", new RemoveOrder(orderService), orderMenu));
+        orderMenu.getMenuItems().add(new MenuItem("Get order by id", new GetOrderById(orderService), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Get archived orders sorted by completion date", new GetArchivedOrdersSortedByCompletionDate(orderService), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Get archived orders sorted by price", new GetArchivedOrdersSortedByPrice(orderService), orderMenu));
         orderMenu.getMenuItems().add(new MenuItem("Get archived orders sorted by submission date", new GetArchivedOrdersSortedBySubmissionDate(orderService), orderMenu));

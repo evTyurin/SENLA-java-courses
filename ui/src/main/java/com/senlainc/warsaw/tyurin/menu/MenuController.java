@@ -1,18 +1,18 @@
 package com.senlainc.warsaw.tyurin.menu;
 
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
-import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
-@DependencyClass
+@Component
 public class MenuController {
 
     private static MenuController INSTANCE;
 
-    @DependencyComponent
+    @Autowired
     private Builder builder;
-    @DependencyComponent
+    @Autowired
     private Navigator navigator;
 
     public MenuController() {}

@@ -1,7 +1,5 @@
 package com.senlainc.warsaw.tyurin.service;
 
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
-import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.dao.ICraftsmanDao;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
 import com.senlainc.warsaw.tyurin.util.Constants;
@@ -10,27 +8,29 @@ import com.senlainc.warsaw.tyurin.util.csvhandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonWriter;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@DependencyClass
+@Service
 public class CraftsmanService implements ICraftsmanService{
 
     private final static Logger logger = Logger.getLogger(CraftsmanService.class);
 
-    @DependencyComponent
+    @Autowired
     private ICraftsmanDao craftsmanDao;
-    @DependencyComponent
+    @Autowired
     private IOrderService orderService;
-    @DependencyComponent
+    @Autowired
     private CsvReader csvReader;
-    @DependencyComponent
+    @Autowired
     private CsvWriter csvWriter;
-    @DependencyComponent
+    @Autowired
     private JsonReader jsonReader;
-    @DependencyComponent
+    @Autowired
     private JsonWriter jsonWriter;
 
     @Override

@@ -1,13 +1,9 @@
 package com.senlainc.warsaw.tyurin.menu;
 
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
-import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
+import org.springframework.stereotype.Component;
 
-@DependencyClass
+@Component
 public class Navigator {
-
-    @DependencyComponent
-    private static Navigator INSTANCE;
 
     private Menu currentMenu;
 

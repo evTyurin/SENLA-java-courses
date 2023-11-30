@@ -19,7 +19,6 @@ public class GetSortedAlphabetically implements IAction {
 
         System.out.println("List of craftsmen sorted alphabetically");
         try {
-            System.out.println("UI. get sorted alphabetically ");
             craftsmanService
                     .getSortedAlphabetically()
                     .forEach(craftsman -> System.out.println(craftsman.toString()));
