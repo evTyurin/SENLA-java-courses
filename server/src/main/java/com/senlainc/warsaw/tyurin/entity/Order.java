@@ -2,25 +2,44 @@ package com.senlainc.warsaw.tyurin.entity;
 
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "orders")
 public class Order {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "price")
     private double price;
+    @Column(name = "submission_date")
     private LocalDateTime submissionDate;
+    @Column(name = "start_date")
     private LocalDateTime startDate;
+    @Column(name = "completion_date")
     private LocalDateTime completionDate;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_status_id")
     private OrderStatus orderStatus;
-    private List<Long> craftsmenId;
-    private long garagePlaceId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "garage_place_id")
+    private GaragePlace garagePlace;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "craftsman_orders",
+            joinColumns = @JoinColumn(name = "orders_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "craftsman_id", referencedColumnName = "id")
+    )
+    private List<Craftsman> craftsmen;
 
     public Order() {
         orderStatus = OrderStatus.NEW;
-        craftsmenId = new ArrayList<>();
+        craftsmen = new ArrayList<>();
         submissionDate = LocalDateTime.now();
         submissionDate = submissionDate
                 .minusSeconds(submissionDate.getSecond())
@@ -43,20 +62,12 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public List<Long> getCraftsmenId() {
-        return craftsmenId;
+    public List<Craftsman> getCraftsmen() {
+        return craftsmen;
     }
 
-    public void setCraftsmen(List<Long> craftsmenId) {
-        this.craftsmenId = craftsmenId;
-    }
-
-    public void addCraftsmanId(Craftsman craftsman) {
-        craftsmenId.add(craftsman.getId());
-    }
-
-    public void removeCraftsman(Craftsman craftsman) {
-        craftsmenId.remove(craftsman.getId());
+    public void setCraftsmen(List<Craftsman> craftsmen) {
+        this.craftsmen = craftsmen;
     }
 
     public void changeStatusToClose() {
@@ -107,12 +118,12 @@ public class Order {
         this.completionDate = completionDate;
     }
 
-    public long getGaragePlaceId() {
-        return garagePlaceId;
+    public GaragePlace getGaragePlace() {
+        return garagePlace;
     }
 
-    public void setGaragePlaceId(long garagePlaceId) {
-        this.garagePlaceId = garagePlaceId;
+    public void setGaragePlace(GaragePlace garagePlace) {
+        this.garagePlace = garagePlace;
     }
 
     @Override
@@ -122,12 +133,12 @@ public class Order {
         Order order = (Order) o;
         return id == order.id &&
                 Double.compare(order.price, price) == 0 &&
-                garagePlaceId == order.garagePlaceId &&
+                garagePlace == order.garagePlace &&
                 submissionDate.equals(order.submissionDate) &&
                 startDate.equals(order.startDate) &&
                 completionDate.equals(order.completionDate) &&
                 orderStatus == order.orderStatus &&
-                craftsmenId.equals(order.craftsmenId);
+                craftsmen.equals(order.craftsmen);
     }
 
     @Override
@@ -138,8 +149,8 @@ public class Order {
                 startDate,
                 completionDate,
                 orderStatus,
-                craftsmenId,
-                garagePlaceId);
+                craftsmen,
+                garagePlace);
     }
 
     @Override
@@ -160,15 +171,15 @@ public class Order {
                 .append(",")
                 .append(orderStatus)
                 .append(",");
-        craftsmenId.forEach(id -> stringBuilder
-                .append(id)
+        craftsmen.forEach(craftsman -> stringBuilder
+                .append(craftsman)
                 .append(";"));
 
         stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(";"));
 
         stringBuilder
                 .append(",")
-                .append(garagePlaceId);
+                .append(garagePlace);
 
         return stringBuilder.toString();
     }

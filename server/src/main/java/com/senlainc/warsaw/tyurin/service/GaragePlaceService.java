@@ -3,7 +3,6 @@ package com.senlainc.warsaw.tyurin.service;
 import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
 import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
-import com.senlainc.warsaw.tyurin.annotation.DependencyInitMethod;
 import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDao;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
@@ -24,7 +23,6 @@ public class GaragePlaceService implements IGaragePlaceService{
 
     private final static Logger logger = Logger.getLogger(GaragePlaceService.class);
 
-    private static GaragePlaceService INSTANCE;
     @DependencyComponent
     private IGaragePlaceDao garagePlaceDao;
     @DependencyComponent
@@ -44,42 +42,33 @@ public class GaragePlaceService implements IGaragePlaceService{
     @ConfigProperty(propertyKey = Constants.ABILITY_TO_REMOVE_GARAGE_PLACE)
     private boolean isGaragePlaceRemovable;
 
-    public static GaragePlaceService getInstance() {
-        return INSTANCE;
-    }
-
-    @DependencyInitMethod
-    public void setInstance() {
-        INSTANCE = this;
-    }
-
     @Override
-    public void addGaragePlace(GaragePlace garagePlace) throws Exception {
+    public void addGaragePlace(GaragePlace garagePlace) {
 
         if (isGaragePlaceAddable) {
-            garagePlaceDao.addGaragePlace(garagePlace);
+            garagePlaceDao.create(garagePlace);
         } else {
             logger.error("Adding garage places was prohibited");
         }
     }
 
     @Override
-    public void removeGaragePlace(long id) throws Exception {
+    public void removeGaragePlace(long id) {
 
         if (isGaragePlaceRemovable) {
-            garagePlaceDao.deleteGaragePlace(id);
+            garagePlaceDao.delete(garagePlaceDao.findById(id));
         } else {
             logger.error("Removing garage places was prohibited");
         }
     }
 
     @Override
-    public List<GaragePlace> getAvailablePlaces() throws Exception {
+    public List<GaragePlace> getAvailablePlaces() {
         return garagePlaceDao.getAvailableGaragePlaces();
     }
 
     @Override
-    public long getAvailablePlacesAmount(LocalDateTime localDateTime) throws Exception {
+    public long getAvailablePlacesAmount(LocalDateTime localDateTime) {
        return garagePlaceDao.getAvailablePlacesAmount(localDateTime);
     }
 
@@ -136,7 +125,7 @@ public class GaragePlaceService implements IGaragePlaceService{
                     }
                     if (garagePlace == null) {
                         try {
-                            garagePlaceDao.addGaragePlace(importGaragePlace);
+                            garagePlaceDao.create(importGaragePlace);
                         } catch (Exception exception) {
                             logger.error("Can't add garage place", exception);
                         }
@@ -148,15 +137,15 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public GaragePlace getGaragePlaceById(Long id) throws Exception {
-        return garagePlaceDao.getGaragePlace(id);
+    public GaragePlace getGaragePlaceById(Long id) {
+        return garagePlaceDao.findById(id);
     }
 
     @Override
-    public void exportGaragePlacesToCsv() throws Exception {
+    public void exportGaragePlacesToCsv() {
 
         List<String> garagePlaces = garagePlaceDao
-                .getGaragePlaces()
+                .getAll()
                 .stream()
                 .sorted(Comparator.comparing(GaragePlace::getId))
                 .map(GaragePlace::toString)
@@ -181,7 +170,7 @@ public class GaragePlaceService implements IGaragePlaceService{
                     }
                     if (garagePlace == null) {
                         try {
-                            garagePlaceDao.addGaragePlace(importGaragePlace);
+                            garagePlaceDao.create(importGaragePlace);
                         } catch (Exception exception) {
                             logger.error("Can't add garage place", exception);
                         }
@@ -193,7 +182,7 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public void exportGaragePlacesToJson() throws Exception {
-        jsonWriter.writeEntities(garagePlaceDao.getGaragePlaces(), Constants.PATH_TO_GARAGE_PLACES_JSON);
+    public void exportGaragePlacesToJson() {
+        jsonWriter.writeEntities(garagePlaceDao.getAll(), Constants.PATH_TO_GARAGE_PLACES_JSON);
     }
 }

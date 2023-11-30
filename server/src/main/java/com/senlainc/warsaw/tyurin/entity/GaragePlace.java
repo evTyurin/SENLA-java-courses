@@ -1,12 +1,25 @@
 package com.senlainc.warsaw.tyurin.entity;
 
+import com.senlainc.warsaw.tyurin.util.OrderStatus;
+
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "garage_place")
 public class GaragePlace {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "number")
     private int number;
+    @Column(name = "space")
     private double space;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "garage_place_id")
+    private List<Order> orders;
 
     public GaragePlace() {}
 

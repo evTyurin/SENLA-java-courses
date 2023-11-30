@@ -11,11 +11,17 @@ public class GetCraftsmenByOrder implements IAction {
 
     private final static Logger logger = Logger.getLogger(GetCraftsmenByOrder.class);
 
+    private CraftsmanService craftsmanService;
+
+    public GetCraftsmenByOrder(CraftsmanService craftsmanService) {
+        this.craftsmanService = craftsmanService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
-            List<Craftsman> craftsmen = CraftsmanService.getInstance().getCraftsmenByOrder(1);
+            List<Craftsman> craftsmen = craftsmanService.getCraftsmenByOrder(1);
             craftsmen.forEach(craftsman -> System.out.println(craftsman.toString()));
         } catch (Exception exception) {
             logger.error("Can't get craftsman by order", exception);

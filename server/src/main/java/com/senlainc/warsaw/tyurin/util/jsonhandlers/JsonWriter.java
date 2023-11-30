@@ -14,15 +14,6 @@ public class JsonWriter {
 
     private final static Logger logger = Logger.getLogger(JsonWriter.class);
 
-    private static JsonWriter INSTANCE;
-
-    public static JsonWriter getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new JsonWriter();
-        }
-        return INSTANCE;
-    }
-
     public <T> void writeEntities(List<T> entities, String path) {
 
         ObjectMapper objectMapper = new ObjectMapper();

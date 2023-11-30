@@ -8,13 +8,18 @@ public class GetCurrentlyExecutedOrdersSortedByPrice implements IAction {
 
     private final static Logger logger = Logger.getLogger(GetCurrentlyExecutedOrdersSortedByPrice.class);
 
+    private OrderService orderService;
+
+    public GetCurrentlyExecutedOrdersSortedByPrice(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of currently executed orders sorted by price");
         try {
-            OrderService
-                    .getInstance()
+            orderService
                     .getCurrentlyExecutedOrdersSortedByPrice()
                     .forEach(order -> System.out.println(order.toString()));
         } catch (Exception exception) {

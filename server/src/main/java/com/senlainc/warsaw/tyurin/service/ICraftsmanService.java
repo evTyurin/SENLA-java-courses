@@ -6,27 +6,27 @@ import java.util.List;
 
 public interface ICraftsmanService {
 
-    void addCraftsman(Craftsman craftsman) throws Exception;
+    void addCraftsman(Craftsman craftsman);
 
-    void removeCraftsmanById(long id) throws Exception;
+    void removeCraftsmanById(long id);
 
-    List<Craftsman> getCraftsmenByOrder(long id) throws Exception;
+    List<Craftsman> getCraftsmenByOrder(long id);
 
-    List<Craftsman> getSortedAlphabetically() throws Exception;
+    List<Craftsman> getSortedAlphabetically();
 
-    List<Craftsman> getSortedByBusyness() throws Exception;
+    List<Craftsman> getSortedByBusyness();
 
-    Craftsman getCraftsmanById(Long id) throws Exception;
+    Craftsman getCraftsmanById(Long id);
 
     Craftsman createCraftsmen(String name, String surname);
 
-    List<Craftsman> getCraftsmen() throws Exception;
+    List<Craftsman> getCraftsmen();
 
     void importCraftsmenFromCsv();
 
-    void exportCraftsmenToCsv() throws Exception;
+    void exportCraftsmenToCsv();
 
     void importCraftsmenFromJson();
 
-    void exportCraftsmenToJson() throws Exception;
+    void exportCraftsmenToJson();
 }

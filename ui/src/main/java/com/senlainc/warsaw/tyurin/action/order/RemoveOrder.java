@@ -8,11 +8,17 @@ public class RemoveOrder implements IAction {
 
     private final static Logger logger = Logger.getLogger(RemoveOrder.class);
 
+    private OrderService orderService;
+
+    public RemoveOrder(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
-            OrderService.getInstance().removeOrder(1L);
+            orderService.removeOrder(1L);
         } catch (Exception exception) {
             logger.error("Can't remove order", exception);
         }

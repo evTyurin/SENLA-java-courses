@@ -8,13 +8,18 @@ public class ImportCraftsmenFromCsv implements IAction {
 
     private final static Logger logger = Logger.getLogger(ImportCraftsmenFromCsv.class);
 
+    private CraftsmanService craftsmanService;
+
+    public ImportCraftsmenFromCsv(CraftsmanService craftsmanService) {
+        this.craftsmanService = craftsmanService;
+    }
+
     @Override
     public void execute() {
 
         System.out.println("Import from csv");
         try {
-            CraftsmanService
-                    .getInstance()
+            craftsmanService
                     .importCraftsmenFromCsv();
         } catch (Exception exception) {
             logger.error("Can't craftsman import from csv", exception);

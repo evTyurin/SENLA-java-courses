@@ -8,13 +8,18 @@ public class ImportCraftsmenFromJson implements IAction {
 
     private final static Logger logger = Logger.getLogger(ImportCraftsmenFromJson.class);
 
+    private CraftsmanService craftsmanService;
+
+    public ImportCraftsmenFromJson(CraftsmanService craftsmanService) {
+        this.craftsmanService = craftsmanService;
+    }
+
     @Override
     public void execute() {
 
         System.out.println("Import from json");
         try {
-            CraftsmanService
-                    .getInstance()
+            craftsmanService
                     .importCraftsmenFromJson();
         } catch (Exception exception) {
             logger.error("Can't import craftsman from json", exception);

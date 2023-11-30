@@ -10,11 +10,17 @@ public class ChangeOrderStatus implements IAction {
 
     private final static Logger logger = Logger.getLogger(ChangeOrderStatus.class);
 
+    private OrderService orderService;
+
+    public ChangeOrderStatus(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
-            Order order = OrderService.getInstance().getOrderById(1);
+            Order order = orderService.getOrderById(1);
             order.setOrderStatus(OrderStatus.COMPLETED);
         } catch (Exception exception) {
             logger.error("Can't change order status", exception);

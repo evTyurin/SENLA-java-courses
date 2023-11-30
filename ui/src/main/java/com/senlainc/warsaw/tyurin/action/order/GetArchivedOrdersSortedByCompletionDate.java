@@ -8,13 +8,18 @@ public class GetArchivedOrdersSortedByCompletionDate implements IAction {
 
     private final static Logger logger = Logger.getLogger(GetArchivedOrdersSortedByCompletionDate.class);
 
+    private OrderService orderService;
+
+    public GetArchivedOrdersSortedByCompletionDate(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of archived orders sorted by completion date");
         try {
-            OrderService
-                    .getInstance()
+            orderService
                     .getArchivedOrdersSortedByCompletionDate()
                     .forEach(order -> System.out.println(order.toString()));
         } catch (Exception exception) {

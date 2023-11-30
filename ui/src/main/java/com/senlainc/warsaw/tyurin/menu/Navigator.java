@@ -1,17 +1,15 @@
 package com.senlainc.warsaw.tyurin.menu;
 
+import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
+import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
+
+@DependencyClass
 public class Navigator {
 
+    @DependencyComponent
     private static Navigator INSTANCE;
 
     private Menu currentMenu;
-
-    public static Navigator getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Navigator();
-        }
-        return INSTANCE;
-    }
 
     public Navigator() {}
 

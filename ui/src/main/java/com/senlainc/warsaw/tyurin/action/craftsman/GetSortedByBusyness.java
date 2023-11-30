@@ -8,13 +8,18 @@ public class GetSortedByBusyness implements IAction {
 
     private final static Logger logger = Logger.getLogger(GetSortedByBusyness.class);
 
+    private CraftsmanService craftsmanService;
+
+    public GetSortedByBusyness(CraftsmanService craftsmanService) {
+        this.craftsmanService = craftsmanService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of craftsmen sorted by busyness");
         try {
-            CraftsmanService
-                    .getInstance()
+            craftsmanService
                     .getSortedByBusyness()
                     .forEach(craftsman -> System.out.println(craftsman.toString()));
         } catch (Exception exception) {

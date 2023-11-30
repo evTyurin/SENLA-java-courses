@@ -14,15 +14,6 @@ public class CsvReader {
 
     private final static Logger logger = Logger.getLogger(CsvReader.class);
 
-    private static CsvReader INSTANCE;
-
-    public static CsvReader getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new CsvReader();
-        }
-        return INSTANCE;
-    }
-
     public List<String> readEntities(String path) {
         List<String> rawEntities = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {

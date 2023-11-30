@@ -8,13 +8,18 @@ public class GetArchivedOrdersSortedByPrice implements IAction {
 
     private final static Logger logger = Logger.getLogger(GetArchivedOrdersSortedByPrice.class);
 
+    private OrderService orderService;
+
+    public GetArchivedOrdersSortedByPrice(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of archived orders sorted by price");
         try {
-            OrderService
-                    .getInstance()
+            orderService
                     .getArchivedOrdersSortedByPrice()
                     .forEach(order -> System.out.println(order.toString()));
         } catch (Exception exception) {

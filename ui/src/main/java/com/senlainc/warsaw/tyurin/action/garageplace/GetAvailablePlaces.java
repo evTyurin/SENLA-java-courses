@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.action.garagePlace;
+package com.senlainc.warsaw.tyurin.action.garageplace;
 
 import com.senlainc.warsaw.tyurin.action.IAction;
 import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
@@ -8,13 +8,18 @@ public class GetAvailablePlaces implements IAction {
 
     private final static Logger logger = Logger.getLogger(GetAvailablePlaces.class);
 
+    private GaragePlaceService garagePlaceService;
+
+    public GetAvailablePlaces(GaragePlaceService garagePlaceService) {
+        this.garagePlaceService = garagePlaceService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of available garage places");
         try {
-            GaragePlaceService
-                    .getInstance()
+            garagePlaceService
                     .getAvailablePlaces()
                     .forEach(garagePlace -> System.out.println(garagePlace.toString()));
         } catch (Exception exception) {

@@ -8,13 +8,18 @@ public class GetSortedByStartDate implements IAction {
 
     private final static Logger logger = Logger.getLogger(GetSortedByStartDate.class);
 
+    private OrderService orderService;
+
+    public GetSortedByStartDate(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         System.out.println("List of orders sorted by start date");
         try {
-            OrderService
-                    .getInstance()
+            orderService
                     .getSortedByStartDate()
                     .forEach(order -> System.out.println(order.toString()));
         } catch (Exception exception) {

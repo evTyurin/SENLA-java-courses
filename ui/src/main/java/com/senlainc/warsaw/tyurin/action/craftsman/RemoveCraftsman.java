@@ -8,13 +8,17 @@ public class RemoveCraftsman implements IAction {
 
     private final static Logger logger = Logger.getLogger(RemoveCraftsman.class);
 
-    @Override
-    public void execute() throws Exception {
+    private CraftsmanService craftsmanService;
 
-        CraftsmanService.getInstance().removeCraftsmanById(1);
+    public RemoveCraftsman(CraftsmanService craftsmanService) {
+        this.craftsmanService = craftsmanService;
+    }
+
+    @Override
+    public void execute() {
 
         try {
-
+            craftsmanService.removeCraftsmanById(1);
         } catch (Exception exception) {
             logger.error("Can't add craftsman", exception);
         }

@@ -8,27 +8,17 @@ public class AddCraftsman implements IAction {
 
     private final static Logger logger = Logger.getLogger(AddCraftsman.class);
 
+    private CraftsmanService craftsmanService;
+
+    public AddCraftsman(CraftsmanService craftsmanService) {
+        this.craftsmanService = craftsmanService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
-            CraftsmanService
-                    .getInstance()
-                    .addCraftsman(CraftsmanService
-                            .getInstance()
-                            .createCraftsmen("Nick", "Smart"));
-
-            CraftsmanService
-                    .getInstance()
-                    .addCraftsman(CraftsmanService
-                            .getInstance()
-                            .createCraftsmen("Jack", "Jones"));
-
-            CraftsmanService
-                    .getInstance()
-                    .addCraftsman(CraftsmanService
-                            .getInstance()
-                            .createCraftsmen("Star", "Wars"));
+            craftsmanService.createCraftsmen("Star", "Wars");
         } catch (Exception exception) {
             logger.error("Can't add craftsman", exception);
         }

@@ -8,13 +8,18 @@ public class ExportOrdersToJson implements IAction {
 
     private final static Logger logger = Logger.getLogger(ExportOrdersToJson.class);
 
+    private OrderService orderService;
+
+    public ExportOrdersToJson(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
-    public void execute() throws Exception {
+    public void execute() {
 
         try {
             System.out.println("Export to json");
-            OrderService
-                    .getInstance()
+            orderService
                     .exportOrdersToJson();
         } catch (Exception exception) {
             logger.error("Can't export order to json", exception);
