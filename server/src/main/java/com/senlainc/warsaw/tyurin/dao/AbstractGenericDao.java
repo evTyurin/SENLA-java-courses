@@ -1,11 +1,11 @@
 package com.senlainc.warsaw.tyurin.dao;
 
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
-import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -14,12 +14,12 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
 import java.util.List;
 
-@DependencyClass
+@Repository
 public abstract class AbstractGenericDao<T> implements IGenericDao<T>{
 
     private final static Logger logger = Logger.getLogger(AbstractGenericDao.class);
     private final Class<T> entityClass;
-    @DependencyComponent
+    @Autowired
     protected HibernateUtil hibernateUtil;
 
     public AbstractGenericDao() {

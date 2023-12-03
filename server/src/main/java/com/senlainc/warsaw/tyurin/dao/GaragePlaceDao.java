@@ -1,11 +1,11 @@
 package com.senlainc.warsaw.tyurin.dao;
 
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.*;
 import java.sql.Timestamp;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-@DependencyClass
+@Repository
 public class GaragePlaceDao extends AbstractGenericDao<GaragePlace> implements IGaragePlaceDao {
 
     private final static Logger logger = Logger.getLogger(GaragePlaceDao.class);

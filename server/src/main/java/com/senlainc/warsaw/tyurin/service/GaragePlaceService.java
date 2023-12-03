@@ -1,8 +1,5 @@
 package com.senlainc.warsaw.tyurin.service;
 
-import com.senlainc.warsaw.tyurin.annotation.ConfigProperty;
-import com.senlainc.warsaw.tyurin.annotation.DependencyClass;
-import com.senlainc.warsaw.tyurin.annotation.DependencyComponent;
 import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDao;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
@@ -12,34 +9,37 @@ import com.senlainc.warsaw.tyurin.util.csvhandlers.CsvWriter;
 import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonReader;
 import com.senlainc.warsaw.tyurin.util.jsonhandlers.JsonWriter;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@DependencyClass
+@Service
 public class GaragePlaceService implements IGaragePlaceService{
 
     private final static Logger logger = Logger.getLogger(GaragePlaceService.class);
 
-    @DependencyComponent
+    @Autowired
     private IGaragePlaceDao garagePlaceDao;
-    @DependencyComponent
+    @Autowired
     private IOrderService orderService;
-    @DependencyComponent
+    @Autowired
     private ICraftsmanService craftsmanService;
-    @DependencyComponent
+    @Autowired
     private CsvReader csvReader;
-    @DependencyComponent
+    @Autowired
     private CsvWriter csvWriter;
-    @DependencyComponent
+    @Autowired
     private JsonReader jsonReader;
-    @DependencyComponent
+    @Autowired
     private JsonWriter jsonWriter;
-    @ConfigProperty(propertyKey = Constants.ABILITY_TO_ADD_GARAGE_PLACE)
+    @Value("${garage-place.add.enabled}")
     private boolean isGaragePlaceAddable;
-    @ConfigProperty(propertyKey = Constants.ABILITY_TO_REMOVE_GARAGE_PLACE)
+    @Value("${garage-place.remove.enabled}")
     private boolean isGaragePlaceRemovable;
 
     @Override

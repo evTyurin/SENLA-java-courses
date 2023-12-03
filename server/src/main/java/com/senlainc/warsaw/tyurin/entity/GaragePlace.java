@@ -1,7 +1,5 @@
 package com.senlainc.warsaw.tyurin.entity;
 
-import com.senlainc.warsaw.tyurin.util.OrderStatus;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;

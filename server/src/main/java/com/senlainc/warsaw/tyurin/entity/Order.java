@@ -4,7 +4,6 @@ import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,8 +22,8 @@ public class Order {
     private LocalDateTime startDate;
     @Column(name = "completion_date")
     private LocalDateTime completionDate;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_status_id")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_status")
     private OrderStatus orderStatus;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "garage_place_id")
@@ -39,7 +38,6 @@ public class Order {
 
     public Order() {
         orderStatus = OrderStatus.NEW;
-        craftsmen = new ArrayList<>();
         submissionDate = LocalDateTime.now();
         submissionDate = submissionDate
                 .minusSeconds(submissionDate.getSecond())
