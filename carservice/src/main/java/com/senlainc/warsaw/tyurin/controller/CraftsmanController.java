@@ -2,12 +2,14 @@ package com.senlainc.warsaw.tyurin.controller;
 
 import com.senlainc.warsaw.tyurin.dto.CraftsmanDto;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
+import com.senlainc.warsaw.tyurin.exception.CriteriaNotFoundException;
 import com.senlainc.warsaw.tyurin.service.ICraftsmanService;
 import com.senlainc.warsaw.tyurin.util.builder.CraftsmanBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("craftsmen")
@@ -31,14 +33,37 @@ public class CraftsmanController {
 
     @ResponseBody
     @GetMapping("{id}")
-    public Craftsman find(@PathVariable long id) {
-        return craftsmanService.getCraftsmanById(id);
+    public CraftsmanDto find(@PathVariable long id) {
+        return craftsmanBuilder.build(craftsmanService.getCraftsmanById(id));
     }
 
     @ResponseBody
     @GetMapping("{id}/orders")
-    public List<Craftsman> findByOrder(@PathVariable long id) {
-        return craftsmanService.getCraftsmenByOrder(id);
+    public List<CraftsmanDto> findByOrder(@PathVariable long id) {
+        return craftsmanService
+                .getCraftsmenByOrder(id)
+                .stream()
+                .map(craftsman -> craftsmanBuilder.build(craftsman))
+                .collect(Collectors.toList());
+    }
+
+    @ResponseBody
+    @GetMapping("sort/{sortCriteria}")
+    public List<CraftsmanDto> getSortedByCriteria(@PathVariable String criteria) throws CriteriaNotFoundException {
+        if(criteria.equals("business")) {
+            return craftsmanService
+                    .getSortedByBusyness()
+                    .stream()
+                    .map(craftsman -> craftsmanBuilder.build(craftsman))
+                    .collect(Collectors.toList());
+        } else if (criteria.equals("alphabetically")) {
+            return craftsmanService
+                    .getSortedAlphabetically()
+                    .stream()
+                    .map(craftsman -> craftsmanBuilder.build(craftsman))
+                    .collect(Collectors.toList());
+        }
+        throw new CriteriaNotFoundException("criteria " + criteria + " not available", 405);
     }
 
     @ResponseBody

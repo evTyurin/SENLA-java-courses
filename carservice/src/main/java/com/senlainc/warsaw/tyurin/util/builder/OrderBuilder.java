@@ -7,19 +7,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Validated
 public class OrderBuilder {
 
-    private final CraftsmanBuilder craftsmanBuilder;
     private final GaragePlaceBuilder garagePlaceBuilder;
 
     @Autowired
-    public OrderBuilder(CraftsmanBuilder craftsmanBuilder,
-                        GaragePlaceBuilder garagePlaceBuilder) {
-        this.craftsmanBuilder = craftsmanBuilder;
+    public OrderBuilder(GaragePlaceBuilder garagePlaceBuilder) {
         this.garagePlaceBuilder = garagePlaceBuilder;
+    }
+
+    public List<OrderDto> build(List<Order> orders) {
+        return orders
+                .stream()
+                .map(this::build)
+                .collect(Collectors.toList());
     }
 
     public Order build(@Valid OrderDto dto) {

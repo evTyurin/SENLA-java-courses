@@ -1,5 +1,5 @@
 # SENLA-java-courses
-## TASK 13
+## TASK 16
 ### Electronic Vehicle Garage Administrator
 ### The programme shall provide the possibility of:
 
@@ -26,3 +26,5 @@
 #### Added the ability to configure the program using the property file.
 
 #### Added the implementation of working with the database using hibernate.
+
+#### Application modified to web application

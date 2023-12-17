@@ -1,7 +1,6 @@
 package com.senlainc.warsaw.tyurin.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -9,7 +8,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.senlainc.warsaw.tyurin.util.OrderStatus;
 
-import javax.persistence.*;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,7 +15,6 @@ import java.util.List;
 
 public class OrderDto implements Serializable {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
     private double price;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -40,7 +37,6 @@ public class OrderDto implements Serializable {
         return id;
     }
 
-    @JsonIgnore
     public void setId(long id) {
         this.id = id;
     }
@@ -57,7 +53,6 @@ public class OrderDto implements Serializable {
         return submissionDate;
     }
 
-    @JsonIgnore
     public void setSubmissionDate(LocalDateTime submissionDate) {
         this.submissionDate = submissionDate;
     }
@@ -100,19 +95,5 @@ public class OrderDto implements Serializable {
 
     public void setCraftsmen(List<CraftsmanDto> craftsmen) {
         this.craftsmen = craftsmen;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderDto{" +
-                "id=" + id +
-                ", price=" + price +
-                ", submissionDate=" + submissionDate +
-                ", startDate=" + startDate +
-                ", completionDate=" + completionDate +
-                ", orderStatus=" + orderStatus +
-                ", garagePlace=" + garagePlace +
-                ", craftsmen=" + craftsmen +
-                '}';
     }
 }

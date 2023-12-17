@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ public class OrderService implements IOrderService{
     private boolean isOrderRemovable;
 
     @Override
+    @Transactional
     public void changeStatus(long id, OrderStatus status) {
         Order order = orderDao.findById(id);
         order.setOrderStatus(status);
@@ -36,6 +38,7 @@ public class OrderService implements IOrderService{
     }
 
     @Override
+    @Transactional
     public void shiftStartDateTime(long id, LocalDateTime startDateTime) {
         Order order = orderDao.findById(id);
         order.setStartDate(startDateTime);
@@ -43,6 +46,7 @@ public class OrderService implements IOrderService{
     }
 
     @Override
+    @Transactional
     public void shiftCompletionDateTime(long id, LocalDateTime completionDateTime) {
         if (isCompletionDateTimeShiftable) {
             Order order = orderDao.findById(id);
