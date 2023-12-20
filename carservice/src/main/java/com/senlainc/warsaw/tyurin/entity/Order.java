@@ -16,17 +16,17 @@ public class Order {
     private long id;
     @Column(name = "price")
     private double price;
-    @Column(name = "submissionDate")
+    @Column(name = "submission_date")
     private LocalDateTime submissionDate;
-    @Column(name = "startDate")
+    @Column(name = "start_date")
     private LocalDateTime startDate;
-    @Column(name = "completionDate")
+    @Column(name = "completion_date")
     private LocalDateTime completionDate;
     @Enumerated(EnumType.STRING)
-    @Column(name = "orderStatus")
+    @Column(name = "order_status")
     private OrderStatus orderStatus;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "garagePlace")
+    @JoinColumn(name = "garage_place_id")
     private GaragePlace garagePlace;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(

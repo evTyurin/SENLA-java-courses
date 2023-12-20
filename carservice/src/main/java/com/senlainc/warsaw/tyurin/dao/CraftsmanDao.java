@@ -43,7 +43,6 @@ public class CraftsmanDao extends AbstractGenericDao<Craftsman> implements ICraf
                             builder.asc(root.get("name")));
             return session.createQuery(criteria).getResultList();
         } catch (Exception exception) {
-            System.out.println(exception);
             logger.error("Can't get craftsmen sorted alphabetically", exception);
         }
         return Collections.EMPTY_LIST;

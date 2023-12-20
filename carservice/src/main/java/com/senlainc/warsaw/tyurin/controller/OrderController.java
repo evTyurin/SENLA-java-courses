@@ -2,107 +2,61 @@ package com.senlainc.warsaw.tyurin.controller;
 
 import com.senlainc.warsaw.tyurin.dto.OrderDto;
 import com.senlainc.warsaw.tyurin.entity.Order;
-import com.senlainc.warsaw.tyurin.exception.CriteriaNotFoundException;
+import com.senlainc.warsaw.tyurin.exception.ExpectationFailedException;
+import com.senlainc.warsaw.tyurin.exception.NotFoundException;
 import com.senlainc.warsaw.tyurin.service.IOrderService;
-import com.senlainc.warsaw.tyurin.util.builder.OrderBuilder;
-import org.springframework.stereotype.Controller;
+import com.senlainc.warsaw.tyurin.util.mapper.OrderMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("orders")
 public class OrderController {
 
-    private final OrderBuilder orderBuilder;
+    private final OrderMapper orderMapper;
     private IOrderService orderService;
 
-    public OrderController(OrderBuilder orderBuilder,
+    public OrderController(OrderMapper orderMapper,
                            IOrderService orderService) {
         this.orderService = orderService;
-        this.orderBuilder = orderBuilder;
+        this.orderMapper = orderMapper;
     }
 
-    @ResponseBody
     @PostMapping()
-    public void create(@Valid @RequestBody OrderDto orderDto) {
-        Order order = orderBuilder.build(orderDto);
+    public void create(@Valid @RequestBody OrderDto orderDto) throws NotFoundException {
+        Order order = orderMapper.mapToEntity(orderDto);
         orderService.addOrder(order);
     }
 
-    @ResponseBody
     @GetMapping("{id}")
-    public OrderDto find(@PathVariable long id) {
-        return orderBuilder.build(orderService.getOrderById(id));
+    public OrderDto find(@PathVariable long id) throws NotFoundException {
+        return orderMapper.mapToEntity(orderService.getOrderById(id));
     }
 
-    @ResponseBody
     @DeleteMapping("{id}")
-    public void delete(@PathVariable long id) {
+    public void delete(@PathVariable long id) throws NotFoundException {
         orderService.removeOrder(id);
     }
 
-    @ResponseBody
-    @GetMapping("archived/sort/{sort}")
-    public List<OrderDto> getArchivedOrdersSortByCriteria(@PathVariable String criteria) throws CriteriaNotFoundException {
-        if (criteria.equals("price")) {
-            return orderBuilder.build(orderService
-                    .getArchivedOrdersSortedByPrice());
-        } else if (criteria.equals("completion-date")) {
-            return orderBuilder.build(orderService
-                    .getArchivedOrdersSortedByCompletionDate());
-        } else if (criteria.equals("submission-date")) {
-            return orderBuilder.build(orderService
-                    .getArchivedOrdersSortedBySubmissionDate());
-        }
-        throw new CriteriaNotFoundException("update by " + criteria + " not available", 405);
+    @GetMapping("archived/sort/{criteria}")
+    public List<OrderDto> getArchivedOrdersSortByCriteria(@PathVariable String criteria) throws ExpectationFailedException {
+        return orderMapper.mapToEntity(orderService.getArchivedOrdersSortByCriteria(criteria));
     }
 
-    @ResponseBody
-    @GetMapping("currently-executed/sort/{sort}")
-    public List<OrderDto> getCurrentlyExecutedOrdersSortByCriteria(@PathVariable String criteria) throws CriteriaNotFoundException {
-        if (criteria.equals("price")) {
-            return orderBuilder.build(orderService
-                    .getCurrentlyExecutedOrdersSortedByPrice());
-        } else if (criteria.equals("completion-date")) {
-            return orderBuilder.build(orderService
-                    .getArchivedOrdersSortedByCompletionDate());
-        } else if (criteria.equals("submission-date")) {
-            return orderBuilder.build(orderService
-                    .getCurrentlyExecutedOrdersSortedBySubmissionDate());
-        }
-        throw new CriteriaNotFoundException("sort by " + criteria + " not available", 405);
+    @GetMapping("currently-executed/sort/{criteria}")
+    public List<OrderDto> getCurrentlyExecutedOrdersSortedByCriteria(@PathVariable String criteria) throws ExpectationFailedException {
+        return orderMapper.mapToEntity(orderService.getCurrentlyExecutedOrdersSortedByCriteria(criteria));
     }
 
-    @ResponseBody
-    @GetMapping("sort/{sort}")
-    public List<OrderDto> getOrdersSortByCriteria(@PathVariable String criteria) throws CriteriaNotFoundException {
-        if (criteria.equals("price")) {
-            return orderBuilder.build(orderService.getSortedByPrice());
-        } else if (criteria.equals("completion-date")) {
-            return orderBuilder.build(orderService.getSortedByCompletionDate());
-        } else if (criteria.equals("submission-date")) {
-            return orderBuilder.build(orderService.getSortedBySubmissionDate());
-        } else if (criteria.equals("start-date")) {
-            return orderBuilder.build(orderService.getSortedByStartDate());
-        }
-        throw new CriteriaNotFoundException("sort by " + criteria + " not available", 405);
+    @GetMapping("sort/{criteria}")
+    public List<OrderDto> getAllOrdersSortedByCriteria(@PathVariable String criteria) throws ExpectationFailedException {
+        return orderMapper.mapToEntity(orderService.getSortedAllOrdersByCriteria(criteria));
     }
 
-    @ResponseBody
     @PatchMapping()
-    public void updateOrderParameter(@Valid @RequestBody OrderDto orderDto) throws CriteriaNotFoundException {
-        if (orderDto.getId() > 0) {
-            if (orderDto.getOrderStatus() != null) {
-                orderService.changeStatus(orderDto.getId(), orderDto.getOrderStatus());
-            }
-            if (orderDto.getCompletionDate() != null) {
-                orderService.shiftCompletionDateTime(orderDto.getId(), orderDto.getCompletionDate());
-            }
-        } else {
-            throw new CriteriaNotFoundException("bad id", 405);
-        }
+    public void updateOrderParameter(@Valid @RequestBody OrderDto orderDto) throws NotFoundException {
+        orderService.updateOrder(orderMapper.mapToEntity(orderDto));
     }
-
 }

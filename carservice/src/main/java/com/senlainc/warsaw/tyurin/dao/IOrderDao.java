@@ -1,14 +1,15 @@
 package com.senlainc.warsaw.tyurin.dao;
 
 import com.senlainc.warsaw.tyurin.entity.Order;
+import com.senlainc.warsaw.tyurin.exception.NotFoundException;
 
 import java.util.List;
 
 public interface IOrderDao {
 
-    void create(Order object);
+    void create(Order object) throws NotFoundException;
 
-    Order findById(long id);
+    Order findById(long id) throws NotFoundException;
 
     void update(Order order);
 

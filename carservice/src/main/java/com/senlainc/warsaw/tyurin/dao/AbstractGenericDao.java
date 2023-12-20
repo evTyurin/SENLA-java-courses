@@ -1,5 +1,6 @@
 package com.senlainc.warsaw.tyurin.dao;
 
+import com.senlainc.warsaw.tyurin.exception.NotFoundException;
 import com.senlainc.warsaw.tyurin.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -29,8 +30,12 @@ public abstract class AbstractGenericDao<T> implements IGenericDao<T>{
     }
 
     @Override
-    public T findById(long id) {
-        return (T) hibernateUtil.openSession().get(this.entityClass, id);
+    public T findById(long id) throws NotFoundException {
+        T object = hibernateUtil.openSession().get(this.entityClass, id);
+        if(object == null) {
+            throw new NotFoundException(id);
+        }
+        return object;
     }
 
     @Override

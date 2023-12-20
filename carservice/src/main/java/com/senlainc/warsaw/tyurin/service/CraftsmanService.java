@@ -2,6 +2,8 @@ package com.senlainc.warsaw.tyurin.service;
 
 import com.senlainc.warsaw.tyurin.dao.ICraftsmanDao;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
+import com.senlainc.warsaw.tyurin.exception.ExpectationFailedException;
+import com.senlainc.warsaw.tyurin.exception.NotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ public class CraftsmanService implements ICraftsmanService {
     }
 
     @Override
-    public void removeCraftsmanById(long id) {
+    public void removeCraftsmanById(long id) throws NotFoundException {
         craftsmanDao.delete(craftsmanDao.findById(id));
     }
 
@@ -42,7 +44,7 @@ public class CraftsmanService implements ICraftsmanService {
     }
 
     @Override
-    public Craftsman getCraftsmanById(Long id) {
+    public Craftsman getCraftsmanById(Long id) throws NotFoundException {
         return craftsmanDao.findById(id);
     }
 
@@ -57,5 +59,15 @@ public class CraftsmanService implements ICraftsmanService {
     @Override
     public List<Craftsman> getCraftsmen() {
         return craftsmanDao.getAll();
+    }
+
+    @Override
+    public List<Craftsman> getSortedByCriteria(String criteria) throws ExpectationFailedException {
+        if(criteria.equals("business")) {
+            return getSortedByBusyness();
+        } else if (criteria.equals("alphabetically")) {
+            return getSortedAlphabetically();
+        }
+        throw new ExpectationFailedException(criteria);
     }
 }

@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.util.builder;
+package com.senlainc.warsaw.tyurin.util.mapper;
 
 import com.senlainc.warsaw.tyurin.dto.CraftsmanDto;
 import com.senlainc.warsaw.tyurin.entity.Craftsman;
@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 
 @Component
-public class CraftsmanBuilder {
+public class CraftsmanMapper {
 
-    public CraftsmanBuilder() {
+    public CraftsmanMapper() {
     }
 
-    public Craftsman build(@Valid CraftsmanDto dto) {
+    public Craftsman mapToEntity(@Valid CraftsmanDto dto) {
         Craftsman craftsman = new Craftsman();
         craftsman.setName(dto.getName());
         craftsman.setSurname(dto.getSurname());
@@ -20,7 +20,7 @@ public class CraftsmanBuilder {
         return craftsman;
     }
 
-    public CraftsmanDto build(Craftsman craftsman) {
+    public CraftsmanDto mapToEntity(Craftsman craftsman) {
         CraftsmanDto dto = new CraftsmanDto();
         dto.setName(craftsman.getName());
         dto.setSurname(craftsman.getSurname());

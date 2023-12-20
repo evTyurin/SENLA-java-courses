@@ -1,4 +1,4 @@
-package com.senlainc.warsaw.tyurin.util.builder;
+package com.senlainc.warsaw.tyurin.util.mapper;
 
 import com.senlainc.warsaw.tyurin.dto.OrderDto;
 import com.senlainc.warsaw.tyurin.entity.Order;
@@ -12,40 +12,40 @@ import java.util.stream.Collectors;
 
 @Component
 @Validated
-public class OrderBuilder {
+public class OrderMapper {
 
-    private final GaragePlaceBuilder garagePlaceBuilder;
+    private final GaragePlaceMapper garagePlaceMapper;
 
     @Autowired
-    public OrderBuilder(GaragePlaceBuilder garagePlaceBuilder) {
-        this.garagePlaceBuilder = garagePlaceBuilder;
+    public OrderMapper(GaragePlaceMapper garagePlaceMapper) {
+        this.garagePlaceMapper = garagePlaceMapper;
     }
 
-    public List<OrderDto> build(List<Order> orders) {
+    public List<OrderDto> mapToEntity(List<Order> orders) {
         return orders
                 .stream()
-                .map(this::build)
+                .map(this::mapToEntity)
                 .collect(Collectors.toList());
     }
 
-    public Order build(@Valid OrderDto dto) {
+    public Order mapToEntity(@Valid OrderDto dto) {
         Order order = new Order();
         order.setOrderStatus(dto.getOrderStatus());
-        order.setGaragePlace(garagePlaceBuilder.build(dto.getGaragePlace()));
+        order.setGaragePlace(garagePlaceMapper.mapToEntity(dto.getGaragePlace()));
         order.setCompletionDate(dto.getCompletionDate());
         order.setPrice(dto.getPrice());
         order.setStartDate(dto.getStartDate());
         return order;
     }
 
-    public OrderDto build(Order order) {
+    public OrderDto mapToEntity(Order order) {
         OrderDto dto = new OrderDto();
         dto.setCompletionDate(order.getCompletionDate());
         dto.setId(order.getId());
         dto.setOrderStatus(order.getOrderStatus());
         dto.setStartDate(order.getStartDate());
         dto.setSubmissionDate(order.getSubmissionDate());
-        dto.setGaragePlace(garagePlaceBuilder.build(order.getGaragePlace()));
+        dto.setGaragePlace(garagePlaceMapper.mapToEntity(order.getGaragePlace()));
         return dto;
     }
 }

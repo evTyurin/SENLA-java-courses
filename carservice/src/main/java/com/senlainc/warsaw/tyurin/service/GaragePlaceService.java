@@ -3,6 +3,7 @@ package com.senlainc.warsaw.tyurin.service;
 import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDao;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.entity.Order;
+import com.senlainc.warsaw.tyurin.exception.NotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,7 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public void removeGaragePlace(long id) {
+    public void removeGaragePlace(long id) throws NotFoundException {
 
         if (isGaragePlaceRemovable) {
             garagePlaceDao.delete(garagePlaceDao.findById(id));
@@ -88,7 +89,7 @@ public class GaragePlaceService implements IGaragePlaceService{
     }
 
     @Override
-    public GaragePlace getGaragePlaceById(Long id) {
+    public GaragePlace getGaragePlaceById(Long id) throws NotFoundException {
         return garagePlaceDao.findById(id);
     }
 }
