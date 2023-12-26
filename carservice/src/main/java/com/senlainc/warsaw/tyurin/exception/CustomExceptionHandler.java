@@ -2,6 +2,8 @@ package com.senlainc.warsaw.tyurin.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,5 +34,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<ResponseException> handleNotFoundException(NotFoundException exception) {
         return new ResponseEntity<>(new ResponseException("Invalid entity id = "
                 + exception.getEntityId() + ". Entity not found", "404"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = UserExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    protected ResponseEntity<ResponseException> handleUserExistException(UserExistException exception) {
+        return new ResponseEntity<>(new ResponseException("User with username "
+                + exception.getUsername() + " already exist", "409"), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = BadCredentialsException.class)
+    protected ResponseEntity<ResponseException> handleBadCredentialsException() {
+        return new ResponseEntity<>(new ResponseException("Incorrect username or password", "401"), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = AuthenticationCredentialsNotFoundException.class)
+    protected ResponseEntity<ResponseException> handleAuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException exception) {
+        return new ResponseEntity<>(new ResponseException(exception.getMessage(), "401"), HttpStatus.UNAUTHORIZED);
     }
 }
