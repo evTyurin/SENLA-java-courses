@@ -2,7 +2,6 @@ package com.senlainc.warsaw.tyurin.service;
 
 import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDao;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
-import com.senlainc.warsaw.tyurin.entity.Order;
 import com.senlainc.warsaw.tyurin.exception.NotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,6 @@ public class GaragePlaceService implements IGaragePlaceService{
 
     @Autowired
     private IGaragePlaceDao garagePlaceDao;
-    @Autowired
-    private IOrderService orderService;
-    @Autowired
-    private ICraftsmanService craftsmanService;
     @Value("${garage-place.add.enabled}")
     private boolean isGaragePlaceAddable;
     @Value("${garage-place.remove.enabled}")
@@ -68,16 +63,10 @@ public class GaragePlaceService implements IGaragePlaceService{
                 .minusNanos(currantTime.getNano())
                 .plusHours(1);
 
-        if (getAvailablePlacesAmount(searchTime) > 0) {
-            return searchTime;
+        while (getAvailablePlacesAmount(searchTime) == 0) {
+            searchTime = searchTime.plusHours(1);
         }
-        List<Order> ordersInProgress = orderService.getArchivedOrdersSortedByCompletionDate();
-        for (Order order : ordersInProgress) {
-            if (getAvailablePlacesAmount(order.getCompletionDate()) > 0) {
-                return order.getCompletionDate();
-            }
-        }
-        return null;
+        return searchTime;
     }
 
     @Override
