@@ -18,7 +18,5 @@ public interface IGaragePlaceService {
 
     LocalDateTime getNearestAvailableDate();
 
-    GaragePlace createGaragePlace(int number, double space);
-
     GaragePlace getGaragePlaceById(Long id) throws NotFoundException;
 }

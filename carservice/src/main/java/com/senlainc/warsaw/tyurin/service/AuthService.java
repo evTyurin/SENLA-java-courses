@@ -14,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -23,14 +24,24 @@ public class AuthService implements IAuthService {
 
     private final static Logger logger = Logger.getLogger(AuthService.class);
 
-    @Autowired
     private IUserDao userDao;
-    @Autowired
     private IRoleDao roleDao;
-    @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
     private JwtGenerator jwtGenerator;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public AuthService(IUserDao userDao,
+                       IRoleDao roleDao,
+                       AuthenticationManager authenticationManager,
+                       JwtGenerator jwtGenerator,
+                       PasswordEncoder passwordEncoder) {
+        this.roleDao = roleDao;
+        this.userDao = userDao;
+        this.jwtGenerator = jwtGenerator;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public void register(UserEntity user) throws NotFoundException, UserExistException {
@@ -39,6 +50,7 @@ public class AuthService implements IAuthService {
         }
         Role roles = roleDao.findByName("USER");
         user.setRoles(Collections.singletonList(roles));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.create(user);
     }
 
