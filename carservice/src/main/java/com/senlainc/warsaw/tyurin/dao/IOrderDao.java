@@ -31,6 +31,8 @@ public interface IOrderDao {
 
     List<Order> getInProgressOrdersStartDateSorted();
 
+    List<Order> getInProgressOrdersPriceSorted();
+
     List<Order> getArchivedOrdersSubmissionDateSorted();
 
     List<Order> getArchivedOrdersCompletionDateSorted();

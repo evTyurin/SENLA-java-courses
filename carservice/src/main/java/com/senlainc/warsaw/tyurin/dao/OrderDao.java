@@ -41,6 +41,11 @@ public class OrderDao extends AbstractGenericDao<Order> implements IOrderDao {
     }
 
     @Override
+    public List<Order> getInProgressOrdersPriceSorted() {
+        return getOrdersInProgressSortedByCriteria("price");
+    }
+
+    @Override
     public List<Order> getInProgressOrdersCompletionDateSorted() {
         return getOrdersInProgressSortedByCriteria("completion_date");
     }

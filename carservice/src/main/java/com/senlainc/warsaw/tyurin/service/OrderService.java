@@ -13,101 +13,21 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService implements IOrderService{
 
     private final static Logger logger = Logger.getLogger(OrderService.class);
 
-    @Autowired
     private IOrderDao orderDao;
-    @Autowired
-    private ICraftsmanService craftsmanService;
-    @Autowired
-    private IGaragePlaceService garagePlaceService;
     @Value("${order.shift-completion-time.enabled}")
     private boolean isCompletionDateTimeShiftable;
     @Value("${order.remove.enabled}")
     private boolean isOrderRemovable;
 
-    @Override
-    @Transactional
-    public void changeStatus(long id, OrderStatus status) throws NotFoundException {
-        Order order = orderDao.findById(id);
-        order.setOrderStatus(status);
-        orderDao.update(order);
-    }
-
-    @Override
-    @Transactional
-    public void shiftStartDateTime(long id, LocalDateTime startDateTime) throws NotFoundException {
-        Order order = orderDao.findById(id);
-        order.setStartDate(startDateTime);
-        orderDao.update(order);
-    }
-
-    @Override
-    @Transactional
-    public void shiftCompletionDateTime(long id, LocalDateTime completionDateTime) throws NotFoundException {
-        if (isCompletionDateTimeShiftable) {
-            Order order = orderDao.findById(id);
-            order.setCompletionDate(completionDateTime);
-            orderDao.update(order);
-        } else {
-            logger.error("Shifting completion time was prohibited");
-        }
-    }
-
-    @Override
-    public List<Order> getSortedBySubmissionDate() {
-        return orderDao.getOrdersSubmissionDateSorted();
-    }
-
-    @Override
-    public List<Order> getSortedByCompletionDate() {
-        return orderDao.getOrdersCompletionDateSorted();
-    }
-
-    @Override
-    public List<Order> getSortedByStartDate() {
-        return orderDao.getOrdersStartDateSorted();
-    }
-
-    @Override
-    public List<Order> getSortedByPrice() {
-        return orderDao.getOrdersPriceSorted();
-    }
-
-    @Override
-    public List<Order> getCurrentlyExecutedOrdersSortedBySubmissionDate() {
-        return orderDao.getInProgressOrdersSubmissionDateSorted();
-    }
-
-    @Override
-    public List<Order> getCurrentlyExecutedOrdersSortedByCompletionDate() {
-        return orderDao.getInProgressOrdersCompletionDateSorted();
-    }
-
-    @Override
-    public List<Order> getCurrentlyExecutedOrdersSortedByPrice() {
-        return orderDao.getInProgressOrdersStartDateSorted();
-    }
-
-    @Override
-    public List<Order> getArchivedOrdersSortedBySubmissionDate() {
-        return orderDao.getArchivedOrdersSubmissionDateSorted();
-    }
-
-    @Override
-    public List<Order> getArchivedOrdersSortedByCompletionDate() {
-        return orderDao.getArchivedOrdersCompletionDateSorted();
-    }
-
-    @Override
-    public List<Order> getArchivedOrdersSortedByPrice() {
-        return orderDao.getArchivedOrdersPriceSorted();
+    @Autowired
+    public OrderService(IOrderDao orderDao) {
+        this.orderDao = orderDao;
     }
 
     @Override
@@ -118,36 +38,6 @@ public class OrderService implements IOrderService{
     @Override
     public List<Order> getOrders() {
         return orderDao.getAll();
-    }
-
-    @Override
-    public Order createOrder(double price,
-                             LocalDateTime startDate,
-                             LocalDateTime completionDate,
-                             List<Long> craftsmenId,
-                             long garagePlaceId) {
-        Order order = new Order();
-        order.setPrice(price);
-        order.setStartDate(startDate);
-        order.setCompletionDate(completionDate);
-        order.setCraftsmen(craftsmenId
-                .stream()
-                .map(craftsmanId -> {
-                    try {
-                        return craftsmanService
-                                .getCraftsmanById(craftsmanId);
-                    } catch (NotFoundException exception) {
-                        logger.error("Can't get craftsman with id " + craftsmanId, exception);
-                    }
-                    return null;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList()));
-        try {
-            order.setGaragePlace(garagePlaceService.getGaragePlaceById(garagePlaceId));        } catch (Exception exception) {
-            logger.error("Can't get garage place", exception);
-        }
-        return order;
     }
 
     @Override
@@ -187,7 +77,7 @@ public class OrderService implements IOrderService{
         if (criteria.equals("price")) {
             return getCurrentlyExecutedOrdersSortedByPrice();
         } else if (criteria.equals("completion-date")) {
-            return getArchivedOrdersSortedByCompletionDate();
+            return getCurrentlyExecutedOrdersSortedByCompletionDate();
         } else if (criteria.equals("submission-date")) {
             return getCurrentlyExecutedOrdersSortedBySubmissionDate();
         }
@@ -209,6 +99,7 @@ public class OrderService implements IOrderService{
     }
 
     @Override
+    @Transactional
     public void updateOrder(Order order) throws NotFoundException {
         if (order.getId() < 1) {
             throw new NotFoundException(order.getId());
@@ -221,6 +112,68 @@ public class OrderService implements IOrderService{
         }
         if (order.getCompletionDate() != null) {
             shiftCompletionDateTime(order.getId(), order.getCompletionDate());
+        }
+    }
+
+    private List<Order> getSortedBySubmissionDate() {
+        return orderDao.getOrdersSubmissionDateSorted();
+    }
+
+    private List<Order> getSortedByCompletionDate() {
+        return orderDao.getOrdersCompletionDateSorted();
+    }
+
+    private List<Order> getSortedByStartDate() {
+        return orderDao.getOrdersStartDateSorted();
+    }
+
+    private List<Order> getSortedByPrice() {
+        return orderDao.getOrdersPriceSorted();
+    }
+
+    private List<Order> getCurrentlyExecutedOrdersSortedBySubmissionDate() {
+        return orderDao.getInProgressOrdersSubmissionDateSorted();
+    }
+
+    private List<Order> getCurrentlyExecutedOrdersSortedByCompletionDate() {
+        return orderDao.getInProgressOrdersCompletionDateSorted();
+    }
+
+    private List<Order> getCurrentlyExecutedOrdersSortedByPrice() {
+        return orderDao.getInProgressOrdersPriceSorted();
+    }
+
+    private List<Order> getArchivedOrdersSortedBySubmissionDate() {
+        return orderDao.getArchivedOrdersSubmissionDateSorted();
+    }
+
+    private List<Order> getArchivedOrdersSortedByCompletionDate() {
+        return orderDao.getArchivedOrdersCompletionDateSorted();
+    }
+
+    private List<Order> getArchivedOrdersSortedByPrice() {
+        return orderDao.getArchivedOrdersPriceSorted();
+    }
+
+    private void changeStatus(long id, OrderStatus status) throws NotFoundException {
+        Order order = orderDao.findById(id);
+        order.setOrderStatus(status);
+        orderDao.update(order);
+    }
+
+    private void shiftStartDateTime(long id, LocalDateTime startDateTime) throws NotFoundException {
+        Order order = orderDao.findById(id);
+        order.setStartDate(startDateTime);
+        orderDao.update(order);
+    }
+
+    private void shiftCompletionDateTime(long id, LocalDateTime completionDateTime) throws NotFoundException {
+        if (isCompletionDateTimeShiftable) {
+            Order order = orderDao.findById(id);
+            order.setCompletionDate(completionDateTime);
+            orderDao.update(order);
+        } else {
+            logger.error("Shifting completion time was prohibited");
         }
     }
 }

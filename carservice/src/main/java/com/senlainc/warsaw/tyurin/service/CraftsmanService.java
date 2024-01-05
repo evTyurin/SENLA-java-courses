@@ -15,8 +15,12 @@ public class CraftsmanService implements ICraftsmanService {
 
     private final static Logger logger = Logger.getLogger(CraftsmanService.class);
 
-    @Autowired
     private ICraftsmanDao craftsmanDao;
+
+    @Autowired
+    public CraftsmanService(ICraftsmanDao craftsmanDao) {
+        this.craftsmanDao = craftsmanDao;
+    }
 
     @Override
     public void addCraftsman(Craftsman craftsman) {
@@ -34,26 +38,8 @@ public class CraftsmanService implements ICraftsmanService {
     }
 
     @Override
-    public List<Craftsman> getSortedAlphabetically() {
-        return craftsmanDao.getSortedAlphabetically();
-    }
-
-    @Override
-    public List<Craftsman> getSortedByBusyness() {
-        return craftsmanDao.getSortedByBusyness();
-    }
-
-    @Override
     public Craftsman getCraftsmanById(Long id) throws NotFoundException {
         return craftsmanDao.findById(id);
-    }
-
-    @Override
-    public Craftsman createCraftsmen(String name, String surname) {
-        Craftsman craftsman = new Craftsman();
-        craftsman.setName(name);
-        craftsman.setSurname(surname);
-        return craftsman;
     }
 
     @Override
@@ -69,5 +55,13 @@ public class CraftsmanService implements ICraftsmanService {
             return getSortedAlphabetically();
         }
         throw new ExpectationFailedException(criteria);
+    }
+
+    private List<Craftsman> getSortedAlphabetically() {
+        return craftsmanDao.getSortedAlphabetically();
+    }
+
+    private List<Craftsman> getSortedByBusyness() {
+        return craftsmanDao.getSortedByBusyness();
     }
 }

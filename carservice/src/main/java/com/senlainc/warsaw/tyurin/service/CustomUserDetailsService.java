@@ -22,8 +22,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final static Logger logger = Logger.getLogger(CustomUserDetailsService.class);
 
-    @Autowired
     private IUserDao userDao;
+
+    @Autowired
+    public CustomUserDetailsService(IUserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

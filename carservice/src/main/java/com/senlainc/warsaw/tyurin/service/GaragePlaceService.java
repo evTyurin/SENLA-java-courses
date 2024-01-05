@@ -16,12 +16,16 @@ public class GaragePlaceService implements IGaragePlaceService{
 
     private final static Logger logger = Logger.getLogger(GaragePlaceService.class);
 
-    @Autowired
     private IGaragePlaceDao garagePlaceDao;
     @Value("${garage-place.add.enabled}")
     private boolean isGaragePlaceAddable;
     @Value("${garage-place.remove.enabled}")
     private boolean isGaragePlaceRemovable;
+
+    @Autowired
+    public GaragePlaceService(IGaragePlaceDao garagePlaceDao) {
+        this.garagePlaceDao = garagePlaceDao;
+    }
 
     @Override
     public void addGaragePlace(GaragePlace garagePlace) {
@@ -67,14 +71,6 @@ public class GaragePlaceService implements IGaragePlaceService{
             searchTime = searchTime.plusHours(1);
         }
         return searchTime;
-    }
-
-    @Override
-    public GaragePlace createGaragePlace(int number, double space) {
-        GaragePlace garagePlace = new GaragePlace();
-        garagePlace.setNumber(number);
-        garagePlace.setSpace(space);
-        return garagePlace;
     }
 
     @Override

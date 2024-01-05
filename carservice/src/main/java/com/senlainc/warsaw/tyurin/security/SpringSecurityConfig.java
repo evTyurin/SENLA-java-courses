@@ -7,19 +7,19 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SpringSecurityConfig {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .sessionManagement()
@@ -34,15 +34,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/craftsmen/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/orders/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/orders/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/orders/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.PATCH, "/orders/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/craftsmen/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/craftsmen/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/garage-places/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/garage-places/**").hasAnyAuthority("ADMIN");
+                .antMatchers(HttpMethod.POST, "/orders/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/orders/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/craftsmen/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/craftsmen/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/garage-places/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/garage-places/**").hasAuthority("ADMIN");
         http
                 .addFilterBefore(jwtAuthenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 
     @Bean

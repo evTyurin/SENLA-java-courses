@@ -3,15 +3,17 @@ package com.senlainc.warsaw.tyurin;
 import com.senlainc.warsaw.tyurin.dao.IGaragePlaceDao;
 import com.senlainc.warsaw.tyurin.entity.GaragePlace;
 import com.senlainc.warsaw.tyurin.exception.NotFoundException;
-import com.senlainc.warsaw.tyurin.service.GaragePlaceService;
+import com.senlainc.warsaw.tyurin.service.IGaragePlaceService;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,36 +24,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {TestConfig.class}, loader = AnnotationConfigContextLoader.class)
+@TestPropertySource(locations = "classpath:test-application.properties")
 class GaragePlaceServiceUnitTest {
 
-    @InjectMocks
-    private GaragePlaceService garagePlaceService;
-    @Mock
-    private IGaragePlaceDao garagePlaceDao;
+    @Autowired
+    IGaragePlaceService garagePlaceService;
+    @Autowired
+    IGaragePlaceDao garagePlaceDao;
+    List<GaragePlace> testGaragePlaces;
+    LocalDateTime testLocalDateTime;
+    long testId;
 
-    @AfterEach
-    void tearDown() {
-        Mockito.verifyNoMoreInteractions(garagePlaceDao);
-    }
-
-    @Test
-    void delete_deleteGaragePlaceById_deletedSuccessfully() throws NotFoundException {
-        GaragePlace testGaragePlace = new GaragePlace();
-        testGaragePlace.setId(1L);
-        testGaragePlace.setNumber(1);
-        testGaragePlace.setSpace(15.0);
-
-        ReflectionTestUtils.setField(garagePlaceService,"isGaragePlaceRemovable",true);
-        when(garagePlaceDao.findById(1L)).thenReturn(testGaragePlace);
-
-        garagePlaceService.removeGaragePlace(1L);
-
-        verify(garagePlaceDao).delete(testGaragePlace);
-    }
-
-    @Test
-    void find_findAvailableGaragePlaces_returnedGaragePlaces() {
+    @BeforeEach
+    void init() {
         GaragePlace testGaragePlace1 = new GaragePlace();
         testGaragePlace1.setId(1L);
         testGaragePlace1.setNumber(1);
@@ -62,9 +49,49 @@ class GaragePlaceServiceUnitTest {
         testGaragePlace2.setNumber(2);
         testGaragePlace2.setSpace(10.0);
 
-        List<GaragePlace> testGaragePlaces = new ArrayList<>(Arrays
+        testGaragePlaces = new ArrayList<>(Arrays
                 .asList(testGaragePlace1,
                         testGaragePlace2));
+
+        testLocalDateTime = LocalDateTime
+                .of(2023, 10, 10, 12, 0);
+
+        testId = 1L;
+    }
+
+    @AfterEach
+    void clearInvocationsInMocked() {
+        Mockito.clearInvocations(garagePlaceDao);
+    }
+
+    @Test
+    void delete_deleteGaragePlaceById_deletedSuccessfully() throws NotFoundException {
+        GaragePlace testGaragePlace = testGaragePlaces
+                .stream()
+                .filter(garagePlace -> garagePlace.getId() == testId)
+                .findFirst()
+                .get();
+
+        when(garagePlaceDao.findById(testId)).thenReturn(testGaragePlace);
+
+        garagePlaceService.removeGaragePlace(testId);
+
+        verify(garagePlaceDao).delete(testGaragePlace);
+    }
+
+    @Test
+    void create_createGaragePlace_createSuccessfully() {
+        GaragePlace testGaragePlace = new GaragePlace();
+        testGaragePlace.setNumber(10);
+        testGaragePlace.setSpace(25.0);
+
+        garagePlaceService.addGaragePlace(testGaragePlace);
+
+        verify(garagePlaceDao).create(testGaragePlace);
+    }
+
+    @Test
+    void find_findAvailableGaragePlaces_returnedGaragePlaces() {
         when(garagePlaceDao.getAvailableGaragePlaces()).thenReturn(testGaragePlaces);
         List<GaragePlace> garagePlacesReturned = garagePlaceService.getAvailablePlaces();
 
@@ -75,43 +102,37 @@ class GaragePlaceServiceUnitTest {
 
     @Test
     void find_findAvailableGaragePlacesAmount_returnedAmount() {
-        when(garagePlaceDao.getAvailablePlacesAmount(LocalDateTime
-                .of(2023, 10, 10, 12, 0)))
+        when(garagePlaceDao.getAvailablePlacesAmount(testLocalDateTime))
                 .thenReturn(2L);
 
-        garagePlaceService.getAvailablePlacesAmount(LocalDateTime
-                .of(2023, 10, 10, 12, 0));
+        garagePlaceService.getAvailablePlacesAmount(testLocalDateTime);
 
-        verify(garagePlaceDao).getAvailablePlacesAmount(LocalDateTime
-                .of(2023, 10, 10, 12, 0));
+        verify(garagePlaceDao).getAvailablePlacesAmount(testLocalDateTime);
     }
 
     @Test
     void find_findNearestAvailableDate_returnedNearestAvailableDate() {
-        when(garagePlaceDao.getAvailablePlacesAmount(LocalDateTime
-                .of(2023, 10, 10, 12, 0))).thenReturn(2L);
-        long availablePlacesAmount = garagePlaceService.getAvailablePlacesAmount(LocalDateTime
-                .of(2023, 10, 10, 12, 0));
+        when(garagePlaceDao.getAvailablePlacesAmount(testLocalDateTime)).thenReturn(2L);
+        long availablePlacesAmount = garagePlaceService.getAvailablePlacesAmount(testLocalDateTime);
 
         assertEquals(2, availablePlacesAmount);
 
-        verify(garagePlaceDao).getAvailablePlacesAmount(LocalDateTime
-                .of(2023, 10, 10, 12, 0));
+        verify(garagePlaceDao).getAvailablePlacesAmount(testLocalDateTime);
     }
 
     @Test
     void find_findGaragePlaceById_returnedGaragePlace() throws NotFoundException {
-        GaragePlace testGaragePlace = new GaragePlace();
-        testGaragePlace.setId(1L);
-        testGaragePlace.setNumber(1);
-        testGaragePlace.setSpace(15.0);
+        GaragePlace testGaragePlace = testGaragePlaces
+                .stream()
+                .filter(garagePlace -> garagePlace.getId() == testId)
+                .findFirst()
+                .get();
 
-        when(garagePlaceDao.findById(1)).thenReturn(testGaragePlace);
-        GaragePlace garagePlaceReturned = garagePlaceService.getGaragePlaceById(1L);
+        when(garagePlaceDao.findById(testId)).thenReturn(testGaragePlace);
+        GaragePlace garagePlaceReturned = garagePlaceService.getGaragePlaceById(testId);
 
         assertEquals(garagePlaceReturned, testGaragePlace);
 
-        verify(garagePlaceDao).findById(1L);
+        verify(garagePlaceDao).findById(testId);
     }
-
 }
